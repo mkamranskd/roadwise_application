@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-
+import 'package:roadwise_application/screens/profile.dart';
 import 'common_header.dart';
-import 'dashboard_screen.dart';
 import 'password_reset_screen.dart';
 import 'sign_up_screen.dart';
 
@@ -20,7 +19,7 @@ class LoginScreen extends StatelessWidget {
           duration: const Duration(seconds: 1),
           child: Column(
             children: <Widget>[
-              const CommonHeader(title: 'roadWise'),
+              const CommonHeader(title: 'kamran'),
               FadeInUp(
                 duration: const Duration(milliseconds: 1500),
                 child: const Text(
@@ -89,7 +88,7 @@ class LoginScreen extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const DashBoard()),
+                          MaterialPageRoute(builder: (context) => const ProfileScreen()),
                         );
                       },
                       child: FadeInUp(

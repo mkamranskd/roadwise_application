@@ -16,7 +16,6 @@ dependencies:
   page_transition: ^2.1.0
   curved_navigation_bar: ^1.0.3
   firebase_auth: ^4.17.4
-  cloud_firestore: ^4.8.2
   firebase_storage: ^11.2.4
   firebase_core: ^2.25.4
   flare_flutter: ^3.0.2
