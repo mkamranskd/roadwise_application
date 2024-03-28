@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:roadwise_application/screens/profile.dart';
+import 'package:roadwise_application/screens/dashboard_screen.dart';
 import 'common_header.dart';
 import 'password_reset_screen.dart';
 import 'sign_up_screen.dart';
+
 
 
 class LoginScreen extends StatelessWidget {
@@ -19,14 +20,14 @@ class LoginScreen extends StatelessWidget {
           duration: const Duration(seconds: 1),
           child: Column(
             children: <Widget>[
-              const CommonHeader(title: 'kamran'),
+              const CommonHeader(title: 'Road Wise'),
               FadeInUp(
                 duration: const Duration(milliseconds: 1500),
                 child: const Text(
                   "Login First",
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: Color(0xff2623d2),
                     fontSize: 30,
                     fontFamily: 'Dubai',
                     fontWeight: FontWeight.w600,
@@ -88,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                          MaterialPageRoute(builder: (context) => const DashBoard()),
                         );
                       },
                       child: FadeInUp(
@@ -99,8 +100,8 @@ class LoginScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             gradient: const LinearGradient(
                               colors: [
-                                Color.fromRGBO(143, 148, 251, 1),
-                                Color.fromRGBO(143, 148, 251, .6),
+                                Color.fromRGBO(38, 35, 210, 1),
+                                Color.fromRGBO(38, 35, 210, 1),
                               ],
                             ),
                           ),
@@ -127,7 +128,8 @@ class LoginScreen extends StatelessWidget {
                             gradient: const LinearGradient(
                               colors: [
                                 Color.fromRGBO(104, 159, 56, 1), // Green color with full opacity
-                                Color.fromRGBO(104, 159, 56, 0.6),
+                                //Color.fromRGBO(104, 159, 56, 0.6),
+                                Color.fromRGBO(104, 159, 56, 1),
                               ],
                             ),
                           ),
@@ -155,7 +157,8 @@ class LoginScreen extends StatelessWidget {
                             gradient: const LinearGradient(
                               colors: [
                                 Color.fromRGBO(255, 0, 0, 1),
-                                Color.fromRGBO(255, 0, 0, .5),
+                                Color.fromRGBO(255, 0, 0, 1),
+                                //Color.fromRGBO(255, 0, 0, .5),
 
                               ],
                             ),

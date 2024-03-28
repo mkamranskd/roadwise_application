@@ -6,7 +6,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 void main() {
   runApp(const DashBoard());
 }
-Color primary = const Color(0xff13265C);
+Color primary = const Color(0xff2623d2);
 
 class DashBoard extends StatelessWidget {
   const DashBoard({super.key});
@@ -80,45 +80,45 @@ class _FirstPageState extends State<FirstPage> {
       bottomNavigationBar: FadeInUp(
         duration: const Duration(milliseconds: 1000),
         child: CurvedNavigationBar(
-          color: Colors.blue,
+          color: primary,
           backgroundColor: Colors.transparent,
-          buttonBackgroundColor: Colors.blue,
+          buttonBackgroundColor: primary,
           height: 50,
           items: <Widget>[
             Image.asset(
-              'lib/assets/icons/home_icon.png', // Replace 'home_icon.png' with your actual asset path
+              'lib/assets/icons/home_icon.png',
               width: 20,
               height: 20,
               color: Colors.white,
 
             ),
             Image.asset(
-              'lib/assets/icons/mail_icon.png', // Replace 'mail_icon.png' with your actual asset path
+              'lib/assets/icons/mail_icon.png',
               width: 20,
               height: 20,
               color: Colors.white,
             ),
             Image.asset(
-              'lib/assets/icons/notifications_icon.png', // Replace 'notifications_icon.png' with your actual asset path
+              'lib/assets/icons/notifications_icon.png',
               width: 20,
               height: 20,
               color: Colors.white,
             ),
             Image.asset(
-              'lib/assets/icons/roadmap-planning.png', // Replace 'person1_icon.png' with your actual asset path
+              'lib/assets/icons/roadmap-planning.png',
               width: 20,
               height: 20,
               color: Colors.white,
             ),
             Image.asset(
-              'lib/assets/icons/person_icon.png', // Replace 'person2_icon.png' with your actual asset path
+              'lib/assets/icons/person_icon.png',
               width: 20,
               height: 20,
               color: Colors.white,
             ),
           ],
           onTap: _onItemTapped,
-          index: _currentIndex, // Set the index of the selected item
+          index: _currentIndex,
         ),
 
       ),
@@ -140,62 +140,316 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
+      backgroundColor: Colors.grey[100],
+      /*appBar: AppBar(
+        backgroundColor: primary,
         title: const Text(
           'Road Wise',
           style: TextStyle(color: Colors.white, fontFamily: 'bifur', fontSize: 20),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            // Vertical list of circular icon buttons
-            SizedBox(
-              width: 50, // Adjust width as needed
-              child: SingleChildScrollView(
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Handle notifications button tap
+            },
+            icon: const Icon(Icons.notifications),
+          ),
+        ],
+      )*/
+      body: SingleChildScrollView(
+        child: Padding(
+        
+          padding: const EdgeInsets.all(0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(30,60, 10, 10),
+                decoration: BoxDecoration(
+                  color: primary, // Background color
+                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MyApp()),
-                        );
-                      },
-                      icon: const Icon(Icons.add_circle),
+                    Row(
+                      children: [
+        
+                        const Expanded(
+                          child: Row(
+                            children: [
+        
+                              // Location icon
+                              SizedBox(width: 5), // Adjust spacing between icon and text
+                              Text(
+                                'Hi, Muhammad Kamran', // Your location tag here
+                                style: TextStyle(fontSize: 30.0, color: Colors.white,fontWeight: FontWeight.bold),
+                              ),
+        
+                            ],
+                          ),
+                        ),
+        
+                        IconButton(
+                          onPressed: () {
+                            // Handle notifications button tap
+                          },
+                          icon: const Icon(Icons.account_circle_outlined,color: Colors.white,),
+                        ),
+        
+        
+        
+                      ],
                     ),
-
-                    const SizedBox(height: 20), // Add spacing between buttons
-                    IconButton(
-                      onPressed: () {
-                        // Handle button tap
-                      },
-                      icon: const Icon(Icons.edit),
+        
+                  ],
+                ),
+        
+              ),
+        
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Background color
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child:  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Find Here',
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.search_sharp,color: primary,),
+                      suffixIcon: const Icon(Icons.filter_list),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16.0),
                     ),
-                    const SizedBox(height: 20), // Add spacing between buttons
-                    IconButton(
-                      onPressed: () {
-                        // Handle button tap
-                      },
-                      icon: const Icon(Icons.delete),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Latest Admissions',
+                      style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'See All',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: primary,
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-            // Vertical separator
-            const VerticalDivider(thickness: 1, width: 1),
-            // Centered sidebar
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'Centered Sidebar',
-                  style: TextStyle(fontSize: 24),
+        
+              SizedBox(
+                height: 200,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: const [
+                    JobCard(
+                      jobTitle: 'Software Engineer',
+                      instituteName: 'ABC Tech',
+                      location: 'New York',
+                      salary: 'Rs.5000-Rs.50000',
+                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
+                    ),
+                    JobCard(
+                      jobTitle: 'Data Analyst',
+                      instituteName: 'XYZ Inc.',
+                      location: 'San Francisco',
+                      salary: 'Rs.45000',
+                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
+                    ), JobCard(
+                      jobTitle: 'Data Analyst',
+                      instituteName: 'XYZ Inc.',
+                      location: 'San Francisco',
+                      salary: 'Rs.45000',
+                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
+                    ),
+                    // Add more JobCard widgets here
+                  ],
                 ),
+              ),
+        
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Recent Notifications',
+                      style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'See All',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+        
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: Column(
+                  children: [
+                    NotificationCard(
+                      instituteName: 'ABC Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: March 25, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+                      iconData: Icons.notifications,
+                    ),
+                    NotificationCard(
+                      instituteName: 'XYZ Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: April 1, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+                      iconData: Icons.notifications,
+                    ),
+                    NotificationCard(
+                      instituteName: 'PQR Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: April 10, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+                      iconData: Icons.notifications,
+                    ),
+                    NotificationCard(
+                      instituteName: 'LMN Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: April 15, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+
+                      iconData: Icons.notifications,
+                    ),
+
+                  ],
+                ),
+              ),
+        
+        
+            ],
+        
+        
+        
+        
+        
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+class NotificationCard extends StatelessWidget {
+  final String instituteName;
+  final String newsTitle1;
+  final String newsTitle2;
+  final IconData iconData;
+
+  NotificationCard({
+    required this.instituteName,
+    required this.newsTitle1,
+    required this.newsTitle2,
+    required this.iconData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      child: ListTile(
+        leading: Icon(iconData),
+        title: Text(instituteName),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(newsTitle1,style: TextStyle(color: Colors.red),),
+            Text(newsTitle2),
+          ],
+        ),
+        trailing: IconButton(
+          icon: Icon(Icons.check),
+          onPressed: () {
+            // Add your onPressed logic here
+          },
+        ),
+      ),
+    );
+  }
+}
+
+
+
+class JobCard extends StatelessWidget {
+  final String jobTitle;
+  final String instituteName;
+  final String location;
+  final String salary;
+  final Icon ico;
+
+  const JobCard({
+    Key? key,
+    required this.jobTitle,
+    required this.instituteName,
+    required this.location,
+    required this.salary,
+    required this.ico,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+
+      margin: const EdgeInsets.all(10),
+      height: 150,
+      width: 350,
+      child: Card(
+        color: Colors.white,
+        elevation: 0.5,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              leading:  CircleAvatar(
+                backgroundColor: Colors.white,
+                child:  Icon(
+                  Icons.work,
+                  color: primary,
+                ),
+              ),
+              title: Text(jobTitle, style:  TextStyle(color:primary, fontWeight: FontWeight.bold),),
+              subtitle: Text(instituteName, style:  TextStyle(color: primary,)),
+              trailing:  ico,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                       Icon(
+                        Icons.location_on,
+                        color: primary,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(location, style: TextStyle(color: primary), ),
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      Text(' $salary', style: TextStyle(color: primary,fontWeight: FontWeight.bold,fontSize: 20), ),
+                       Text('/month', style: TextStyle(color: primary,), ),
+                    ],
+                  ),
+
+                ],
               ),
             ),
           ],
@@ -212,7 +466,7 @@ class Screen2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: primary,
         title: const Text('Messages', style: TextStyle(color: Colors.white)),
       ),
       body: const MessageCardList(),
@@ -310,13 +564,14 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: primary,
         title: const Text('Notifications',style: TextStyle(color: Colors.white),),
       ),
       body: const NotificationList(),
     );
   }
 }
+
 class NotificationList extends StatefulWidget {
   const NotificationList({super.key});
 
@@ -489,7 +744,7 @@ class _NotificationListState extends State<NotificationList> {
           margin: const EdgeInsets.all(8.0),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: Colors.blue,
+              backgroundColor: primary,
               child: Text(
                 '${index + 1}', // Display the index of the notification (starting from 1)
                 style: const TextStyle(color: Colors.white),
@@ -519,6 +774,7 @@ class _NotificationListState extends State<NotificationList> {
     );
   }
 }
+
 class NotificationItem {
   final String heading;
   final String description;
@@ -562,106 +818,65 @@ class NotificationDetails extends StatelessWidget {
   }
 }
 
-
-class Folder {
-  final String name;
-  final List<Folder> subFolders;
-
-  Folder(this.name, this.subFolders);
-}
-
 class Screen4 extends StatelessWidget {
-  final List<Folder> folders = [
-    Folder('Folder 1', [
-      Folder('Subfolder 1.1', []),
-      Folder('Subfolder 1.2', [
-        Folder('Sub-subfolder 1.2.1', []),
-        Folder('Sub-subfolder 1.2.2', []),
-      ]),
-    ]),
-    Folder('Folder 1', [
-      Folder('Subfolder 1.1', []),
-      Folder('Subfolder 1.2', [
-        Folder('Sub-subfolder 1.2.1', []),
-        Folder('Sub-subfolder 1.2.2', []),
-      ]),
-    ]),
-    Folder('Folder 1', [
-      Folder('Subfolder 1.1', []),
-      Folder('Subfolder 1.2', [
-        Folder('Sub-subfolder 1.2.1', []),
-        Folder('Sub-subfolder 1.2.2', []),
-      ]),
-    ]),
-    Folder('Folder 1', [
-      Folder('Subfolder 1.1', []),
-      Folder('Subfolder 1.2', [
-        Folder('Sub-subfolder 1.2.1', []),
-        Folder('Sub-subfolder 1.2.2', []),
-      ]),
-    ]),
-    Folder('Folder 1', [
-      Folder('Subfolder 1.1', []),
-      Folder('Subfolder 1.2', [
-        Folder('Sub-subfolder 1.2.1', []),
-        Folder('Sub-subfolder 1.2.2', []),
-      ]),
-    ]),
-    Folder('Folder 2', []),
-    Folder('Folder 3', [
-      Folder('Subfolder 3.1', []),
-    ]),
-  ];
-
   Screen4({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: const Text('Folder Tree', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Bookmarks',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.home, color: Colors.black), // Home Icon
+          onPressed: () {
+            // Implement action for home button
+          },
+        ),
       ),
-      body: ListView.builder(
-        itemCount: folders.length,
-        itemBuilder: (context, index) {
-          return FolderItem(folders[index]);
-        },
-      ),
-    );
-  }
-}
 
-class FolderItem extends StatelessWidget {
-  final Folder folder;
+      body:
+      SizedBox(
 
-  const FolderItem(this.folder, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(folder.name),
-      leading: const Icon(Icons.folder),
-      onTap: () {
-        // Handle tapping on folder item if needed
-      },
-      subtitle: folder.subFolders.isEmpty
-          ? null
-          : Padding(
-        padding: const EdgeInsets.only(left: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (var subFolder in folder.subFolders)
-              FolderItem(subFolder),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: const [
+            JobCard(
+              jobTitle: 'Software Engineer',
+              instituteName: 'ABC Tech',
+              location: 'New York',
+              salary: 'Rs.5000-Rs.50000',
+              ico: Icon(Icons.bookmark,color: Color(0xff2623d2),),
+            ),
+            JobCard(
+              jobTitle: 'Data Analyst',
+              instituteName: 'XYZ Inc.',
+              location: 'Dubai',
+              salary: 'Rs.45000',
+              ico: Icon(Icons.bookmark,color: Color(0xff2623d2),),
+            ), JobCard(
+              jobTitle: 'Data Analyst',
+              instituteName: 'XYZ Inc.',
+              location: 'San Francisco',
+              salary: 'Rs.45000',
+              ico: Icon(Icons.bookmark,color: Color(0xff2623d2),),
+            ),JobCard(
+              jobTitle: 'Security Analyst',
+              instituteName: 'DBR Solutions.',
+              location: 'Karachi',
+              salary: 'Rs.45000',
+              ico: Icon(Icons.bookmark,color: Color(0xff2623d2),),
+            ),
+            // Add more JobCard widgets here
           ],
         ),
       ),
-    );
+      );
   }
 }
-
-
 
 class AccountSettingsScreen extends StatelessWidget {
   const AccountSettingsScreen({super.key});
@@ -670,7 +885,7 @@ class AccountSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue, // You can customize the color as needed
+        backgroundColor: primary, // You can customize the color as needed
         title: const Text(
           'Account Settings',
           style: TextStyle(color: Colors.white),
@@ -687,10 +902,10 @@ class AccountSettingsScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: ListTile(
-                    leading: const CircleAvatar(
-                      backgroundColor: Colors.blue, // Customize the background color as needed
+                    leading:  CircleAvatar(
+                      backgroundColor: primary, // Customize the background color as needed
                       radius: 30,
-                      child: Icon(
+                      child: const Icon(
                         Icons.person,
                         size: 40, // Adjust the size of the icon as needed
                         color: Colors.white, // Customize the color as needed
@@ -703,10 +918,10 @@ class AccountSettingsScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: const Text(
+                    subtitle:  Text(
                       'View Profile', // Add a subtitle for additional action or information
                       style: TextStyle(
-                        color: Colors.blue, // Customize the color as needed
+                        color: primary, // Customize the color as needed
                         fontWeight: FontWeight.w500,
                       ),
                     ),

@@ -4,7 +4,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
-import 'common_header.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key});
