@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:roadwise_application/global/style.dart';
 import 'package:roadwise_application/screens/dashboard_screen.dart';
-import 'common_header.dart';
-import 'password_reset_screen.dart';
-import 'sign_up_screen.dart';
+import '../../../../screens/common_header.dart';
+import '../../../../screens/password_reset_screen.dart';
+import '../../../../screens/sign_up_screen.dart';
 
 
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key});
+class SignInScreen extends StatelessWidget {
+  const SignInScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,28 +86,31 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const DashBoard()),
-                        );
-                      },
-                      child: FadeInUp(
-                        duration: const Duration(milliseconds: 1900),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 1900),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const DashBoard()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero, backgroundColor: primaryBlueColor, // Use the desired color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color.fromRGBO(38, 35, 210, 1),
-                                Color.fromRGBO(38, 35, 210, 1),
-                              ],
-                            ),
                           ),
                           child: const Center(
-                            child: Text("Login ", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            child: Text(
+                              "Login",
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       ),

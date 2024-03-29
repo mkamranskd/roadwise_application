@@ -1,12 +1,16 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
+import 'package:roadwise_application/features/presentation/pages/jobs_page/job_details.dart';
+import 'package:roadwise_application/global/style.dart';
+import '../features/presentation/widgets/app_bar_widget.dart';
+import '../features/presentation/widgets/drawer_widget.dart';
 import 'chat_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+
 void main() {
   runApp(const DashBoard());
 }
-Color primary = const Color(0xff2623d2);
 
 class DashBoard extends StatelessWidget {
   const DashBoard({super.key});
@@ -80,38 +84,38 @@ class _FirstPageState extends State<FirstPage> {
       bottomNavigationBar: FadeInUp(
         duration: const Duration(milliseconds: 1000),
         child: CurvedNavigationBar(
-          color: primary,
+          color: primaryBlueColor,
           backgroundColor: Colors.transparent,
-          buttonBackgroundColor: primary,
+          buttonBackgroundColor:primaryBlueColor ,
           height: 50,
           items: <Widget>[
             Image.asset(
-              'lib/assets/icons/home_icon.png',
+              'assets/icons/home_icon.png',
               width: 20,
               height: 20,
               color: Colors.white,
 
             ),
             Image.asset(
-              'lib/assets/icons/mail_icon.png',
+              'assets/icons/mail_icon.png',
               width: 20,
               height: 20,
               color: Colors.white,
             ),
             Image.asset(
-              'lib/assets/icons/notifications_icon.png',
+              'assets/icons/notifications_icon.png',
               width: 20,
               height: 20,
               color: Colors.white,
             ),
             Image.asset(
-              'lib/assets/icons/roadmap-planning.png',
+              'assets/icons/roadmap-planning.png',
               width: 20,
               height: 20,
               color: Colors.white,
             ),
             Image.asset(
-              'lib/assets/icons/person_icon.png',
+              'assets/icons/person_icon.png',
               width: 20,
               height: 20,
               color: Colors.white,
@@ -134,15 +138,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<String> cardData = List.generate(100, (index) => 'Card ${index + 1}');
-  bool showAllCards = false;
+  int _currentPageIndex = 0;
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[300],
+      key: _scaffoldState,
+      drawer: const DrawerWidget(),
+      appBar: _currentPageIndex ==4?appBarWidget(title: "Search Jobs",isJobTab: true,onTap: (){setState(() {
+        _scaffoldState.currentState!.openDrawer();
+      });}): appBarWidget(
+          title: "Search",
+          isJobTab: false,
+          onTap: (){setState(() {
+            _scaffoldState.currentState!.openDrawer();
+          });}
+      ),
       /*appBar: AppBar(
-        backgroundColor: primary,
+        backgroundColor: primaryBlueColor,
         title: const Text(
           'Road Wise',
           style: TextStyle(color: Colors.white, fontFamily: 'bifur', fontSize: 20),
@@ -158,55 +174,12 @@ class _HomeScreenState extends State<HomeScreen> {
       )*/
       body: SingleChildScrollView(
         child: Padding(
-        
+
           padding: const EdgeInsets.all(0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(30,60, 10, 10),
-                decoration: BoxDecoration(
-                  color: primary, // Background color
-                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-        
-                        const Expanded(
-                          child: Row(
-                            children: [
-        
-                              // Location icon
-                              SizedBox(width: 5), // Adjust spacing between icon and text
-                              Text(
-                                'Hi, Muhammad Kamran', // Your location tag here
-                                style: TextStyle(fontSize: 30.0, color: Colors.white,fontWeight: FontWeight.bold),
-                              ),
-        
-                            ],
-                          ),
-                        ),
-        
-                        IconButton(
-                          onPressed: () {
-                            // Handle notifications button tap
-                          },
-                          icon: const Icon(Icons.account_circle_outlined,color: Colors.white,),
-                        ),
-        
-        
-        
-                      ],
-                    ),
-        
-                  ],
-                ),
-        
-              ),
-        
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -218,35 +191,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: InputDecoration(
                       hintText: 'Find Here',
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.search_sharp,color: primary,),
+                      prefixIcon: Icon(Icons.search_sharp,color: primaryBlueColor,),
                       suffixIcon: const Icon(Icons.filter_list),
                       contentPadding: const EdgeInsets.symmetric(vertical: 16.0),
                     ),
                   ),
                 ),
-              ),
+              ),*/
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Latest Admissions',
-                      style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),
+                      'Recent Jobs',
+                      style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'See All',
                       style: TextStyle(
-                        fontSize: 18.0,
-                        color: primary,
+                        fontSize: 15.0,
+                        color: primaryBlueColor,
                       ),
                     ),
                   ],
                 ),
               ),
-        
+
               SizedBox(
-                height: 200,
+                height:180,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: const [
@@ -254,27 +227,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       jobTitle: 'Software Engineer',
                       instituteName: 'ABC Tech',
                       location: 'New York',
-                      salary: 'Rs.5000-Rs.50000',
+                      salary: '50000',
+                      description: 'a quick brown fox jumps over the lazy dog.',
                       ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
                     ),
                     JobCard(
                       jobTitle: 'Data Analyst',
                       instituteName: 'XYZ Inc.',
                       location: 'San Francisco',
-                      salary: 'Rs.45000',
+                      salary: '45000',
+                      description: 'a quick brown fox jumps over the lazy dog.',
                       ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
                     ), JobCard(
                       jobTitle: 'Data Analyst',
                       instituteName: 'XYZ Inc.',
                       location: 'San Francisco',
-                      salary: 'Rs.45000',
+                      salary: '45000',
+                      description: 'a quick brown fox jumps over the lazy dog.',
                       ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
                     ),
                     // Add more JobCard widgets here
                   ],
                 ),
               ),
-        
+
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
@@ -282,19 +258,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Text(
                       'Recent Notifications',
-                      style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'See All',
                       style: TextStyle(
-                        fontSize: 18.0,
-                        color: primary,
+                        fontSize: 15.0,
+                        color: primaryBlueColor,
                       ),
                     ),
                   ],
                 ),
               ),
-        
+
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Column(
@@ -324,26 +300,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       iconData: Icons.notifications,
                     ),
+                    NotificationCard(
+                      instituteName: 'LMN Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: April 15, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+
+                      iconData: Icons.notifications,
+                    ),
 
                   ],
                 ),
               ),
-        
-        
+
+
+
             ],
-        
-        
-        
-        
-        
+
+
+
+
+
           ),
         ),
       ),
     );
+
+    /*
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            Expanded(
+
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: _userPost.length,
+                itemBuilder: (context, index) {
+                  final userPostData = _userPost[index];
+                  return SinglePostCardWidget(userPostData: userPostData);
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+*/
+
   }
 }
-
-
 
 class NotificationCard extends StatelessWidget {
   final String instituteName;
@@ -368,12 +373,12 @@ class NotificationCard extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(newsTitle1,style: TextStyle(color: Colors.red),),
+            Text(newsTitle1,style: const TextStyle(color: Colors.red),),
             Text(newsTitle2),
           ],
         ),
         trailing: IconButton(
-          icon: Icon(Icons.check),
+          icon: const Icon(Icons.check),
           onPressed: () {
             // Add your onPressed logic here
           },
@@ -383,13 +388,12 @@ class NotificationCard extends StatelessWidget {
   }
 }
 
-
-
 class JobCard extends StatelessWidget {
   final String jobTitle;
   final String instituteName;
   final String location;
   final String salary;
+  final String description;
   final Icon ico;
 
   const JobCard({
@@ -398,65 +402,111 @@ class JobCard extends StatelessWidget {
     required this.instituteName,
     required this.location,
     required this.salary,
+    required this.description,
     required this.ico,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>  JobDetailsScreen()),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
 
-      margin: const EdgeInsets.all(10),
-      height: 150,
-      width: 350,
-      child: Card(
-        color: Colors.white,
-        elevation: 0.5,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              leading:  CircleAvatar(
-                backgroundColor: Colors.white,
-                child:  Icon(
-                  Icons.work,
-                  color: primary,
+          margin: const EdgeInsets.all(0),
+
+          width: 350,
+          child: Card(
+            color: Colors.white,
+            elevation: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  leading:  CircleAvatar(
+                    backgroundColor: primaryBlueColor,
+                    child:  const Icon(
+                      Icons.work,
+                      color: Colors.white,
+                    ),
+                  ),
+                  title: Text(jobTitle, style:  const TextStyle(color:Colors.black,fontSize: 20, fontWeight: FontWeight.bold),),
+                  subtitle: Text(instituteName, style:  const TextStyle(color: Colors.grey,)),
+                  trailing:  ico,
                 ),
-              ),
-              title: Text(jobTitle, style:  TextStyle(color:primary, fontWeight: FontWeight.bold),),
-              subtitle: Text(instituteName, style:  TextStyle(color: primary,)),
-              trailing:  ico,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
                     children: [
-                       Icon(
-                        Icons.location_on,
-                        color: primary,
+                      Row(
+                        children: [
+                          SizedBox(width: 8), // Adding space between badges
+                          _buildBadge("Full-Time"),
+                          SizedBox(width: 8), // Adding space between badges
+                          _buildBadge("Remote"),
+                          SizedBox(width: 8), // Adding space between badges
+                          _buildBadge("Internship"),
+
+                        ],
                       ),
-                      const SizedBox(width: 5),
-                      Text(location, style: TextStyle(color: primary), ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                             children: [
+                               const Icon(
+                                Icons.location_on,
+                                color: Colors.green,),
+                               SizedBox(width: 8),
+                               Text(location, style: TextStyle(color: primaryBlueColor), ),
+                             ],
+                           ),
+                          const SizedBox(height: 8,),
+                          Row(
+                            children: [
+                              Text('Rs $salary/hr', style: TextStyle(color: primaryBlueColor,fontWeight: FontWeight.bold,fontSize: 15), ),
+
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8,),
+
                     ],
                   ),
-
-                  Row(
-                    children: [
-                      Text(' $salary', style: TextStyle(color: primary,fontWeight: FontWeight.bold,fontSize: 20), ),
-                       Text('/month', style: TextStyle(color: primary,), ),
-                    ],
-                  ),
-
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
+}
+
+Widget _buildBadge(String text) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: Colors.grey.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(
+        color: Colors.black87,
+        fontSize: 12,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
 }
 
 class Screen2 extends StatelessWidget {
@@ -466,7 +516,7 @@ class Screen2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primary,
+        backgroundColor: primaryBlueColor,
         title: const Text('Messages', style: TextStyle(color: Colors.white)),
       ),
       body: const MessageCardList(),
@@ -564,7 +614,7 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primary,
+        backgroundColor: primaryBlueColor,
         title: const Text('Notifications',style: TextStyle(color: Colors.white),),
       ),
       body: const NotificationList(),
@@ -744,7 +794,7 @@ class _NotificationListState extends State<NotificationList> {
           margin: const EdgeInsets.all(8.0),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: primary,
+              backgroundColor: primaryBlueColor,
               child: Text(
                 '${index + 1}', // Display the index of the notification (starting from 1)
                 style: const TextStyle(color: Colors.white),
@@ -825,13 +875,13 @@ class Screen4 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: primaryBlueColor, // You can customize the color as needed
         title: const Text(
           'Bookmarks',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.home, color: Colors.black), // Home Icon
+          icon: const Icon(Icons.home, color: Colors.white), // Home Icon
           onPressed: () {
             // Implement action for home button
           },
@@ -843,32 +893,36 @@ class Screen4 extends StatelessWidget {
 
         child: ListView(
           scrollDirection: Axis.vertical,
-          children: const [
+          children:  [
             JobCard(
               jobTitle: 'Software Engineer',
               instituteName: 'ABC Tech',
               location: 'New York',
               salary: 'Rs.5000-Rs.50000',
-              ico: Icon(Icons.bookmark,color: Color(0xff2623d2),),
+              description: 'a quick brown fox jumps over the lazy dog.',
+              ico: Icon(Icons.bookmark,color: primaryBlueColor,),
             ),
             JobCard(
               jobTitle: 'Data Analyst',
               instituteName: 'XYZ Inc.',
               location: 'Dubai',
               salary: 'Rs.45000',
-              ico: Icon(Icons.bookmark,color: Color(0xff2623d2),),
+              description: 'a quick brown fox jumps over the lazy dog.',
+              ico: Icon(Icons.bookmark,color: primaryBlueColor,),
             ), JobCard(
               jobTitle: 'Data Analyst',
               instituteName: 'XYZ Inc.',
               location: 'San Francisco',
               salary: 'Rs.45000',
-              ico: Icon(Icons.bookmark,color: Color(0xff2623d2),),
+              description: 'a quick brown fox jumps over the lazy dog.',
+              ico: Icon(Icons.bookmark,color: primaryBlueColor,),
             ),JobCard(
               jobTitle: 'Security Analyst',
               instituteName: 'DBR Solutions.',
               location: 'Karachi',
               salary: 'Rs.45000',
-              ico: Icon(Icons.bookmark,color: Color(0xff2623d2),),
+              description: 'a quick brown fox jumps over the lazy dog.',
+              ico: Icon(Icons.bookmark,color: primaryBlueColor,),
             ),
             // Add more JobCard widgets here
           ],
@@ -885,7 +939,7 @@ class AccountSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primary, // You can customize the color as needed
+        backgroundColor: primaryBlueColor, // You can customize the color as needed
         title: const Text(
           'Account Settings',
           style: TextStyle(color: Colors.white),
@@ -903,7 +957,7 @@ class AccountSettingsScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: ListTile(
                     leading:  CircleAvatar(
-                      backgroundColor: primary, // Customize the background color as needed
+                      backgroundColor: primaryBlueColor, // Customize the background color as needed
                       radius: 30,
                       child: const Icon(
                         Icons.person,
@@ -921,7 +975,7 @@ class AccountSettingsScreen extends StatelessWidget {
                     subtitle:  Text(
                       'View Profile', // Add a subtitle for additional action or information
                       style: TextStyle(
-                        color: primary, // Customize the color as needed
+                        color: primaryBlueColor, // Customize the color as needed
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -972,7 +1026,7 @@ class AccountSettingsScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const MyApp()),
+                    MaterialPageRoute(builder: (context) => const SignInScreen()),
                   );
                 },
               ),

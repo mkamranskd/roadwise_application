@@ -37,29 +37,34 @@ dev_dependencies:
 flutter_native_splash:
   color: "#fafafa"
   color_dark: "#484b6a"
-  image: lib/assets/images/roadWiseLogoWhite.PNG
-  image_dark: lib/assets/images/roadWiseLogoWhite.PNG
+  image: assets/images/roadWiseLogoWhite.PNG
+  image_dark: assets/images/roadWiseLogoWhite.PNG
   #branding: lib/assets/images/brandingBlack.PNG
   #branding_dark: lib/assets/images/brandingWhite.PNG
 
 flutter:
   uses-material-design: true
   assets:
-    - lib/assets/images/
-    - lib/assets/icons/home_icon.png
-    - lib/assets/icons/mail_icon.png
-    - lib/assets/icons/notifications_icon.png
-    - lib/assets/icons/person_icon.png
-    - lib/assets/icons/roadmap-planning.png
+    - assets/.
+    - assets/icons/.
+    - assets/images/.
+    - assets/likes/.
+    - assets/profiles/.
+    - assets/icons/.
+    - assets/icons/home_icon.png
+    - assets/icons/mail_icon.png
+    - assets/icons/notifications_icon.png
+    - assets/icons/person_icon.png
+    - assets/icons/roadmap-planning.png
   fonts:
     - family: Dubai
       fonts:
-        - asset: lib/assets/fonts/Dubai-Bold.otf
-        - asset: lib/assets/fonts/Dubai-Light.otf
-        - asset: lib/assets/fonts/Dubai-Medium.ttf
-        - asset: lib/assets/fonts/Dubai-Regular.otf
+        - asset: assets/fonts/Dubai-Bold.otf
+        - asset: assets/fonts/Dubai-Light.otf
+        - asset: assets/fonts/Dubai-Medium.ttf
+        - asset: assets/fonts/Dubai-Regular.otf
           weight: 400
     - family: bifur
       fonts:
-        - asset: lib/assets/fonts/Dubai-Bold.otf
+        - asset: assets/fonts/Dubai-Bold.otf
           weight: 400

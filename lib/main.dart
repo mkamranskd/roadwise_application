@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:roadwise_application/screens/login_screen.dart';
+import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home:  const SignInScreen()
     );
   }
 }

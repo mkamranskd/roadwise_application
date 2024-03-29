@@ -10,7 +10,7 @@ class CommonHeader extends StatelessWidget {
       height: 400,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('lib/assets/images/background.png'),
+          image: AssetImage('assets/images/background.png'),
           fit: BoxFit.fill,
         ),
       ),
@@ -23,7 +23,7 @@ class CommonHeader extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/images/light-1.png'),
+                  image: AssetImage('assets/images/light-1.png'),
                 ),
               ),
             ),
@@ -35,7 +35,7 @@ class CommonHeader extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/images/light-2.png'),
+                  image: AssetImage('assets/images/light-2.png'),
                 ),
               ),
             ),
@@ -48,7 +48,7 @@ class CommonHeader extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/images/clock.png'),
+                  image: AssetImage('assets/images/clock.png'),
                 ),
               ),
             ),
