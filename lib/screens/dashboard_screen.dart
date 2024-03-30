@@ -77,7 +77,7 @@ class _FirstPageState extends State<FirstPage> {
           const HomeScreen(),
           const Screen2(),
           const NotificationScreen(),
-          Screen4(),
+          BookMarks_Page(),
           const AccountSettingsScreen(),
         ],
       ),
@@ -91,33 +91,33 @@ class _FirstPageState extends State<FirstPage> {
           items: <Widget>[
             Image.asset(
               'assets/icons/home_icon.png',
-              width: 20,
-              height: 20,
+              width: 15,
+              height: 15,
               color: Colors.white,
 
             ),
             Image.asset(
               'assets/icons/mail_icon.png',
-              width: 20,
-              height: 20,
+              width: 15,
+              height: 15,
               color: Colors.white,
             ),
             Image.asset(
               'assets/icons/notifications_icon.png',
-              width: 20,
-              height: 20,
+              width: 15,
+              height: 15,
               color: Colors.white,
             ),
             Image.asset(
               'assets/icons/roadmap-planning.png',
-              width: 20,
-              height: 20,
+              width: 15,
+              height: 15,
               color: Colors.white,
             ),
             Image.asset(
               'assets/icons/person_icon.png',
-              width: 20,
-              height: 20,
+              width: 15,
+              height: 15,
               color: Colors.white,
             ),
           ],
@@ -138,6 +138,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   int _currentPageIndex = 0;
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
@@ -145,7 +146,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       key: _scaffoldState,
       drawer: const DrawerWidget(),
       appBar: _currentPageIndex ==4?appBarWidget(title: "Search Jobs",isJobTab: true,onTap: (){setState(() {
@@ -868,8 +868,8 @@ class NotificationDetails extends StatelessWidget {
   }
 }
 
-class Screen4 extends StatelessWidget {
-  Screen4({super.key});
+class BookMarks_Page extends StatelessWidget {
+  BookMarks_Page({super.key});
 
   @override
   Widget build(BuildContext context) {

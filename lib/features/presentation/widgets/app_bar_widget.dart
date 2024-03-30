@@ -9,13 +9,13 @@ PreferredSizeWidget appBarWidget({VoidCallback? onTap, String? title,bool? isJob
     leading: GestureDetector(
       onTap: onTap,
       child: const Padding(
-        padding: EdgeInsets.only(left: 10),
+        padding: EdgeInsets.only(left: 20),
        child: CircleAvatar(backgroundImage: AssetImage("assets/profiles/profile2.jpg"),)
       ),
     ),
     title: Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-      child: SizedBox(  
+      child: SizedBox(
         height: 40.0, // Adjust the height as needed
         child: Container(
           //padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -29,7 +29,8 @@ PreferredSizeWidget appBarWidget({VoidCallback? onTap, String? title,bool? isJob
               border: InputBorder.none,
               prefixIcon: Icon(Icons.search_sharp, color: Colors.blue),
               //suffixIcon: const Icon(Icons.filter_list),
-              contentPadding: EdgeInsets.symmetric(vertical: 8.0), // Reduced vertical padding
+
+              contentPadding:  EdgeInsets.fromLTRB(10, 5, 10, 0),// Reduced vertical padding
             ),
           ),
         ),
@@ -37,7 +38,7 @@ PreferredSizeWidget appBarWidget({VoidCallback? onTap, String? title,bool? isJob
 
     ),
     actions: [
-      IconButton(onPressed: (){}, icon: const Icon(Icons.messenger_outline_outlined,size: 20,color: Colors.white,)),
+      IconButton(onPressed: (){}, icon:  Image.asset("assets/icons/email.png",height: 30,)),
       /*isJobTab == false? IconButton(onPressed: (){}, icon: Icon(FontAwesomeIcons.message,size: 15,color: Colors.white,))
           : Row(
         children: [

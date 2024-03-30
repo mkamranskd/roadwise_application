@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
 import 'package:roadwise_application/global/style.dart';
-import 'package:roadwise_application/screens/dashboard_screen.dart';
 import '../../../../screens/common_header.dart';
 import '../../../../screens/password_reset_screen.dart';
 import '../../../../screens/sign_up_screen.dart';
@@ -14,35 +14,23 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
         child: FadeInUp(
-          duration: const Duration(seconds: 1),
+          duration: const Duration(milliseconds: 100),
           child: Column(
+
             children: <Widget>[
               const CommonHeader(title: 'Road Wise'),
-              FadeInUp(
-                duration: const Duration(milliseconds: 1500),
-                child: const Text(
-                  "Login First",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    color: Color(0xff2623d2),
-                    fontSize: 30,
-                    fontFamily: 'Dubai',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+              FadeInUpBig(duration: const Duration(milliseconds: 400),child:  H1(title: "Login First",clr: primaryBlueColor,)),
+
               Padding(
-                padding: const EdgeInsets.all(30.0),
+                padding: const EdgeInsets.fromLTRB(20,0 , 20,0),
                 child: Column(
                   children: <Widget>[
                     FadeInUp(
-                      duration: const Duration(milliseconds: 1800),
+                      duration: const Duration(milliseconds: 600),
                       child: Container(
-                        padding: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(1),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
@@ -58,7 +46,7 @@ class SignInScreen extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                               decoration: const BoxDecoration(
                                 border: Border(bottom: BorderSide(color: Color.fromRGBO(143, 148, 251, 1))),
                               ),
@@ -66,18 +54,18 @@ class SignInScreen extends StatelessWidget {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Email or Phone number",
-                                  hintStyle: TextStyle(color: Colors.grey[700]),
+                                  hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
                                 ),
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                               child: TextField(
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Password",
-                                  hintStyle: TextStyle(color: Colors.grey[700]),
+                                  hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
                                 ),
                               ),
                             )
@@ -86,91 +74,34 @@ class SignInScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 1900),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const DashBoard()),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.zero, backgroundColor: primaryBlueColor, // Use the desired color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const SignUpPage()),
-                        );
-                      },
-                      child: FadeInUp(
-                        duration: const Duration(milliseconds: 1900),
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color.fromRGBO(104, 159, 56, 1), // Green color with full opacity
-                                //Color.fromRGBO(104, 159, 56, 0.6),
-                                Color.fromRGBO(104, 159, 56, 1),
-                              ],
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text("Don't Have a Account? Create one?", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const PasswordResetPage()),
-                        );
-                      },
-                      child: FadeInUp(
-                        duration: const Duration(milliseconds: 1900),
-                        child: Container(
-                          height: 30,
-                          width: 130,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color.fromRGBO(255, 0, 0, 1),
-                                Color.fromRGBO(255, 0, 0, 1),
-                                //Color.fromRGBO(255, 0, 0, .5),
 
-                              ],
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text("Forgot Password? ", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                          ),
-                        ),
+
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 800),
+                      child: CustomButton(
+                        title: "Login ",
+                        navigateTo: Question1(),
+                        clr1: primaryBlueColor,
+                        clr2: primaryBlueColor,
+                      ),
+                    ),
+
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 1000),
+                      child: const CustomButton(
+                        title: "Sign Up",
+                        navigateTo: SignUpPage(),
+                        clr1:  Color.fromRGBO(104, 159, 56, 1),
+                        clr2:  Color.fromRGBO(104, 159, 56, 1),
+                      ),
+                    ),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 1200),
+                      child: const CustomButton(
+                        title: "Forgot Password?",
+                        navigateTo: PasswordResetPage(),
+                        clr1: Color.fromRGBO(255, 0, 0, 1),
+                        clr2: Color.fromRGBO(255, 0, 0, 1),
                       ),
                     ),
                   ],
