@@ -60,7 +60,7 @@ class CommonHeader extends StatelessWidget {
                 children: [
                   Center(
                     child: Text(
-                      title,
+                      "ROADWISE",
                       style: const TextStyle(color: Colors.white, fontFamily: 'bifur', fontSize: 60.0),
                     ),
                   ),
@@ -68,6 +68,19 @@ class CommonHeader extends StatelessWidget {
               ),
             ),
           )
+          /*Positioned(
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(50, 30, 50, 30),
+              child: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+
+                    image: AssetImage('assets/roadwiselogo.PNG',),
+                  ),
+                ),
+              ),
+            ),
+          )*/
         ],
       ),
     );
