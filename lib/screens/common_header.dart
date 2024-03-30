@@ -7,7 +7,7 @@ class CommonHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 250,
+      height: 400,
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/background.png'),
@@ -19,7 +19,7 @@ class CommonHeader extends StatelessWidget {
           Positioned(
             left: 30,
             width: 80,
-            height: 100,
+            height: 200,
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
@@ -31,7 +31,7 @@ class CommonHeader extends StatelessWidget {
           Positioned(
             left: 140,
             width: 80,
-            height: 75,
+            height: 150,
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
@@ -41,10 +41,10 @@ class CommonHeader extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 10,
-            top: 30,
-            width: 50,
-            height: 50,
+            right: 40,
+            top: 40,
+            width: 80,
+            height: 150,
             child: Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
@@ -55,13 +55,13 @@ class CommonHeader extends StatelessWidget {
           ),
           Positioned(
             child: Container(
-              margin: const EdgeInsets.only(top: 80),
+              margin: const EdgeInsets.only(top: 140),
               child: Column(
                 children: [
                   Center(
                     child: Text(
                       title,
-                      style: const TextStyle(color: Colors.white, fontFamily: 'bifur', fontSize: 50.0),
+                      style: const TextStyle(color: Colors.white, fontFamily: 'bifur', fontSize: 60.0),
                     ),
                   ),
                 ],
