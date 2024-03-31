@@ -36,10 +36,10 @@ dev_dependencies:
   flutter_lints: ^3.0.1
 
 flutter_native_splash:
-  color: "#fafafa"
-  color_dark: "#484b6a"
-  image: assets/images/roadWiseLogoWhite.PNG
-  image_dark: assets/images/roadWiseLogoWhite.PNG
+  color: "#ff0094fd"
+  color_dark: "#ff0094fd"
+  image: assets/roadwiselogo.PNG
+  image_dark: assets/roadwiselogo.PNG
   #branding: lib/assets/images/brandingBlack.PNG
   #branding_dark: lib/assets/images/brandingWhite.PNG
 
