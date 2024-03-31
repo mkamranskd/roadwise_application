@@ -1,9 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:roadwise_application/features/domain/entities/user_post_data.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
+import 'package:roadwise_application/features/presentation/pages/home_page/widgets/single_post_card_widget.dart';
 import 'package:roadwise_application/features/presentation/pages/jobs_page/job_details.dart';
 import 'package:roadwise_application/global/style.dart';
-import '../features/presentation/widgets/app_bar_widget.dart';
 import '../features/presentation/widgets/drawer_widget.dart';
 import 'chat_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -139,8 +140,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  int _currentPageIndex = 0;
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+  ScrollController? _scrollController;
+  final _userPost = UserPostClass.userPostList;
 
 
   @override
@@ -148,7 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _scaffoldState,
       drawer: const DrawerWidget(),
-      appBar: _currentPageIndex ==4?appBarWidget(title: "Search Jobs",isJobTab: true,onTap: (){setState(() {
+
+    /*appBar: _currentPageIndex ==4?appBarWidget(title: "Search Jobs",isJobTab: true,onTap: (){setState(() {
         _scaffoldState.currentState!.openDrawer();
       });}): appBarWidget(
           title: "Search",
@@ -156,196 +159,48 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: (){setState(() {
             _scaffoldState.currentState!.openDrawer();
           });}
-      ),
-      /*appBar: AppBar(
+      ),*/
+      appBar: AppBar(
         backgroundColor: primaryBlueColor,
+        toolbarHeight: 45,
         title: const Text(
-          'Road Wise',
-          style: TextStyle(color: Colors.white, fontFamily: 'bifur', fontSize: 20),
+          'HOME',
+          style: TextStyle(color: Colors.white, fontFamily: 'Dubai', fontSize: 15,fontWeight: FontWeight.bold),
         ),
+        leading: GestureDetector(
+        onTap: (){setState(() {
+          _scaffoldState.currentState!.openDrawer();
+        });},
+        child: const Padding(
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            child: CircleAvatar(backgroundImage: AssetImage("assets/profiles/profile2.jpg"),)
+        ),
+      ),
         actions: [
           IconButton(
             onPressed: () {
               // Handle notifications button tap
             },
-            icon: const Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications,color:Colors.white,),
           ),
         ],
-      )*/
-      body: SingleChildScrollView(
-        child: Padding(
-
-          padding: const EdgeInsets.all(0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              /*Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white, // Background color
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child:  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Find Here',
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.search_sharp,color: primaryBlueColor,),
-                      suffixIcon: const Icon(Icons.filter_list),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16.0),
-                    ),
-                  ),
-                ),
-              ),*/
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Recent Jobs',
-                      style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'See All',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: primaryBlueColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(
-                height:180,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: const [
-                    JobCard(
-                      jobTitle: 'Software Engineer',
-                      instituteName: 'ABC Tech',
-                      location: 'New York',
-                      salary: '50000',
-                      description: 'a quick brown fox jumps over the lazy dog.',
-                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
-                    ),
-                    JobCard(
-                      jobTitle: 'Data Analyst',
-                      instituteName: 'XYZ Inc.',
-                      location: 'San Francisco',
-                      salary: '45000',
-                      description: 'a quick brown fox jumps over the lazy dog.',
-                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
-                    ), JobCard(
-                      jobTitle: 'Data Analyst',
-                      instituteName: 'XYZ Inc.',
-                      location: 'San Francisco',
-                      salary: '45000',
-                      description: 'a quick brown fox jumps over the lazy dog.',
-                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
-                    ),
-                    // Add more JobCard widgets here
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Recent Notifications',
-                      style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'See All',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: primaryBlueColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Column(
-                  children: [
-                    NotificationCard(
-                      instituteName: 'ABC Institute', // Dummy Institute Name
-                      newsTitle1: 'Last Date: March 25, 2024', // Adding last date and color
-                      newsTitle2: 'New Courses Released', // Indicating new courses
-                      iconData: Icons.notifications,
-                    ),
-                    NotificationCard(
-                      instituteName: 'XYZ Institute', // Dummy Institute Name
-                      newsTitle1: 'Last Date: April 1, 2024', // Adding last date and color
-                      newsTitle2: 'New Courses Released', // Indicating new courses
-                      iconData: Icons.notifications,
-                    ),
-                    NotificationCard(
-                      instituteName: 'PQR Institute', // Dummy Institute Name
-                      newsTitle1: 'Last Date: April 10, 2024', // Adding last date and color
-                      newsTitle2: 'New Courses Released', // Indicating new courses
-                      iconData: Icons.notifications,
-                    ),
-                    NotificationCard(
-                      instituteName: 'LMN Institute', // Dummy Institute Name
-                      newsTitle1: 'Last Date: April 15, 2024', // Adding last date and color
-                      newsTitle2: 'New Courses Released', // Indicating new courses
-
-                      iconData: Icons.notifications,
-                    ),
-                    NotificationCard(
-                      instituteName: 'LMN Institute', // Dummy Institute Name
-                      newsTitle1: 'Last Date: April 15, 2024', // Adding last date and color
-                      newsTitle2: 'New Courses Released', // Indicating new courses
-
-                      iconData: Icons.notifications,
-                    ),
-
-                  ],
-                ),
-              ),
-
-
-
-            ],
-
-
-
-
-
-          ),
-        ),
       ),
-    );
-
-    /*
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: _userPost.length,
-                itemBuilder: (context, index) {
-                  final userPostData = _userPost[index];
-                  return SinglePostCardWidget(userPostData: userPostData);
-                },
-              ),
-            )
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: _userPost.length,
+              itemBuilder: (context, index) {
+                final userPostData = _userPost[index];
+                return SinglePostCardWidget(userPostData: userPostData);
+              },
+            ),
+          )
+        ],
       ),
+
     );
-*/
 
   }
 }
@@ -517,8 +372,10 @@ class Screen2 extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryBlueColor,
-        title: const Text('Messages', style: TextStyle(color: Colors.white)),
-      ),
+        toolbarHeight: 45,
+        title: const Text(
+        'Messages',
+        style: TextStyle(color: Colors.white, fontFamily: 'Dubai', fontSize: 15,fontWeight: FontWeight.bold),),),
       body: const MessageCardList(),
     );
   }
@@ -615,8 +472,11 @@ class NotificationScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryBlueColor,
-        title: const Text('Notifications',style: TextStyle(color: Colors.white),),
-      ),
+
+        toolbarHeight: 45,
+        title: const Text(
+          'Notifications',
+          style: TextStyle(color: Colors.white, fontFamily: 'Dubai', fontSize: 15,fontWeight: FontWeight.bold),),),
       body: const NotificationList(),
     );
   }
@@ -846,8 +706,11 @@ class NotificationDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notification Details'),
-      ),
+
+        toolbarHeight: 45,
+        title: const Text(
+          'Notification Details',
+          style: TextStyle(color: Colors.white, fontFamily: 'Dubai', fontSize: 15,fontWeight: FontWeight.bold),),),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -876,10 +739,11 @@ class BookMarks_Page extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryBlueColor, // You can customize the color as needed
+
+        toolbarHeight: 45,
         title: const Text(
           'Bookmarks',
-          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-        ),
+          style: TextStyle(color: Colors.white, fontFamily: 'Dubai', fontSize: 15,fontWeight: FontWeight.bold),),
         leading: IconButton(
           icon: const Icon(Icons.home, color: Colors.white), // Home Icon
           onPressed: () {
@@ -940,10 +804,11 @@ class AccountSettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryBlueColor, // You can customize the color as needed
+
+        toolbarHeight: 45,
         title: const Text(
-          'Account Settings',
-          style: TextStyle(color: Colors.white),
-        ),
+          'Profile Settings',
+          style: TextStyle(color: Colors.white, fontFamily: 'Dubai', fontSize: 15,fontWeight: FontWeight.bold),),
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 const kPrimaryColor = Color(0xff0a66c2);
 const kPrimaryLightColor = Color(0xFFFFECDF);
 Color primaryBlueColor =  const Color(0xff0094fd);
-
 
 class TEXTBOX extends StatelessWidget {
   final String title;
@@ -41,6 +41,48 @@ class TEXTBOX extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5), // Adjusted SizedBox height
+      ],
+    );
+  }
+}
+
+class ProgressBar extends StatelessWidget {
+  final int count,total;
+  const ProgressBar({super.key, required this.count,required this.total});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 10,),
+        StepProgressIndicator(
+          totalSteps: total,
+          currentStep: count,
+          selectedColor: Colors.yellow,
+          unselectedColor: Colors.white,
+          customStep: (index, color, _) => color == Colors.yellow
+              ? Container(
+            color: color,
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.yellow,
+              ),
+            ),
+          )
+              : Container(
+            color: color,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              child: const Icon(
+                Icons.check_circle_outline,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 15,),
       ],
     );
   }
@@ -220,7 +262,7 @@ class CAPTION extends StatelessWidget {
           title,
           textAlign: TextAlign.left,
           style: const TextStyle(
-            color: Colors.grey,
+            color: Colors.white54,
             fontSize: 12,
               fontFamily: 'Dubai',
               fontWeight: FontWeight.bold
@@ -245,6 +287,11 @@ class _CustomComboBoxState extends State<CustomComboBox> {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure that the initial value is either null or exists in the items list
+    if (_selectedItem != null && !widget.items.contains(_selectedItem)) {
+      _selectedItem = null; // Reset to null if the initial value is not found in the items list
+    }
+
     return Column(
       children: [
         Container(
@@ -263,7 +310,7 @@ class _CustomComboBoxState extends State<CustomComboBox> {
           ),
           child: DropdownButtonFormField<String>(
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Adjust padding here
+              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Adjust padding here
               border: InputBorder.none,
               hintText: widget.title,
               hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
@@ -290,15 +337,17 @@ class _CustomComboBoxState extends State<CustomComboBox> {
 
 class CustomButton extends StatelessWidget {
   final String title;
-  final Widget navigateTo;
+  final Widget? navigateTo; // Make navigateTo parameter optional
   final Color clr1;
   final Color clr2;
+  final Function()? onPressed; // Added onPressed parameter
 
-  const CustomButton({super.key,
+  CustomButton({
     required this.title,
-    required this.navigateTo,
+    this.navigateTo, // Make navigateTo parameter optional
     required this.clr1,
-    required this.clr2
+    required this.clr2,
+    this.onPressed, // Updated constructor
   });
 
   @override
@@ -308,11 +357,22 @@ class CustomButton extends StatelessWidget {
         Column(
           children: <Widget>[
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => navigateTo),
-                );
+              onTap: onPressed != null ? () {
+                if(onPressed != null) {
+                  onPressed!();
+                } else if(navigateTo != null) { // Check if navigateTo is provided
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => navigateTo!),
+                  );
+                }
+              } : () {
+                if(navigateTo != null) { // Check if navigateTo is provided
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => navigateTo!),
+                  );
+                }
               },
               child: Container(
                 height: 40,
@@ -321,23 +381,20 @@ class CustomButton extends StatelessWidget {
                   gradient:  LinearGradient(
                     colors: [
                       clr1,
-                      clr2
-                      /*Color.fromRGBO(104, 159, 56, 1),
-                      Color.fromRGBO(104, 159, 56, 0.6),*/
+                      clr2,
                     ],
                   ),
                 ),
                 child:  Center(
                   child: Text(
                     title,
-                    style: TextStyle(color: Colors.white, fontFamily: 'Dubai',fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Colors.white, fontFamily: 'Dubai',fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
             ),
           ],
         ),
-
         const SizedBox(height: 15,),
       ],
     );
@@ -393,10 +450,10 @@ class _TextWithIconState extends State<TextWithIconState> {
                     color: isSelected ? Colors.white : Colors.black,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 isSelected
-                    ? Icon(Icons.check_circle, color: Colors.white,)
-                    : Icon(Icons.cancel, color: Colors.red),
+                    ? const Icon(Icons.check_circle, color: Colors.white,)
+                    : const Icon(Icons.cancel, color: Colors.red),
               ],
             ),
           ),
@@ -457,10 +514,10 @@ class _TextWithRadioState extends State<TextWithIcon> {
                     color: selectedIndex == index ? Colors.white : Colors.black,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 selectedIndex == index
-                    ? Icon(Icons.check_circle, color: Colors.white,)
-                    : Icon(Icons.radio_button_unchecked, color: Colors.red), // Using radio button icon
+                    ? const Icon(Icons.check_circle, color: Colors.white,)
+                    : const Icon(Icons.radio_button_unchecked, color: Colors.red), // Using radio button icon
               ],
             ),
           ),

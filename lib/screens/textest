@@ -1,0 +1,151 @@
+SingleChildScrollView(
+        child: Padding(
+
+          padding: const EdgeInsets.all(0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              /*Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Background color
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child:  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Find Here',
+                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.search_sharp,color: primaryBlueColor,),
+                      suffixIcon: const Icon(Icons.filter_list),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16.0),
+                    ),
+                  ),
+                ),
+              ),*/
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Recent Jobs',
+                      style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'See All',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: primaryBlueColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(
+                height:180,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: const [
+                    JobCard(
+                      jobTitle: 'Software Engineer',
+                      instituteName: 'ABC Tech',
+                      location: 'New York',
+                      salary: '50000',
+                      description: 'a quick brown fox jumps over the lazy dog.',
+                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
+                    ),
+                    JobCard(
+                      jobTitle: 'Data Analyst',
+                      instituteName: 'XYZ Inc.',
+                      location: 'San Francisco',
+                      salary: '45000',
+                      description: 'a quick brown fox jumps over the lazy dog.',
+                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
+                    ), JobCard(
+                      jobTitle: 'Data Analyst',
+                      instituteName: 'XYZ Inc.',
+                      location: 'San Francisco',
+                      salary: '45000',
+                      description: 'a quick brown fox jumps over the lazy dog.',
+                      ico: Icon(Icons.bookmark_add_outlined,color: Color(0xff2623d2),),
+                    ),
+                    // Add more JobCard widgets here
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Recent Notifications',
+                      style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'See All',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: primaryBlueColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: Column(
+                  children: [
+                    NotificationCard(
+                      instituteName: 'ABC Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: March 25, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+                      iconData: Icons.notifications,
+                    ),
+                    NotificationCard(
+                      instituteName: 'XYZ Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: April 1, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+                      iconData: Icons.notifications,
+                    ),
+                    NotificationCard(
+                      instituteName: 'PQR Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: April 10, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+                      iconData: Icons.notifications,
+                    ),
+                    NotificationCard(
+                      instituteName: 'LMN Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: April 15, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+
+                      iconData: Icons.notifications,
+                    ),
+                    NotificationCard(
+                      instituteName: 'LMN Institute', // Dummy Institute Name
+                      newsTitle1: 'Last Date: April 15, 2024', // Adding last date and color
+                      newsTitle2: 'New Courses Released', // Indicating new courses
+
+                      iconData: Icons.notifications,
+                    ),
+
+                  ],
+                ),
+              ),
+
+
+
+            ],
+
+
+
+
+
+          ),
+        ),
+      ),

@@ -80,7 +80,7 @@ class SignInScreen extends StatelessWidget {
                       duration: const Duration(milliseconds: 800),
                       child: CustomButton(
                         title: "Login ",
-                        navigateTo: Question1(),
+                        navigateTo: QuestionScreen(),
                         clr1: primaryBlueColor,
                         clr2: primaryBlueColor,
                       ),
@@ -88,20 +88,20 @@ class SignInScreen extends StatelessWidget {
 
                     FadeInUp(
                       duration: const Duration(milliseconds: 1000),
-                      child: const CustomButton(
+                      child: CustomButton(
                         title: "Sign Up",
-                        navigateTo: SignUpPage(),
-                        clr1:  Color.fromRGBO(104, 159, 56, 1),
-                        clr2:  Color.fromRGBO(104, 159, 56, 1),
+                        navigateTo: const SignUpPage(),
+                        clr1:  const Color.fromRGBO(104, 159, 56, 1),
+                        clr2:  const Color.fromRGBO(104, 159, 56, 1),
                       ),
                     ),
                     FadeInUp(
                       duration: const Duration(milliseconds: 1200),
-                      child: const CustomButton(
+                      child: CustomButton(
                         title: "Forgot Password?",
-                        navigateTo: PasswordResetPage(),
-                        clr1: Color.fromRGBO(255, 0, 0, 1),
-                        clr2: Color.fromRGBO(255, 0, 0, 1),
+                        navigateTo: const PasswordResetPage(),
+                        clr1: const Color.fromRGBO(255, 0, 0, 1),
+                        clr2: const Color.fromRGBO(255, 0, 0, 1),
                       ),
                     ),
                   ],

@@ -3,159 +3,36 @@ import 'package:roadwise_application/global/style.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:roadwise_application/screens/dashboard_screen.dart';
 
-class Question1 extends StatelessWidget {
+class QuestionScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title:  const H3(title: "Tell Us About Yourself",clr: Colors.white,),
-        backgroundColor: Colors.transparent,
-        leading: Container(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        ),
-        actions: const [],
-      ),
-      backgroundColor: Colors.transparent, // Set background color to transparent
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/quiz_background.jpg"), // Path to your background image
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 70,),
-              FadeInUpBig(duration: const Duration(milliseconds: 800),child: const H2(title: "Where are You From?",clr: Colors.white,)),
-              FadeInUpBig(duration: const Duration(milliseconds: 1000),child: const CAPTION(title: "We are Just working in Two Cities only.")),
-              FadeInUpBig(duration: const Duration(milliseconds: 1000),child: CustomComboBox(title: "Location*",items: const ['Sakrand', 'Nawabshah'])),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FadeInUpBig(duration: const Duration(milliseconds: 1800),child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: CustomButton(
-                        title: "Next" ,
-                        navigateTo: Question2(),
-                        clr1: primaryBlueColor,
-                        clr2: const Color.fromRGBO(104, 159, 56, 1),
-                      ),
-                    )),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  _QuestionScreenState createState() => _QuestionScreenState();
 }
 
-class Question2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title:  const H3(title: "Tell Us About Yourself",clr: Colors.white,),
-        backgroundColor: Colors.transparent,
-        leading: Container(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        ),
-        actions: const [],
-      ),
-      backgroundColor: Colors.transparent, // Set background color to transparent
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/quiz_background.jpg"), // Path to your background image
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 70,),
-              FadeInUpBig(duration: const Duration(milliseconds: 800),child: const H2(title: "In which class you are right now??",clr: Colors.white,)),
-              FadeInUpBig(duration: const Duration(milliseconds: 1000),child: const CAPTION(title: "Skip Semester if you've just passed Enter or matric")),
-              FadeInUpBig(duration: const Duration(milliseconds: 1000),child: CustomComboBox(title: "Class*",items: const ['Matric', 'Enter','BS','BSC','MS','MPHIL','PHD'])),
-              FadeInUpBig(duration: const Duration(milliseconds: 1000),child: CustomComboBox(title: "Semester",items: const ['1','2','3','4','5','7','8'])),
-              const SizedBox(height: 50,),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomButton(
-                      title: "Next",
-                      navigateTo: Question3(),
-                      clr1: primaryBlueColor,
-                      clr2: const Color.fromRGBO(104, 159, 56, 1),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+class _QuestionScreenState extends State<QuestionScreen> {
+  int _currentQuestionIndex = 0;
 
-class Question3 extends StatelessWidget {
+  void _navigateToNextQuestion() {
+    setState(() {
+      _currentQuestionIndex++;
+    });
+  }
+
+  void _navigateBack(BuildContext context) {
+    if (_currentQuestionIndex > 0) {
+      setState(() {
+        _currentQuestionIndex--;
+      });
+    } else {
+      Navigator.pop(context);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title:  const H3(title: "Tell Us About Yourself",clr: Colors.white,),
-        backgroundColor: Colors.transparent,
+        title: const H3(title: "Tell Us About Yourself", clr: Colors.white,),
+        backgroundColor: primaryBlueColor,
         leading: Container(
           margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -174,47 +51,127 @@ class Question3 extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black),
               onPressed: () {
-                Navigator.pop(context);
+                _navigateBack(context);
               },
             ),
           ),
         ),
         actions: const [],
       ),
-      backgroundColor: Colors.transparent, // Set background color to transparent
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/quiz_background.jpg"), // Path to your background image
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 70,),
-              FadeInUpBig(duration: const Duration(milliseconds: 800),child: const H2(title: "Educational Interests?",clr: Colors.white,)),
-              FadeInUpBig(duration: const Duration(milliseconds: 1000),child: const CAPTION(title: "Select the Field you are interested in ")),
-              FadeInUpBig(duration: const Duration(milliseconds: 1000),child: const TextWithIcon(options: ['Engineering', 'Medical', 'Arts','Commerce','Not Listed'],),),
-              const SizedBox(height: 50,),
-               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomButton(
-                      title: "Next",
-                      navigateTo: const DashBoard(),
-                      clr1: primaryBlueColor,
-                      clr2: const Color.fromRGBO(104, 159, 56, 1),
-                    ),
-                  ],
+      backgroundColor: Colors.transparent,
+      body: SingleChildScrollView( // Wrap your Container with SingleChildScrollView
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Ensure that Column takes minimum required space
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height, // Set the height of the container to full screen height
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/quiz_background.jpg"),
+                  fit: BoxFit.cover,
                 ),
               ),
-            ],
-          ),
+              child: FadeInUpBig(
+                duration: const Duration(milliseconds: 1000),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        const SizedBox(height: 70,),
+                        ProgressBar(count: _currentQuestionIndex + 1 , total: 4), // Assuming there are 3 questions
+                        if (_currentQuestionIndex == 0) ...[
+                          _buildQuestion1(),
+                        ] else if (_currentQuestionIndex == 1) ...[
+                          _buildQuestion2(),
+                        ] else if (_currentQuestionIndex == 2) ...[
+                          _buildQuestion3(),
+                        ] else if (_currentQuestionIndex == 3) ...[
+                          _buildQuestion4(),
+                        ],
+                        const SizedBox(height: 50,),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomButton(
+                              title: _currentQuestionIndex == 3 ? "Finish" : "Next",
+                              onPressed: _currentQuestionIndex == 3 ? () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const DashBoard()),
+                                );
+                              }  : _navigateToNextQuestion,
+                              clr1: primaryBlueColor,
+                              clr2: const Color.fromRGBO(104, 159, 56, 1),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+
+  Widget _buildQuestion1() {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 500),
+      child: Column(
+        children: [
+          const H2(title: "Where are You From?", clr: Colors.white,),
+          const CAPTION(title: "We are Just working in Two Cities only."),
+          CustomComboBox(title: "District*", items: const ['Shaheed Benazir Abad','Hyderabad']),
+          CustomComboBox(title: "City*", items: const ['Nawabshah','Sakrand']),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuestion2() {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 500),
+      child: Column(
+        children: [
+          const H2(title: "Which class you've just Passed??", clr: Colors.white,),
+          const CAPTION(title: "Skip Semester if you've just passed Enter or matric"),
+          CustomComboBox(title: "Class*", items: const ['Matric', 'Enter','BS','BSC','MS','M-PHIL','PHD']),
+          CustomComboBox(title: "Semester", items: const ['1','2','3','4','5','7','8']),
+          ],
+      ),
+    );
+  }
+
+  Widget _buildQuestion3() {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 500),
+      child: Column(
+        children: [
+          const H2(title: "From?", clr: Colors.white,),
+          const CAPTION(title: "From Which institute you passed your last degree"),
+          CustomComboBox(title: "City*", items: const ['Nawabshah','Sakrand']),
+          CustomComboBox(title: "Institute Name*", items: const ['Nawabshah','Sakrand']),
+
+        ],
+      ),
+    );
+  }
+  Widget _buildQuestion4() {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 500),
+      child: const Column(
+        children: [
+          H2(title: "Educational Interests?", clr: Colors.white,),
+          CAPTION(title: "Select the Field you are interested in "),
+          TextWithIcon(options: ['Engineering', 'Medical', 'Arts','Commerce','Not Listed''Engineering', 'Medical', 'Arts','Commerce','Not Listed''Engineering', 'Medical', 'Arts','Commerce','Not Listed'],),
+        ],
+      ),
+    );
+  }
+
 }
