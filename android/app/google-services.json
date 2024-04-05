@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "79663037799",
+    "project_id": "roadwise-application-54684",
+    "storage_bucket": "roadwise-application-54684.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79663037799:android:f2d9cd42275695d435c3c2",
+        "android_client_info": {
+          "package_name": "com.roadwise.roadwise_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIBmz8bRTSw8_zMv5Gd4ZF8NuiNF9w_9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

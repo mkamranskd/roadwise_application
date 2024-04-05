@@ -1,3 +1,4 @@
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -46,6 +47,8 @@ class TEXTBOX extends StatelessWidget {
   }
 }
 
+
+
 class ProgressBar extends StatelessWidget {
   final int count,total;
   const ProgressBar({super.key, required this.count,required this.total});
@@ -73,9 +76,9 @@ class ProgressBar extends StatelessWidget {
           )
               : Container(
             color: color,
-            child: Padding(
+            child: const Padding(
               padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: const Icon(
+              child: Icon(
                 Icons.check_circle_outline,
                 color: Colors.white,
               ),
@@ -336,67 +339,51 @@ class _CustomComboBoxState extends State<CustomComboBox> {
 }
 
 class CustomButton extends StatelessWidget {
-  final String title;
-  final Widget? navigateTo; // Make navigateTo parameter optional
+  final String title;// Make navigateTo parameter optional
   final Color clr1;
-  final Color clr2;
-  final Function()? onPressed; // Added onPressed parameter
+  final Color clr2;// Added onPressed parameter
+  final VoidCallback onTap;
+  final bool loading;
 
   CustomButton({
     required this.title,
-    this.navigateTo, // Make navigateTo parameter optional
     required this.clr1,
     required this.clr2,
-    this.onPressed, // Updated constructor
+    required this.onTap,
+    this.loading = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Column(
-          children: <Widget>[
-            GestureDetector(
-              onTap: onPressed != null ? () {
-                if(onPressed != null) {
-                  onPressed!();
-                } else if(navigateTo != null) { // Check if navigateTo is provided
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => navigateTo!),
-                  );
-                }
-              } : () {
-                if(navigateTo != null) { // Check if navigateTo is provided
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => navigateTo!),
-                  );
-                }
-              },
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient:  LinearGradient(
-                    colors: [
-                      clr1,
-                      clr2,
-                    ],
-                  ),
-                ),
-                child:  Center(
-                  child: Text(
-                    title,
-                    style: const TextStyle(color: Colors.white, fontFamily: 'Dubai',fontWeight: FontWeight.bold),
-                  ),
-                ),
+    return InkWell(
+      highlightColor: Colors.transparent,
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            height: 45,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient:  LinearGradient(
+                colors: [
+                  clr1,
+                  clr2,
+                ],
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 15,),
-      ],
+            child:  Center(
+              child: loading ? LoadingAnimationWidget.staggeredDotsWave(
+                color: Colors.white,
+                size: 35,
+              ): Text(
+                title,
+                style: const TextStyle(color: Colors.white, fontFamily: 'Dubai',fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(height: 15,),
+        ],
+      ),
     );
   }
 }

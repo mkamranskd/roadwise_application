@@ -1,15 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
+import 'package:roadwise_application/features/presentation/pages/credentials/sign_up_page.dart';
+import 'package:roadwise_application/global/Utils.dart';
 import 'package:roadwise_application/global/style.dart';
+import 'package:roadwise_application/screens/dashboard_screen.dart';
+import 'package:roadwise_application/screens/password_reset_screen.dart';
 import '../../../../screens/common_header.dart';
-import '../../../../screens/password_reset_screen.dart';
-import '../../../../screens/sign_up_screen.dart';
 
 
-
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  bool loading = false;
+  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+@override
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +41,8 @@ class SignInScreen extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(20,0 , 20,0),
                 child: Column(
                   children: <Widget>[
+
+
                     FadeInUp(
                       duration: const Duration(milliseconds: 600),
                       child: Container(
@@ -43,33 +59,53 @@ class SignInScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              decoration: const BoxDecoration(
-                                border: Border(bottom: BorderSide(color: Color.fromRGBO(143, 148, 251, 1))),
-                              ),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Email or Phone number",
-                                  hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                decoration: const BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Color.fromRGBO(143, 148, 251, 1))),
                                 ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              child: TextField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Password",
-                                  hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+                                child: TextFormField(
+                                  keyboardType:TextInputType.emailAddress,
+
+                                  controller: emailController,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Email",
+                                    prefixIcon: Icon(Icons.alternate_email_rounded,size: 20, color: primaryBlueColor,),
+                                    hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+                                  ),
+                                 /* validator: (value){
+                                    if(value!.isEmpty){
+                                      Utils.toastMessage(context, "Please Enter Email", Icons.warning);
+                                    }
+                                    return null;
+                                  },*/
                                 ),
+
                               ),
-                            )
-                          ],
+
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: TextFormField(
+                                  keyboardType:TextInputType.text,
+                                  controller: passwordController,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Password",
+                                    prefixIcon: Icon(Icons.lock_open_outlined,size: 20, color: primaryBlueColor,),
+                                    hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+                                  ),
+
+                                ),
+
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -79,27 +115,33 @@ class SignInScreen extends StatelessWidget {
                     FadeInUp(
                       duration: const Duration(milliseconds: 800),
                       child: CustomButton(
+                        loading: loading,
                         title: "Login ",
-                        navigateTo: QuestionScreen(),
+                        onTap: (){
+                          if(_formKey.currentState!.validate()){
+                            login();
+                          }
+                        },
                         clr1: primaryBlueColor,
                         clr2: primaryBlueColor,
                       ),
                     ),
 
-                    FadeInUp(
-                      duration: const Duration(milliseconds: 1000),
-                      child: CustomButton(
-                        title: "Sign Up",
-                        navigateTo: const SignUpPage(),
-                        clr1:  const Color.fromRGBO(104, 159, 56, 1),
-                        clr2:  const Color.fromRGBO(104, 159, 56, 1),
-                      ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Don't Have an Account?"),
+                        TextButton(onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignUpPage()));
+                        }, child: const Text("Sign Up")),
+                      ],
                     ),
                     FadeInUp(
                       duration: const Duration(milliseconds: 1200),
                       child: CustomButton(
                         title: "Forgot Password?",
-                        navigateTo: const PasswordResetPage(),
+                        onTap:  (){ Navigator.push(context, MaterialPageRoute(builder: (context)=> const PasswordResetPage()));},
                         clr1: const Color.fromRGBO(255, 0, 0, 1),
                         clr2: const Color.fromRGBO(255, 0, 0, 1),
                       ),
@@ -113,4 +155,114 @@ class SignInScreen extends StatelessWidget {
       ),
     );
   }
+
+  void login() {
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      setState(() {
+        loading = true;
+      });
+      _auth.signInWithEmailAndPassword(
+        email: emailController.text.toString(),
+        password: passwordController.text.toString(),
+      ).then((value) {
+        Utils.toastMessage(context, value.user!.email.toString(), Icons.check_circle_outline);
+
+        /*Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const DashBoard()));*/
+        setState(() {
+          loading = false;
+        });
+      }).catchError((error) {
+        // Check the type of error to provide specific feedback
+        IconData icon = Icons.warning;
+        String errorMessage = "An error occurred while logging in. Please try again later.";
+        if (error is FirebaseAuthException) {
+          setState(() {
+            loading = false;
+          });
+          switch (error.code) {
+            case 'invalid-email':
+              errorMessage = "Invalid email address.";
+              break;
+            case 'user-not-found':
+              errorMessage =
+              "User not found. Please check your credentials and try again.";
+              break;
+            case 'wrong-password':
+              errorMessage = "Wrong password. Please try again.";
+              break;
+            case 'user-disabled':
+              errorMessage =
+              "Your account has been disabled. Please contact support.";
+              break;
+            case 'too-many-requests':
+              errorMessage = "Too many login attempts. Please try again later.";
+              break;
+            case 'operation-not-allowed':
+              errorMessage =
+              "Email/password sign-in is not enabled. Please contact support.";
+              break;
+            case 'email-already-in-use':
+              errorMessage =
+              "The email address is already in use by another account.";
+              break;
+            case 'weak-password':
+              errorMessage =
+              "The password is too weak. Please choose a stronger password.";
+              break;
+            case 'network-request-failed':
+              errorMessage =
+              "Network error occurred. Please check your internet connection.";
+              break;
+            case 'invalid-verification-code':
+              errorMessage = "Invalid verification code.";
+              break;
+            case 'invalid-verification-id':
+              errorMessage = "Invalid verification ID.";
+              break;
+            case 'session-expired':
+              errorMessage = "Verification session expired. Please try again.";
+              break;
+            case 'invalid-credential':
+              errorMessage = "Invalid Email or Password.";
+              break;
+            case 'credential-already-in-use':
+              errorMessage =
+              "The credential is already in use by another account.";
+              break;
+            case 'user-mismatch':
+              errorMessage = "User mismatch error.";
+              break;
+            case 'expired-action-code':
+              errorMessage =
+              "The action code has expired. Please request a new one.";
+              break;
+            case 'invalid-action-code':
+              errorMessage = "Invalid action code. Please check and try again.";
+              break;
+            case 'missing-verification-code':
+              errorMessage = "Missing verification code.";
+              break;
+            case 'missing-verification-id':
+              errorMessage = "Missing verification ID.";
+              break;
+            default:
+              errorMessage = "Authentication failed: ${error.message}";
+              break;
+          }
+        }
+        // Display error message to the user
+        Utils.toastMessage(context, errorMessage, icon);
+      });
+    }
+    else{
+      Utils.toastMessage(context, "Please fill in both email and password fields.", Icons.warning);
+      return; // Stop further execution
+    }
+
+  }
+
+
+
+
 }

@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
-void main() {
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:roadwise_application/features/app/splash_screen/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
+  FlutterNativeSplash.remove();
+
 }
 
 class MyApp extends StatelessWidget {
@@ -17,8 +27,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  SignInScreen(),
+      home:   SplashScreen(),
     );
+
   }
+
 }
+
 

@@ -63,6 +63,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min, // Ensure that Column takes minimum required space
           children: [
+
             Container(
               height: MediaQuery.of(context).size.height, // Set the height of the container to full screen height
               decoration: const BoxDecoration(
@@ -94,13 +95,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CustomButton(
-                              title: _currentQuestionIndex == 3 ? "Finish" : "Next",
-                              onPressed: _currentQuestionIndex == 3 ? () {
+                              onTap: _currentQuestionIndex == 3 ? () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => const DashBoard()),
                                 );
                               }  : _navigateToNextQuestion,
+                              title: _currentQuestionIndex == 3 ? "Finish" : "Next",
+
                               clr1: primaryBlueColor,
                               clr2: const Color.fromRGBO(104, 159, 56, 1),
                             ),

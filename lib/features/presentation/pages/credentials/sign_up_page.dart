@@ -1,142 +1,177 @@
+import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:roadwise_application/features/presentation/pages/credentials/widgets/coloured_button_widget.dart';
-import 'package:roadwise_application/features/presentation/widgets/form_container_widget.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
+import 'package:roadwise_application/global/Utils.dart';
 import 'package:roadwise_application/global/style.dart';
 
+
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({Key? key});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  bool showPasswordField = false;
-  bool showBottomButtons = true;
 
+   bool loading = false;
+  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset(
-                  "assets/LinkedIn-logo.png",
-                  width: 90,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  "Sign in",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 33),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "or",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        "Sign in",
-                        style: TextStyle(
-                            color: kPrimaryColor, fontWeight: FontWeight.w600),
+    return Scaffold(
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        child: FadeInUp(
+          duration: const Duration(milliseconds: 100),
+          child: Column(
+
+            children: <Widget>[
+              FadeInUpBig(duration: const Duration(milliseconds: 400),child:  H1(title: "Sign Up",clr: primaryBlueColor,)),
+
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20,0 , 20,0),
+                child: Column(
+                  children: <Widget>[
+
+
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 600),
+                      child: Container(
+                        padding: const EdgeInsets.all(1),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromRGBO(143, 148, 251, .2),
+                              blurRadius: 20.0,
+                              offset: Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                decoration: const BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Color.fromRGBO(143, 148, 251, 1))),
+                                ),
+                                child: TextFormField(
+                                  keyboardType:TextInputType.emailAddress,
+
+                                  controller: emailController,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Email",
+                                    prefixIcon: Icon(Icons.alternate_email_rounded,size: 20, color: primaryBlueColor,),
+                                    hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+                                  ),
+
+                                ),
+
+                              ),
+
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: TextFormField(
+                                  keyboardType:TextInputType.text,
+                                  controller: passwordController,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Password",
+                                    prefixIcon: Icon(Icons.lock_open_outlined,size: 20, color: primaryBlueColor,),
+                                    hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+                                  ),
+
+                                ),
+
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
+                    const SizedBox(height: 30),
+
+
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 800),
+                      child: CustomButton(
+                        loading: loading,
+                        title: "Sign Up",
+                        onTap: (){
+                          if(_formKey.currentState!.validate()){
+                            signUp();
+                          }
+                        },
+                        clr1: primaryBlueColor,
+                        clr2: primaryBlueColor,
+                      ),
+                    ),
+
+
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 1200),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Already have an Account?"),
+                          TextButton(onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const SignInScreen()));
+                          }, child: const Text("Login")),
+                        ],
+                      ),
+                    ),
+
                   ],
                 ),
-                SizedBox(
-                  height: 30,
-                ),
-                FormContainerWidget(
-                  hintText: "Email or Password",
-                  controller: emailController,
-                ),
-                SizedBox(height: 25),
-                showPasswordField
-                    ? FormContainerWidget(
-                        hintText: "Password",
-                        controller: passwordController,
-                        isPasswordField: true,
-                      )
-                    : Container(),
-                SizedBox(height: 25),
-                ColouredButtonWidget(
-                  text: "Continue",
-                  press: () {
-                    setState(() {
-                      if (emailController.text.isEmpty) {
-                        showPasswordField = false;
-                      } else {
-                        showPasswordField = true;
-                        showBottomButtons = false;
-                      }
-                    });
-                  },
-                ),
-                showBottomButtons ? _bottomButtons() : Container(),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  _bottomButtons() {
-    return Column(
-      children: [
-        Row(children: [
-          Expanded(
-            child: new Container(
-                margin: const EdgeInsets.only(right: 15.0),
-                child: Divider(
-                  color: Colors.black,
-                  height: 36,
-                )),
-          ),
-          Text("or"),
-          Expanded(
-            child: new Container(
-                margin: const EdgeInsets.only(
-                  left: 15.0,
-                ),
-                child: Divider(
-                  color: Colors.black,
-                  height: 36,
-                )),
-          ),
-        ]),
-        /*ButtonContainerWidget(
-          press: () {},
-          icon: Icons.google,
-          text: "Sign with Google",
+  void signUp() {
+    setState(() {
+      loading = true;
+    });
+    _auth.createUserWithEmailAndPassword(email: emailController.text.toString(), password:passwordController.text.toString() ).then((value) {
+      Utils.toastMessage(context, "Account Created Successfully\nRedirecting to the Login Screen", Icons.check_circle_outline);
+      Timer(
+        const Duration(seconds: 5),
+            () => Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SignInScreen()),
         ),
-        SizedBox(
-          height: 15,
-        ),
-        ButtonContainerWidget(
-          press: () {},
-          icon: FontAwesomeIcons.facebook,
-          text: "Sign with facebook",
-        ),*/
-      ],
-    );
+      );
+      setState(() {
+        loading = false;
+      });
+
+    }).onError((error, stackTrace) {
+      setState(() {
+        loading = false;
+      });
+      Utils.toastMessage(context, error.toString(), Icons.warning);
+    });
   }
 }
