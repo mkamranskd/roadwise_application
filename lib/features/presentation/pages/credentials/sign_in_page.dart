@@ -141,7 +141,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       duration: const Duration(milliseconds: 1200),
                       child: CustomButton(
                         title: "Forgot Password?",
-                        onTap:  (){ Navigator.push(context, MaterialPageRoute(builder: (context)=> const PasswordResetPage()));},
+                        onTap:  (){ Navigator.push(context, MaterialPageRoute(builder: (context)=> PasswordResetPage()));},
                         clr1: const Color.fromRGBO(255, 0, 0, 1),
                         clr2: const Color.fromRGBO(255, 0, 0, 1),
                       ),

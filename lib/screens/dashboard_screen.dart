@@ -134,7 +134,7 @@ class _FirstPageState extends State<FirstPage> {
           BottomNavigationBarItem(
             icon: Image.asset(
               'assets/icons/person_icon.png',
-              width: 15,
+              width: 30,
               height: 15,
               color: _currentIndex == 4 ? primaryBlueColor : Colors.grey, // Set selected icon color
             ),

@@ -1,12 +1,33 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../global/Utils.dart';
 import 'dashboard_screen.dart';
 import '../main.dart';
-
 class PasswordResetPage extends StatelessWidget {
-  const PasswordResetPage({Key? key});
-
+  PasswordResetPage({Key? key});
+  final _emailController=TextEditingController();
+  Future<void> resetPassword(context) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: _emailController.text.trim(),
+      );
+      // Show a success toast message to the user
+      Utils.toastMessage(
+        context,
+        'Password reset email sent!',
+        Icons.check_circle,
+      );
+    } catch (error) {
+      // Show an error toast message if something goes wrong
+      Utils.toastMessage(
+        context,
+        'Failed to send password reset email',
+        Icons.error,
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +77,7 @@ class PasswordResetPage extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(8.0),
                               child: TextField(
+                                controller: _emailController,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Email or Phone Number",
@@ -69,12 +91,8 @@ class PasswordResetPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 30),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const DashBoard()),
-                        );
-                      },
+                      onTap:  () => resetPassword(context),
+
                       child: FadeInUp(
                         duration: const Duration(milliseconds: 1900),
                         child: Container(
@@ -89,7 +107,7 @@ class PasswordResetPage extends StatelessWidget {
                             ),
                           ),
                           child: const Center(
-                            child: Text("Send Code ", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            child: Text("Send Link ", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
                         ),
                       ),
