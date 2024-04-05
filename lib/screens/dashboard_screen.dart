@@ -1,13 +1,13 @@
-import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roadwise_application/features/domain/entities/user_post_data.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
 import 'package:roadwise_application/features/presentation/pages/home_page/widgets/single_post_card_widget.dart';
 import 'package:roadwise_application/features/presentation/pages/jobs_page/job_details.dart';
+import 'package:roadwise_application/global/Utils.dart';
 import 'package:roadwise_application/global/style.dart';
 import '../features/presentation/widgets/drawer_widget.dart';
 import 'chat_screen.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 void main() {
   runApp(const DashBoard());
@@ -79,54 +79,70 @@ class _FirstPageState extends State<FirstPage> {
           const Screen2(),
           const NotificationScreen(),
           BookMarks_Page(),
-          const AccountSettingsScreen(),
+          AccountSettingsScreen(),
         ],
       ),
-      bottomNavigationBar: FadeInUp(
-        duration: const Duration(milliseconds: 1000),
-        child: CurvedNavigationBar(
-          color: primaryBlueColor,
-          backgroundColor: Colors.transparent,
-          buttonBackgroundColor:primaryBlueColor ,
-          height: 50,
-          items: <Widget>[
-            Image.asset(
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: primaryBlueColor,
+        unselectedItemColor: Colors.white,
+        selectedFontSize: 15,
+        unselectedFontSize: 15,
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed, // Ensures all items are shown
+        showSelectedLabels: false, // Hide labels
+        showUnselectedLabels: false, // Hide labels
+        iconSize: 20, // Adjust icon size as desired
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Image.asset(
               'assets/icons/home_icon.png',
               width: 15,
               height: 15,
-              color: Colors.white,
-
+              color: _currentIndex == 0 ? primaryBlueColor : Colors.grey, // Set selected icon color
             ),
-            Image.asset(
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
               'assets/icons/mail_icon.png',
               width: 15,
               height: 15,
-              color: Colors.white,
+              color: _currentIndex == 1 ? primaryBlueColor : Colors.grey, // Set selected icon color
             ),
-            Image.asset(
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
               'assets/icons/notifications_icon.png',
               width: 15,
               height: 15,
-              color: Colors.white,
+              color: _currentIndex == 2 ? primaryBlueColor : Colors.grey, // Set selected icon color
             ),
-            Image.asset(
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
               'assets/icons/roadmap-planning.png',
               width: 15,
               height: 15,
-              color: Colors.white,
+              color: _currentIndex == 3 ? primaryBlueColor : Colors.grey, // Set selected icon color
             ),
-            Image.asset(
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
               'assets/icons/person_icon.png',
               width: 15,
               height: 15,
-              color: Colors.white,
+              color: _currentIndex == 4 ? primaryBlueColor : Colors.grey, // Set selected icon color
             ),
-          ],
-          onTap: _onItemTapped,
-          index: _currentIndex,
-        ),
-
+            label: "",
+          ),
+        ],
       ),
+
     );
   }
 }
@@ -744,12 +760,7 @@ class BookMarks_Page extends StatelessWidget {
         title: const Text(
           'Bookmarks',
           style: TextStyle(color: Colors.white, fontFamily: 'Dubai', fontSize: 15,fontWeight: FontWeight.bold),),
-        leading: IconButton(
-          icon: const Icon(Icons.home, color: Colors.white), // Home Icon
-          onPressed: () {
-            // Implement action for home button
-          },
-        ),
+
       ),
 
       body:
@@ -797,8 +808,9 @@ class BookMarks_Page extends StatelessWidget {
 }
 
 class AccountSettingsScreen extends StatelessWidget {
-  const AccountSettingsScreen({super.key});
-
+   AccountSettingsScreen({super.key});
+  final auth = FirebaseAuth.instance;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -889,10 +901,13 @@ class AccountSettingsScreen extends StatelessWidget {
                 leading: const Icon(Icons.logout_sharp),
                 title: const Text('Logout'),
                 onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SignInScreen()),
-                  );
+                  
+                  auth.signOut().then((value) {
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=> SignInScreen()));
+                  }).onError((error, stackTrace) {
+                    Utils.toastMessage(context, error.toString(), Icons.warning_amber_rounded);
+
+                  });
                 },
               ),
               // Add more ListTile widgets for other settings as needed
@@ -941,3 +956,4 @@ class CustomSearchDelegate extends SearchDelegate {
     );
   }
 }
+

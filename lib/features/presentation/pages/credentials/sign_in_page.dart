@@ -165,10 +165,10 @@ class _SignInScreenState extends State<SignInScreen> {
         email: emailController.text.toString(),
         password: passwordController.text.toString(),
       ).then((value) {
-        Utils.toastMessage(context, value.user!.email.toString(), Icons.check_circle_outline);
+        //Utils.toastMessage(context, value.user!.email.toString(), Icons.check_circle_outline);
 
-        /*Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const DashBoard()));*/
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const DashBoard()));
         setState(() {
           loading = false;
         });

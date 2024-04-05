@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
+import 'package:roadwise_application/firebase_services/splash_services.dart';
 import 'package:roadwise_application/global/style.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,18 +9,13 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  SplashServices ss = SplashServices();
   @override
   void initState() {
     super.initState();
-    Timer(
-      const Duration(seconds: 3),
-          () => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const SignInScreen()),
-      ),
-    );
+    ss.isLogin(context);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
