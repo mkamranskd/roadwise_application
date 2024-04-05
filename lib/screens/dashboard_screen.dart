@@ -117,7 +117,7 @@ class _FirstPageState extends State<FirstPage> {
             ),
             Image.asset(
               'assets/icons/person_icon.png',
-              width: 15,
+              width: 30,
               height: 15,
               color: Colors.white,
             ),
