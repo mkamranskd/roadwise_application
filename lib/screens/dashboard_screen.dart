@@ -29,9 +29,8 @@ class DashBoard extends StatelessWidget {
     );
   }
 }
-
 class FirstPage extends StatefulWidget {
-  const FirstPage({super.key});
+  const FirstPage({Key? key}) : super(key: key);
 
   @override
   _FirstPageState createState() => _FirstPageState();
@@ -66,83 +65,96 @@ class _FirstPageState extends State<FirstPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (_currentIndex != 0) {
+          // If not on the HomeScreen, navigate back to the HomeScreen
           setState(() {
-            _currentIndex = index;
+            _currentIndex = 0;
           });
-        },
-        children:  [
-          const HomeScreen(),
-          const Screen2(),
-          const NotificationScreen(),
-          BookMarks_Page(),
-          AccountSettingsScreen(),
-        ],
+          return false; // Return false to prevent default back button behavior
+        } else {
+          // If already on the HomeScreen, allow back button press to exit the app
+          return true;
+        }
+      },
+      child: Scaffold(
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          children:  [
+            const HomeScreen(),
+            const Screen2(),
+            const NotificationScreen(),
+            BookMarks_Page(),
+            AccountSettingsScreen(),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          selectedItemColor: primaryBlueColor,
+          unselectedItemColor: Colors.white,
+          selectedFontSize: 15,
+          unselectedFontSize: 15,
+          currentIndex: _currentIndex,
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed, // Ensures all items are shown
+          showSelectedLabels: false, // Hide labels
+          showUnselectedLabels: false, // Hide labels
+          iconSize: 20, // Adjust icon size as desired
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/home_icon.png',
+                width: 15,
+                height: 15,
+                color: _currentIndex == 0 ? primaryBlueColor : Colors.grey, // Set selected icon color
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/mail_icon.png',
+                width: 15,
+                height: 15,
+                color: _currentIndex == 1 ? primaryBlueColor : Colors.grey, // Set selected icon color
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/notifications_icon.png',
+                width: 15,
+                height: 15,
+                color: _currentIndex == 2 ? primaryBlueColor : Colors.grey, // Set selected icon color
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/roadmap-planning.png',
+                width: 15,
+                height: 15,
+                color: _currentIndex == 3 ? primaryBlueColor : Colors.grey, // Set selected icon color
+              ),
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: Image.asset(
+                'assets/icons/person_icon.png',
+                width: 30,
+                height: 15,
+                color: _currentIndex == 4 ? primaryBlueColor : Colors.grey, // Set selected icon color
+              ),
+              label: "",
+            ),
+          ],
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: primaryBlueColor,
-        unselectedItemColor: Colors.white,
-        selectedFontSize: 15,
-        unselectedFontSize: 15,
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed, // Ensures all items are shown
-        showSelectedLabels: false, // Hide labels
-        showUnselectedLabels: false, // Hide labels
-        iconSize: 20, // Adjust icon size as desired
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icons/home_icon.png',
-              width: 15,
-              height: 15,
-              color: _currentIndex == 0 ? primaryBlueColor : Colors.grey, // Set selected icon color
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icons/mail_icon.png',
-              width: 15,
-              height: 15,
-              color: _currentIndex == 1 ? primaryBlueColor : Colors.grey, // Set selected icon color
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icons/notifications_icon.png',
-              width: 15,
-              height: 15,
-              color: _currentIndex == 2 ? primaryBlueColor : Colors.grey, // Set selected icon color
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icons/roadmap-planning.png',
-              width: 15,
-              height: 15,
-              color: _currentIndex == 3 ? primaryBlueColor : Colors.grey, // Set selected icon color
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icons/person_icon.png',
-              width: 30,
-              height: 15,
-              color: _currentIndex == 4 ? primaryBlueColor : Colors.grey, // Set selected icon color
-            ),
-            label: "",
-          ),
-        ],
-      ),
-
     );
   }
 }

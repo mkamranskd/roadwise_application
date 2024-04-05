@@ -36,7 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
             LoadingAnimationWidget.staggeredDotsWave(
               color: primaryBlueColor,
               size: 50,
-            )
+            ),
+
           ],
         ),
       ),
