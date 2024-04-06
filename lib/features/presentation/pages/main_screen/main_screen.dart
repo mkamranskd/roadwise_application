@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldState,
-      drawer: const DrawerWidget(),
+      drawer:  DrawerWidget(),
       appBar: _currentPageIndex ==4?appBarWidget(title: "Search Jobs",isJobTab: true,onTap: (){setState(() {
         _scaffoldState.currentState!.openDrawer();
       });}): appBarWidget(

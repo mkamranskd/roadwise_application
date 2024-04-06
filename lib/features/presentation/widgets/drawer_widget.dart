@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
 import 'package:roadwise_application/global/Utils.dart';
 
+import 'package:roadwise_application/features/presentation/pages/user_profile.dart';
+
+
 class DrawerWidget extends StatefulWidget {
    DrawerWidget({Key? key}) : super(key: key);
 
@@ -53,6 +56,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             ),
                           ),
                           TextButton(
+                            onPressed: () {
+                              // Navigate to UserProfileScreen when "View profile" button is pressed
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => UserProfileScreen(user: _auth.currentUser!)),
+                              );
+                            },
                             child: const Text(
                               "View profile",
                               style: TextStyle(
@@ -61,7 +71,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            onPressed: () {},
+
                           ),
                 
                         ],
