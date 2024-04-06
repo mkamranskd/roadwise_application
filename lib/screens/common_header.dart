@@ -56,12 +56,12 @@ class CommonHeader extends StatelessWidget {
           Positioned(
             child: Container(
               margin: const EdgeInsets.only(top: 140),
-              child: Column(
+              child: const Column(
                 children: [
                   Center(
                     child: Text(
                       "ROADWISE",
-                      style: const TextStyle(color: Colors.white, fontFamily: 'bifur', fontSize: 60.0),
+                      style: TextStyle(color: Colors.white, fontFamily: 'bifur', fontSize: 60.0),
                     ),
                   ),
                 ],

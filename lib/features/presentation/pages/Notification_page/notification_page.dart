@@ -46,7 +46,7 @@ class _NotificationPageState extends State<NotificationPage> {
             updateIndex(0);
           },
           child: Container(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
                 color: selectedIndex == 0 ? Colors.green : Colors.transparent,
                 borderRadius: BorderRadius.circular(15),
@@ -67,7 +67,7 @@ class _NotificationPageState extends State<NotificationPage> {
             updateIndex(1);
           },
           child: Container(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
                 color: selectedIndex == 1 ? Colors.green : Colors.transparent,
                 borderRadius: BorderRadius.circular(15),
@@ -88,7 +88,7 @@ class _NotificationPageState extends State<NotificationPage> {
             updateIndex(2);
           },
           child: Container(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
                 color: selectedIndex == 2 ? Colors.green : Colors.transparent,
                 borderRadius: BorderRadius.circular(15),

@@ -11,7 +11,7 @@ class SetPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -19,33 +19,33 @@ class SetPasswordPage extends StatelessWidget {
               "assets/LinkedIn-logo.png",
               width: 90,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text(
+            const Text(
               "Set your password",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 33),
             ),
             sizeVer(60),
-            FormContainerWidget(hintText: "Email",),
+            const FormContainerWidget(hintText: "Email",),
             sizeVer(20),
-            FormContainerWidget(hintText: "Password",isPasswordField: true,),
+            const FormContainerWidget(hintText: "Password",isPasswordField: true,),
             sizeVer(15),
             Column(
               children: [
                 Row(
                   children: [
-                    Text("You agree to the LinkedIn",style: TextStyle(color: Colors.grey),),
+                    const Text("You agree to the LinkedIn",style: TextStyle(color: Colors.grey),),
                     sizeHor(5),
-                    Text("User Agreement .",style: TextStyle(color: kPrimaryColor),),
+                    const Text("User Agreement .",style: TextStyle(color: kPrimaryColor),),
                   ],
                 ), Row(
                   children: [
-                    Text("Privacy Policy",style: TextStyle(color: kPrimaryColor)),
+                    const Text("Privacy Policy",style: TextStyle(color: kPrimaryColor)),
                     sizeHor(5),
-                    Text("and"),
+                    const Text("and"),
                     sizeHor(5),
-                    Text("Cookie Policy.",style: TextStyle(color: kPrimaryColor)),
+                    const Text("Cookie Policy.",style: TextStyle(color: kPrimaryColor)),
                   ],
                 ),
 

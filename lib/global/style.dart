@@ -1,3 +1,4 @@
+import 'package:icons_plus/icons_plus.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -285,6 +286,7 @@ class CustomComboBox extends StatefulWidget {
   @override
   _CustomComboBoxState createState() => _CustomComboBoxState();
 }
+
 class _CustomComboBoxState extends State<CustomComboBox> {
   String? _selectedItem;
 
@@ -504,7 +506,7 @@ class _TextWithRadioState extends State<TextWithIcon> {
                 const SizedBox(width: 8),
                 selectedIndex == index
                     ? const Icon(Icons.check_circle, color: Colors.white,)
-                    : const Icon(Icons.radio_button_unchecked, color: Colors.red), // Using radio button icon
+                    : const Icon(Icons.radio_button_unchecked, color: Colors.red),
               ],
             ),
           ),
@@ -513,3 +515,45 @@ class _TextWithRadioState extends State<TextWithIcon> {
     );
   }
 }
+
+
+class CustomSearchBar extends StatelessWidget {
+  final TextEditingController controller;
+
+  const CustomSearchBar({Key? key, required this.controller})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      style:const TextStyle(color: Colors.black),
+      keyboardType: TextInputType.text,
+      controller: controller,
+      decoration:  InputDecoration(
+        border: InputBorder.none,
+        hintText: "Search",
+
+        prefixIcon: Icon(
+          Clarity.search_line,
+          size: 20,
+          color: primaryBlueColor,
+        ),
+        suffixIcon:  Icon(
+          Clarity.filter_line,
+          size: 20,
+          color: primaryBlueColor, // Assuming primaryBlueColor is defined
+        ),
+        hintStyle: const TextStyle(
+          color: Colors.grey,
+          fontFamily: 'Dubai',
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+

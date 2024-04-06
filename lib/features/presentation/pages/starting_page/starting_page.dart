@@ -49,7 +49,7 @@ class StartingPage extends StatelessWidget {
               InkWell(
                 onTap: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => SignInScreen()));
+                      context, MaterialPageRoute(builder: (_) => const SignInScreen()));
                 },
                 child: const Text(
                   "Sign In",

@@ -20,28 +20,28 @@ class JoinNowPage extends StatelessWidget {
               "assets/LinkedIn-logo.png",
               width: 90,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text(
+            const Text(
               "Add your name",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 33),
             ),
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
-            FormContainerWidget(hintText: "First Name*"),
-            SizedBox(
+            const FormContainerWidget(hintText: "First Name*"),
+            const SizedBox(
               height: 40,
             ),
-            FormContainerWidget(hintText: "Last Name*"),
-            SizedBox(
+            const FormContainerWidget(hintText: "Last Name*"),
+            const SizedBox(
               height: 25,
             ),
             InkWell(
               onTap: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => AddEmailPage()));
+                    context, MaterialPageRoute(builder: (_) => const AddEmailPage()));
               },
               child: Container(
                 height: 50,
@@ -50,7 +50,7 @@ class JoinNowPage extends StatelessWidget {
                   color: kPrimaryColor,
                   borderRadius: BorderRadius.circular(30),
                 ),
-                child: Center(
+                child: const Center(
                     child: Text(
                   "Continue",
                   textAlign: TextAlign.center,

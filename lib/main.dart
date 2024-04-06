@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:roadwise_application/features/app/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -10,7 +9,6 @@ void main() async{
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
-  FlutterNativeSplash.remove();
 
 }
 

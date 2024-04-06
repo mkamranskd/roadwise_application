@@ -1,24 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:roadwise_application/const/app_const.dart';
 import 'package:roadwise_application/features/domain/entities/user_post_data.dart';
 import 'package:roadwise_application/global/style.dart';
 
 class SinglePostCardWidget extends StatelessWidget {
   final UserPostData userPostData;
-  const SinglePostCardWidget({Key? key, required this.userPostData}) : super(key: key);
+
+  const SinglePostCardWidget({Key? key, required this.userPostData})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context ) {
+  Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       color: Colors.white,
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Column(
-
               children: [
                 Row(
                   children: [
@@ -31,8 +33,8 @@ class SinglePostCardWidget extends StatelessWidget {
                       children: [
                         Text(
                           userPostData.name!,
-                          style:
-                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                         Text(
                           userPostData.headline!,
@@ -45,7 +47,47 @@ class SinglePostCardWidget extends StatelessWidget {
                       ],
                     ),
                     const Spacer(),
-                    const Icon(CupertinoIcons.ellipsis_vertical),
+                    PopupMenuButton<int>(
+                      icon: const Icon(CupertinoIcons.ellipsis_vertical),
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 1,
+                          child: ListTile(
+                            leading: Icon(Clarity.share_line,size: 15,),
+                            title: Text('Share'),
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 2,
+                          child: ListTile(
+                            leading: Icon(Clarity.book_line,size: 15),
+                            title: Text('Save'),
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 3,
+                          child: ListTile(
+                            leading: Icon(Clarity.eye_hide_line,size: 15),
+                            title: Text('Hide'),
+                          ),
+                        ),
+                      ],
+                      onSelected: (value) {
+                        // Handle item selection here
+                        switch (value) {
+                          case 1:
+                          // Handle Share selection
+                            break;
+                          case 2:
+                          // Handle Save selection
+                            break;
+                          case 3:
+                          // Handle Hide selection
+                            break;
+                        }
+                      },
+                    )
+
                   ],
                 ),
                 sizeVer(8),
@@ -60,37 +102,39 @@ class SinglePostCardWidget extends StatelessWidget {
                       color: kPrimaryColor,
                       fontWeight: FontWeight.w500),
                 ),
-
               ],
             ),
           ),
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Image.asset(userPostData.image!),
           ),
-
           Padding(
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: Row(children: [
               Container(
                 height: 16,
                 width: 16,
-
                 decoration: BoxDecoration(
                   color: kPrimaryColor,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Image.asset("assets/likes/like_icon 1.png",color: Colors.white54,),
+                child: Image.asset(
+                  "assets/likes/like_icon 1.png",
+                  color: Colors.white54,
+                ),
               ),
-
               Container(
                 height: 16,
                 width: 16,
                 decoration: BoxDecoration(
-                  color:Colors.redAccent,
+                  color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Image.asset("assets/likes/like_icon 2.png",color: Colors.white,),
+                child: Image.asset(
+                  "assets/likes/like_icon 2.png",
+                  color: Colors.white,
+                ),
               ),
               Container(
                 height: 16,
@@ -143,10 +187,8 @@ class SinglePostCardWidget extends StatelessWidget {
             ),
           ),
           sizeVer(8),
-
           const Divider(
             thickness: 8,
-
           )
         ],
       ),

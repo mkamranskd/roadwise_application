@@ -51,10 +51,10 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
         onFieldSubmitted: widget.onFieldSubmitted,
         cursorColor: Colors.grey,
         cursorHeight: 30,
-        style: TextStyle(fontSize: 19),
+        style: const TextStyle(fontSize: 19),
         decoration: InputDecoration(
           focusedBorder:
-          UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+          const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           hintText: widget.hintText,
           suffixIcon: new GestureDetector(
             onTap: () {
@@ -63,7 +63,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
               });
             },
             child:
-            widget.isPasswordField==true? Icon(_obscureText ? Icons.visibility_off : Icons.visibility, color: _obscureText == false ? Colors.grey : Colors.grey,) : Text(""),
+            widget.isPasswordField==true? Icon(_obscureText ? Icons.visibility_off : Icons.visibility, color: _obscureText == false ? Colors.grey : Colors.grey,) : const Text(""),
           ),
         ),
       ),

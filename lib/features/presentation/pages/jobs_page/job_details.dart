@@ -307,7 +307,7 @@ class JobDetailsScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Apply Now",
                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

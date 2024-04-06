@@ -8,7 +8,7 @@ class ForgotPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 35),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 35),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -16,30 +16,30 @@ class ForgotPasswordPage extends StatelessWidget {
               "assets/LinkedIn-logo.png",
               width: 120,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text(
+            const Text(
               "Forgot password?",
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 33),
             ),
-            SizedBox(
+            const SizedBox(
               height: 6,
             ),
-            Text(
+            const Text(
               "Reset password in two quick steps",
               style: TextStyle(color: Colors.grey),
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "Email or Phone"
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             ColouredButtonWidget(press: (){},text: "Reset password",)
           ],
         ),

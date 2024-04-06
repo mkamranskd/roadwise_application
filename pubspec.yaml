@@ -24,15 +24,9 @@ dependencies:
   ndialog: ^4.1.1+1
   intl: ^0.17.0
   path_provider: ^2.0.11
-  flutter_native_splash: ^2.2.16
-  animated_splash_screen: ^1.3.0
-  tbib_splash_screen: ^1.0.00
   step_progress_indicator: ^1.0.2
   cloud_firestore: ^4.16.0
-  flutter_hot_toast: ^0.0.3
   cherry_toast: ^1.9.1
-  toastification: ^1.2.1
-  connectivity: ^3.0.6
   loading_animation_widget: ^1.2.1
   icons_plus: ^5.0.0
 

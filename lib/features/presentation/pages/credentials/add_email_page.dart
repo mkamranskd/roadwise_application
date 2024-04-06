@@ -18,18 +18,18 @@ class AddEmailPage extends StatelessWidget {
               "assets/LinkedIn-logo.png",
               width: 90,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text(
+            const Text(
               "Add your email or phone",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 33),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            FormContainerWidget(hintText: "Email or Phone"),
-            SizedBox(
+            const FormContainerWidget(hintText: "Email or Phone"),
+            const SizedBox(
               height: 20,
             ),
             ColouredButtonWidget(

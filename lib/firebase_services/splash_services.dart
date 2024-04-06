@@ -14,7 +14,7 @@ class SplashServices {
       Timer(const Duration(seconds: 3),
       () => Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => DashBoard()),
+        MaterialPageRoute(builder: (context) => const DashBoard()),
             (route) => false, // This will remove all routes except the new one
       )
       );
@@ -24,7 +24,7 @@ class SplashServices {
       Timer(const Duration(seconds: 3), () =>
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => SignInScreen()),
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
                 (route) => false, // This will remove all routes except the new one
           )
       );
