@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
-import 'package:roadwise_application/screens/dashboard_screen.dart';
+import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
 
 class SplashServices {
 
@@ -14,7 +14,7 @@ class SplashServices {
       Timer(const Duration(seconds: 3),
       () => Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const DashBoard()),
+        MaterialPageRoute(builder: (context) =>  QuestionScreen()),
             (route) => false, // This will remove all routes except the new one
       )
       );

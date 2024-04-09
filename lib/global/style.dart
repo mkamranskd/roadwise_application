@@ -9,8 +9,8 @@ Color primaryBlueColor =  const Color(0xff0094fd);
 
 class TEXTBOX extends StatelessWidget {
   final String title;
-
-  const TEXTBOX({Key? key, required this.title}) : super(key: key);
+  final TextEditingController? cont;
+  const TEXTBOX({Key? key, required this.title, this.cont}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +31,7 @@ class TEXTBOX extends StatelessWidget {
             ],
           ),
           child: TextField(
+            controller: cont,
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: title,
@@ -281,60 +282,68 @@ class CAPTION extends StatelessWidget {
 class CustomComboBox extends StatefulWidget {
   final List<String> items;
   final String title;
-  CustomComboBox({required this.title,required this.items});
+  final String? initialValue;
+  final void Function(String?)? onChanged;
+  final TextEditingController? controller; // Added controller
+
+  CustomComboBox({
+    required this.title,
+    required this.items,
+    this.initialValue,
+    this.onChanged,
+    this.controller, // Added controller parameter
+  });
 
   @override
   _CustomComboBoxState createState() => _CustomComboBoxState();
 }
 
 class _CustomComboBoxState extends State<CustomComboBox> {
-  String? _selectedItem;
+  late TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController = widget.controller ?? TextEditingController(); // Initialize the controller
+    if (widget.initialValue != null) {
+      _textEditingController.text = widget.initialValue!;
+    }
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose(); // Dispose the controller
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Ensure that the initial value is either null or exists in the items list
-    if (_selectedItem != null && !widget.items.contains(_selectedItem)) {
-      _selectedItem = null; // Reset to null if the initial value is not found in the items list
-    }
-
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromRGBO(143, 148, 251, .2),
-                blurRadius: 10.0,
-                offset: Offset(0, 5),
-              ),
-            ],
-          ),
-          child: DropdownButtonFormField<String>(
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Adjust padding here
-              border: InputBorder.none,
-              hintText: widget.title,
-              hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
-            ),
-            value: _selectedItem,
-            items: widget.items.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedItem = newValue;
-              });
-            },
-          ),
+        Text(
+          widget.title,
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 5), // Adjust SizedBox height as needed
+        DropdownButtonFormField(
+          value: _textEditingController.text.isNotEmpty
+              ? _textEditingController.text
+              : widget.initialValue,
+          items: widget.items.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _textEditingController.text = newValue ?? '';
+              if (widget.onChanged != null) {
+                widget.onChanged!(newValue);
+              }
+            });
+          },
+        ),
       ],
     );
   }

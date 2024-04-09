@@ -3,6 +3,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:roadwise_application/const/app_const.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
+import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
 import 'package:roadwise_application/global/Utils.dart';
 
 import 'package:roadwise_application/features/presentation/pages/user_profile.dart';
@@ -82,7 +83,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       leading: const Icon(Clarity.home_line),
                       title: const Text('Profile'),
                       onTap: () {
-                        // Handle Profile settings
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionScreen()));
                       },
                     ),
                     ListTile(
