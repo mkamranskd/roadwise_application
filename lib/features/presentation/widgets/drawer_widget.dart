@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:roadwise_application/const/app_const.dart';
@@ -8,9 +9,8 @@ import 'package:roadwise_application/global/Utils.dart';
 
 import 'package:roadwise_application/features/presentation/pages/user_profile.dart';
 
-
 class DrawerWidget extends StatefulWidget {
-   DrawerWidget({Key? key}) : super(key: key);
+  DrawerWidget({Key? key}) : super(key: key);
 
   @override
   State<DrawerWidget> createState() => _DrawerWidgetState();
@@ -19,6 +19,39 @@ class DrawerWidget extends StatefulWidget {
 class _DrawerWidgetState extends State<DrawerWidget> {
   final _auth = FirebaseAuth.instance;
   bool isBusinessProfile = false;
+  String firstName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchFirstName();
+  }
+
+  Future<void> fetchFirstName() async {
+    try {
+      String? currentUserId = _auth.currentUser?.uid;
+      if (currentUserId != null) {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Users').doc(currentUserId).get();
+        if (snapshot.exists) {
+          Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+          setState(() {
+            firstName = userData['firstName']+" "+userData['lastName'] ?? 'First Name Not Provided';
+          });
+        } else {
+          print('Document does not exist');
+          // Handle the case when the document does not exist
+        }
+      } else {
+        print('Current user is null');
+        // Handle the case when the current user is null
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle other potential errors
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +82,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           ),
                           sizeVer(10),
                           Text(
-                            'Hi, ${_auth.currentUser!.email}',
+                            firstName.toUpperCase(),
                             style: const TextStyle(
                               fontSize: 21,
                               fontWeight: FontWeight.bold,
