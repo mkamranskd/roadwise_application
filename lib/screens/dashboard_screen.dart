@@ -7,6 +7,7 @@ import 'package:roadwise_application/features/presentation/pages/home_page/widge
 import 'package:roadwise_application/features/presentation/pages/jobs_page/job_details.dart';
 import 'package:roadwise_application/global/Utils.dart';
 import 'package:roadwise_application/global/style.dart';
+import 'package:roadwise_application/screens/Test.dart';
 import '../features/presentation/widgets/drawer_widget.dart';
 import 'chat_screen.dart';
 
@@ -263,6 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
+
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -272,12 +274,66 @@ class _HomeScreenState extends State<HomeScreen> {
                 return SinglePostCardWidget(userPostData: userPostData);
               },
             ),
-          )
-        ],
+          ),
+
+  ]),
+
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Open the chat panel when the FAB is pressed
+          _showChatPanel(context);
+        },
+        child: Icon(Icons.chat),
       ),
     );
   }
+
+  void _showChatPanel(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16.0),
+          height: 300.0, // Adjust the height as needed
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Chat with our Assistant',
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.0),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Display chat messages here
+                      // You can use a ListView.builder to display messages
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Type your message...',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      // Send message functionality
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
+
 
 class NotificationCard extends StatelessWidget {
   final String instituteName;

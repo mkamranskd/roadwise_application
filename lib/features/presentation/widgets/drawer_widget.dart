@@ -8,6 +8,7 @@ import 'package:roadwise_application/features/presentation/pages/quiz/starting_p
 import 'package:roadwise_application/global/Utils.dart';
 
 import 'package:roadwise_application/features/presentation/pages/user_profile.dart';
+import 'package:roadwise_application/screens/Test.dart';
 
 class DrawerWidget extends StatefulWidget {
   DrawerWidget({Key? key}) : super(key: key);
@@ -116,7 +117,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       leading: const Icon(Clarity.home_line),
                       title: const Text('Profile'),
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionScreen()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                       },
                     ),
                     ListTile(
