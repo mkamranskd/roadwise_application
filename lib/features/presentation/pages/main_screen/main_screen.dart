@@ -46,24 +46,24 @@ class _MainPageState extends State<MainPage> {
         unselectedLabelStyle: const TextStyle(color: Colors.grey,fontSize: 12),
         showUnselectedLabels: false,
 
-        items: [
-          const BottomNavigationBarItem(
+        items: const [
+          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: "Home",
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: "Network",
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.add),
             label: "Post",
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: "Notification",
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.check_box),
             label: "Jobs",
           ),

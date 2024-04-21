@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:dialogflow_flutter/dialogflowFlutter.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -23,14 +22,14 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Roadwise'),
+        title: const Text('Roadwise'),
       ),
       body: Column(
         children: [
           Expanded(
             child: GoogleMap(
               onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
+              initialCameraPosition: const CameraPosition(
                 target: LatLng(37.7749, -122.4194), // San Francisco coordinates
                 zoom: 12,
               ),
@@ -38,20 +37,20 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
                     onPressed: _searchInstitutes,
-                    child: Text('Search'),
+                    child: const Text('Search'),
                   ),
                 ),
-                SizedBox(width: 16.0),
+                const SizedBox(width: 16.0),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: _showChatbot,
-                    child: Text('Chatbot'),
+                    child: const Text('Chatbot'),
                   ),
                 ),
               ],
@@ -73,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
     // Add markers to _allMarkers based on fetched data
     // For demo purposes, let's add dummy data
     _allMarkers = [
-      Marker(
+      const Marker(
         markerId: MarkerId('1'),
         position: LatLng(37.7749, -122.4194),
         infoWindow: InfoWindow(
@@ -81,7 +80,7 @@ class _MainScreenState extends State<MainScreen> {
           snippet: 'Private Jesuit university',
         ),
       ),
-      Marker(
+      const Marker(
         markerId: MarkerId('2'),
         position: LatLng(37.7749, -122.4294),
         infoWindow: InfoWindow(
@@ -111,14 +110,14 @@ class _MainScreenState extends State<MainScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Chatbot'),
-          content: Text('Placeholder for chatbot interface'),
+          title: const Text('Chatbot'),
+          content: const Text('Placeholder for chatbot interface'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );

@@ -144,7 +144,7 @@ class _SignInScreenState extends State<SignInScreen> {
         //Utils.toastMessage(context, value.user!.email.toString(), Icons.check_circle_outline);
 
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => QuestionScreen()));
+            MaterialPageRoute(builder: (context) => CompleteProfile()));
 
         setState(() {
           loading = false;

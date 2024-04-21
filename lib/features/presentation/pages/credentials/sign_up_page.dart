@@ -157,7 +157,7 @@ class _SignUpPageState extends State<SignUpPage> {
     _auth.createUserWithEmailAndPassword(email: emailController.text.toString(), password:passwordController.text.toString() ).then((value) {
       Utils.toastMessage(context, "Account Created Successfully\nRedirecting to the Login Screen", Icons.check_circle_outline);
       Timer(
-        const Duration(seconds: 5),
+        const Duration(seconds: 2),
             () => Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const SignInScreen()),

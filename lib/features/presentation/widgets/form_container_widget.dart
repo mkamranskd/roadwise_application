@@ -56,7 +56,7 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
           focusedBorder:
           const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           hintText: widget.hintText,
-          suffixIcon: new GestureDetector(
+          suffixIcon: GestureDetector(
             onTap: () {
               setState(() {
                 _obscureText = !_obscureText;

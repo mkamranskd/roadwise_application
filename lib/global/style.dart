@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+final _auth = FirebaseAuth.instance;
 const kPrimaryColor = Color(0xff0a66c2);
 const kPrimaryLightColor = Color(0xFFFFECDF);
 Color primaryBlueColor =  const Color(0xff0094fd);
@@ -50,6 +53,45 @@ class TEXTBOX extends StatelessWidget {
 }
 
 
+class Field extends StatelessWidget {
+  final String title;
+  const Field({Key? key, required this.title, }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 1000,
+          height: 50,
+          padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 10), // Adjust padding here
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromRGBO(143, 148, 251, .2),
+                blurRadius: 10.0,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Text(
+          title,
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontFamily: 'Dubai',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
+        const SizedBox(height: 5), // Adjusted SizedBox height
+      ],
+    );
+  }
+}
 
 class ProgressBar extends StatelessWidget {
   final int count,total;
@@ -64,7 +106,7 @@ class ProgressBar extends StatelessWidget {
           totalSteps: total,
           currentStep: count,
           selectedColor: Colors.yellow,
-          unselectedColor: Colors.white,
+          unselectedColor: Colors.grey,
           customStep: (index, color, _) => color == Colors.yellow
               ? Container(
             color: color,
@@ -82,7 +124,7 @@ class ProgressBar extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Icon(
                 Icons.check_circle_outline,
-                color: Colors.white,
+                color: Colors.grey,
               ),
             ),
           ),
@@ -264,11 +306,11 @@ class CAPTION extends StatelessWidget {
     return Column(
       children: [
         Text(
-          title,
+          "   "+title,
           textAlign: TextAlign.left,
           style: const TextStyle(
-            color: Colors.white54,
-            fontSize: 12,
+            color: Colors.grey,
+            fontSize: 13,
               fontFamily: 'Dubai',
               fontWeight: FontWeight.bold
           ),
@@ -280,18 +322,17 @@ class CAPTION extends StatelessWidget {
 }
 
 class CustomComboBox extends StatefulWidget {
-  final List<String> items;
   final String title;
-  final String? initialValue;
-  final void Function(String?)? onChanged;
-  final TextEditingController? controller; // Added controller
-
+  final List<String> items;
+  final String firebaseFieldName; // New parameter to specify the Firebase field name
+  final TextEditingController? controller;
+  final String defaultValue;
   CustomComboBox({
     required this.title,
     required this.items,
-    this.initialValue,
-    this.onChanged,
-    this.controller, // Added controller parameter
+    required this.firebaseFieldName,
+    this.controller,
+    this.defaultValue = '',
   });
 
   @override
@@ -299,53 +340,69 @@ class CustomComboBox extends StatefulWidget {
 }
 
 class _CustomComboBoxState extends State<CustomComboBox> {
-  late TextEditingController _textEditingController;
+  late String _selectedValue;
 
   @override
   void initState() {
     super.initState();
-    _textEditingController = widget.controller ?? TextEditingController(); // Initialize the controller
-    if (widget.initialValue != null) {
-      _textEditingController.text = widget.initialValue!;
-    }
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose(); // Dispose the controller
-    super.dispose();
+    _selectedValue = widget.items.first; // Initialize selected value with the first item
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromRGBO(143, 148, 251, .2),
+                blurRadius: 10.0,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 1.0), // Adjust padding here
+              border: InputBorder.none,
+              hintText: widget.title,
+              hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+            ),
+            value: _selectedValue,
+            items: widget.items.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedValue = newValue ?? '';
+                _updateFirebaseField(newValue);
+              });
+            },
+          ),
         ),
-        DropdownButtonFormField(
-          value: _textEditingController.text.isNotEmpty
-              ? _textEditingController.text
-              : widget.initialValue,
-          items: widget.items.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _textEditingController.text = newValue ?? '';
-              if (widget.onChanged != null) {
-                widget.onChanged!(newValue);
-              }
-            });
-          },
-        ),
+        const SizedBox(height: 5), // Adjust SizedBox height as needed
       ],
     );
+  }
+
+  void _updateFirebaseField(String? newValue) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(user.uid)
+          .set({
+        widget.firebaseFieldName: newValue,
+      }, SetOptions(merge: true));
+    }
   }
 }
 
@@ -488,10 +545,10 @@ class _TextWithRadioState extends State<TextWithIcon> {
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             margin: const EdgeInsets.symmetric(vertical: 5),
             decoration: BoxDecoration(
-              color: selectedIndex == index ? Colors.green : Colors.white,
+              color: selectedIndex == index ? primaryBlueColor : Colors.white,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: selectedIndex == index ? Colors.green : Colors.white,
+                color: selectedIndex == index ? primaryBlueColor : Colors.white,
                 width: 2,
               ),
               boxShadow: const [

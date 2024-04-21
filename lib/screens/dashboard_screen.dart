@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -7,7 +10,6 @@ import 'package:roadwise_application/features/presentation/pages/home_page/widge
 import 'package:roadwise_application/features/presentation/pages/jobs_page/job_details.dart';
 import 'package:roadwise_application/global/Utils.dart';
 import 'package:roadwise_application/global/style.dart';
-import 'package:roadwise_application/screens/Test.dart';
 import '../features/presentation/widgets/drawer_widget.dart';
 import 'chat_screen.dart';
 
@@ -188,7 +190,58 @@ class _HomeScreenState extends State<HomeScreen> {
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   ScrollController? _scrollController;
   final _userPost = UserPostClass.userPostList;
+  final _auth = FirebaseAuth.instance;
+  String firstName = '';
 
+  @override
+  void initState() {
+    super.initState();
+    fetchFirstName();
+    _loadProfilePicture();
+  }
+
+  Future<void> fetchFirstName() async {
+    try {
+      String? currentUserId = _auth.currentUser?.uid;
+      if (currentUserId != null) {
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(currentUserId)
+            .get();
+        if (snapshot.exists) {
+          Map<String, dynamic> userData =
+          snapshot.data() as Map<String, dynamic>;
+          setState(() {
+            firstName = userData['firstName'] + " " + userData['lastName'] ??
+                'First Name Not Provided';
+          });
+        } else {
+          print('Document does not exist');
+          // Handle the case when the document does not exist
+        }
+      } else {
+        print('Current user is null');
+        // Handle the case when the current user is null
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle other potential errors
+    }
+  }
+  File? _image;
+  Future<void> _loadProfilePicture() async {
+    final userRef = FirebaseFirestore.instance.collection('Users').doc(_auth.currentUser!.uid);
+    final snapshot = await userRef.get();
+    final userData = snapshot.data();
+    if (userData != null) {
+      final profilePicturePath = userData['profilePicture'];
+      if (profilePicturePath != null) {
+        setState(() {
+          _image = File(profilePicturePath);
+        });
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         toolbarHeight: 45,
         title: Text(
-          'Welcome , ${_auth.currentUser!.email}',
+          'Welcome , ${firstName.toUpperCase()}',
           style: TextStyle(
               color: primaryBlueColor,
               fontFamily: 'Dubai',
@@ -255,11 +308,12 @@ class _HomeScreenState extends State<HomeScreen> {
               _scaffoldState.currentState!.openDrawer();
             });
           },
-          child: const Padding(
-              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-              child: CircleAvatar(
-                backgroundImage: AssetImage("assets/profiles/profile2.jpg"),
-              )),
+          child:  Padding(
+              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+              child:CircleAvatar(
+                radius: 20,
+                backgroundImage: _image != null ? FileImage(_image!) :  const AssetImage('assets/default_avatar.jpg') as ImageProvider,
+              ),),
         ),
       ),
       body: Column(
@@ -284,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // Open the chat panel when the FAB is pressed
           _showChatPanel(context);
         },
-        child: Icon(Icons.chat),
+        child: const Icon(Icons.chat),
       ),
     );
   }
@@ -294,17 +348,17 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           height: 300.0, // Adjust the height as needed
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
+              const Text(
                 'Chat with our Assistant',
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16.0),
-              Expanded(
+              const SizedBox(height: 16.0),
+              const Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -314,12 +368,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Type your message...',
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.send),
+                    icon: const Icon(Icons.send),
                     onPressed: () {
                       // Send message functionality
                     },
@@ -1479,6 +1533,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
+
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);

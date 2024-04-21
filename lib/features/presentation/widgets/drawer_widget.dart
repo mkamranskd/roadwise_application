@@ -1,12 +1,11 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:roadwise_application/const/app_const.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
-import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
 import 'package:roadwise_application/global/Utils.dart';
-
 import 'package:roadwise_application/features/presentation/pages/user_profile.dart';
 import 'package:roadwise_application/screens/Test.dart';
 
@@ -18,25 +17,49 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
-  final _auth = FirebaseAuth.instance;
   bool isBusinessProfile = false;
+  final _auth = FirebaseAuth.instance;
   String firstName = '';
 
   @override
   void initState() {
     super.initState();
     fetchFirstName();
+    _loadProfilePicture();
+  }
+
+  File? _image;
+
+  Future<void> _loadProfilePicture() async {
+    final userRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_auth.currentUser!.uid);
+    final snapshot = await userRef.get();
+    final userData = snapshot.data();
+    if (userData != null) {
+      final profilePicturePath = userData['profilePicture'];
+      if (profilePicturePath != null) {
+        setState(() {
+          _image = File(profilePicturePath);
+        });
+      }
+    }
   }
 
   Future<void> fetchFirstName() async {
     try {
       String? currentUserId = _auth.currentUser?.uid;
       if (currentUserId != null) {
-        DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Users').doc(currentUserId).get();
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(currentUserId)
+            .get();
         if (snapshot.exists) {
-          Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+          Map<String, dynamic> userData =
+              snapshot.data() as Map<String, dynamic>;
           setState(() {
-            firstName = userData['firstName']+" "+userData['lastName'] ?? 'First Name Not Provided';
+            firstName = userData['firstName'] + " " + userData['lastName'] ??
+                'First Name Not Provided';
           });
         } else {
           print('Document does not exist');
@@ -51,8 +74,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       // Handle other potential errors
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,55 +90,59 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           sizeVer(40),
-                          const SizedBox(
+                          SizedBox(
                             width: 90,
                             height: 90,
                             child: CircleAvatar(
-                              backgroundImage: AssetImage("assets/profiles/profile2.jpg"),
+                              radius: 70,
+                              backgroundImage: _image != null
+                                  ? FileImage(_image!)
+                                  : const AssetImage('assets/default_avatar.jpg')
+                                      as ImageProvider,
                             ),
                           ),
                           sizeVer(10),
                           Text(
-                            firstName.toUpperCase(),
+                            firstName != ''
+                                ? firstName.toUpperCase()
+                                : '- - - - - - - - - - - - - ',
                             style: const TextStyle(
-                              fontSize: 21,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Dubai',
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              // Navigate to UserProfileScreen when "View profile" button is pressed
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => UserProfileScreen(user: _auth.currentUser!)),
-                              );
-                            },
-                            child: const Text(
-                              "View profile",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-
-                          ),
-                
                         ],
                       ),
                     ),
-                    const Divider(color: Colors.grey,),
+                    ListTile(
+                      leading: const Icon(Clarity.user_line),
+                      title: const Text(
+                        'My Profile' ,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  UserProfileScreen(user: _auth.currentUser!)),
+                        );
+                      },
+                    ),
                     ListTile(
                       leading: const Icon(Clarity.home_line),
                       title: const Text('Profile'),
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MainScreen()));
                       },
                     ),
                     ListTile(
@@ -148,16 +173,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         // Handle Notification settings
                       },
                     ),
-                
-                
-                
-                
                   ],
                 ),
               ),
             ),
           ),
-          const Divider(color: Colors.grey,),
+          const Divider(
+            color: Colors.grey,
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 30, left: 0),
             child: Column(
@@ -198,7 +221,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('Logout'),
-                          content: const Text('Are you sure you want to logout?'),
+                          content:
+                              const Text('Are you sure you want to logout?'),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
@@ -209,9 +233,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             TextButton(
                               onPressed: () {
                                 _auth.signOut().then((value) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignInScreen()));
                                 }).onError((error, stackTrace) {
-                                  Utils.toastMessage(context, error.toString(), Icons.warning_amber_rounded);
+                                  Utils.toastMessage(context, error.toString(),
+                                      Icons.warning_amber_rounded);
                                 });
                               },
                               child: const Text('Logout'),

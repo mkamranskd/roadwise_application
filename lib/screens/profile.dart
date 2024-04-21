@@ -29,24 +29,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         backgroundColor: Colors.blue, // LinkedIn Blue
       ),
       body: SingleChildScrollView(
         child: FadeInUp(
-          duration: Duration(seconds: 1),
+          duration: const Duration(seconds: 1),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Center(
                   child: Stack(
                     children: [
                       CircleAvatar(
                         radius: 70,
-                        backgroundImage: _image != null ? FileImage(_image!) : AssetImage('assets/default_avatar.jpg') as ImageProvider,
+                        backgroundImage: _image != null ? FileImage(_image!) : const AssetImage('assets/default_avatar.jpg') as ImageProvider,
                       ),
                       Positioned(
                         bottom: 0,
@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             _showImageSource(context);
                           },
-                          child: CircleAvatar(
+                          child: const CircleAvatar(
                             radius: 20,
                             backgroundColor: Colors.white,
                             child: Icon(
@@ -68,16 +68,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Edit Profile',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Personal Information',
                   style: TextStyle(
                     fontSize: 20,
@@ -85,14 +85,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Color(0xFF0077B5), // LinkedIn Blue
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 buildTextField("Username"),
                 buildTextField("Email"),
                 buildTextField("Phone Number"),
                 buildTextField("Address"),
                 buildTextField("Date of Birth"),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Additional Information',
                   style: TextStyle(
                     fontSize: 20,
@@ -100,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Color(0xFF0077B5), // LinkedIn Blue
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 buildRadioField("Gender", ['Male', 'Female','PreferNotToSay']),
                 buildDropdownField("Preferred Language", [
                   'English',
@@ -113,20 +113,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   'Urdu',
                   // Add more languages as needed
                 ]),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       // Implement functionality to update profile
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF0077B5), // LinkedIn Blue
+                      backgroundColor: const Color(0xFF0077B5), // LinkedIn Blue
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                       child: Text(
                         'Save Profile',
                         style: TextStyle(
@@ -151,8 +151,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: TextField(
         decoration: InputDecoration(
           hintText: hintText,
-          border: OutlineInputBorder(),
-          contentPadding: EdgeInsets.all(15),
+          border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.all(15),
         ),
       ),
     );
@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
           children: options.map((option) {
             return Row(
@@ -191,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         DropdownButtonFormField(
           value: _selectedLanguage,
           onChanged: (newValue) {
@@ -205,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(option),
             );
           }).toList(),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           ),
@@ -223,16 +223,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.camera),
-                title: Text('Take a picture'),
+                leading: const Icon(Icons.camera),
+                title: const Text('Take a picture'),
                 onTap: () {
                   _pickImage(ImageSource.camera);
                   Navigator.pop(context);
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Choose from gallery'),
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Choose from gallery'),
                 onTap: () {
                   _pickImage(ImageSource.gallery);
                   Navigator.pop(context);

@@ -55,6 +55,7 @@ flutter:
     - assets/icons/notifications_icon.png
     - assets/icons/person_icon.png
     - assets/icons/roadmap-planning.png
+    - assets/icons/user.png
   fonts:
     - family: Dubai
       fonts:
