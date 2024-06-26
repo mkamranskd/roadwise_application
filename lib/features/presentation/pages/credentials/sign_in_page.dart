@@ -32,7 +32,6 @@ class _SignInScreenState extends State<SignInScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              const CommonHeader(title: 'Road Wise'),
               H1(title: "Login First", clr: primaryBlueColor),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
