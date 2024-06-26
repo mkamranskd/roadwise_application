@@ -178,7 +178,7 @@ class ExampleApp extends StatelessWidget {
                   description: const Text('This is a description message'),
                   themeColor: Colors.green,
                   toastPosition: Position.bottom,
-                  layout: ToastLayout.rtl,
+                  Layout: ToastLayout.rtl,
                   animationType: AnimationType.fromRight,
                   action: const Text(
                     'انقر هنا',
