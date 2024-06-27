@@ -19,8 +19,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isObscure = true; // Initial state of password visibility
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -32,13 +32,15 @@ class _SignInScreenState extends State<SignInScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              //SizedBox(height: 100,),
+              CommonHeader(title: "title"),
               H1(title: "Login First", clr: primaryBlueColor),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: const EdgeInsets.all(1),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -66,7 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Email",
-                                  prefixIcon: Icon(Icons.alternate_email_rounded, size: 20, color: primaryBlueColor),
+                                  //prefixIcon: Icon(Icons.alternate_email_rounded, size: 20, color: primaryBlueColor),
                                   hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
                                 ),
                               ),
@@ -76,11 +78,22 @@ class _SignInScreenState extends State<SignInScreen> {
                               child: TextFormField(
                                 keyboardType: TextInputType.text,
                                 controller: passwordController,
-                                obscureText: true,
+                                obscureText: _isObscure, // Toggle based on _isObscure state
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Password",
-                                  prefixIcon: Icon(Icons.lock_open_outlined, size: 20, color: primaryBlueColor),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                                      color: Colors.grey[700],
+                                      size: 15,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isObscure = !_isObscure; // Toggle visibility
+                                      });
+                                    },
+                                  ),
                                   hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
                                 ),
                               ),
@@ -89,7 +102,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
                     CustomButton(
                       loading: loading,
                       title: "Login ",

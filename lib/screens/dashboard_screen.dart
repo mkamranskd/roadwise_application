@@ -1,18 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:roadwise_application/features/domain/entities/user_post_data.dart';
+import 'package:roadwise_application/global/style.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
-import 'package:roadwise_application/features/presentation/pages/home_page/widgets/single_post_card_widget.dart';
 import 'package:roadwise_application/features/presentation/pages/jobs_page/job_details.dart';
 import 'package:roadwise_application/global/Utils.dart';
-import 'package:roadwise_application/global/style.dart';
-import 'package:roadwise_application/screens/Test.dart';
-import 'package:roadwise_application/screens/profile.dart';
-import '../features/presentation/widgets/drawer_widget.dart';
+import '../features/presentation/pages/user_profile.dart';
 import 'chat_screen.dart';
 import 'chatbot.dart';
-import 'package:roadwise_application/firebase_options.dart';
 final _auth = FirebaseAuth.instance;
 
 void main() {
@@ -163,11 +160,11 @@ class _FirstPageState extends State<FirstPage> {
             BottomNavigationBarItem(
               icon: _currentIndex == 4
                   ? Icon(
-                      BoxIcons.bx_search_alt,
+                      Clarity.user_solid,
                       color: primaryBlueColor,
                     )
                   : const Icon(
-                      Clarity.search_line,
+                      Clarity.user_line,
                       color: Colors.grey,
                     ),
               label: "",
@@ -188,116 +185,126 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-  ScrollController? _scrollController;
-  final _userPost = UserPostClass.userPostList;
+  String _profilePictureUrl = ''; // Store the profile picture URL here
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfilePicture();
+  }
+
+  Future<void> _loadProfilePicture() async {
+    try {
+      final userDoc = FirebaseFirestore.instance.collection('Users').doc(_auth.currentUser!.uid);
+      final userData = await userDoc.get();
+
+      if (userData.exists) {
+        final profilePictureUrl = userData['profilePicture'];
+        setState(() {
+          _profilePictureUrl = profilePictureUrl ?? ''; // Set the profile picture URL
+        });
+      }
+    } catch (e) {
+      print('Error loading profile picture: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldState,
-      drawer: DrawerWidget(),
-
-      /*appBar: _currentPageIndex ==4?appBarWidget(title: "Search Jobs",isJobTab: true,onTap: (){setState(() {
-        _scaffoldState.currentState!.openDrawer();
-      });}): appBarWidget(
-          title: "Search",
-          isJobTab: false,
-          onTap: (){setState(() {
-            _scaffoldState.currentState!.openDrawer();
-          });}
-      ),*/
       appBar: AppBar(
         backgroundColor: Colors.white,
         toolbarHeight: 45,
         title: Text(
-          'Welcome , ${_auth.currentUser!.email}',
+          "Home",
           style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 15,
-              fontWeight: FontWeight.bold),
+            color: primaryBlueColor,
+            fontFamily: 'Dubai',
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
-          IconButton(onPressed: (){
-
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Logout'),
-                  content: const Text('Are you sure you want to logout?'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        _auth.signOut().then((value) {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
-                        }).onError((error, stackTrace) {
-                          Utils.toastMessage(context, error.toString(), Icons.warning_amber_rounded);
-                        });
-                      },
-                      child: const Text('Logout'),
-                    ),
-                  ],
-                );
-              },
-            );
-
-          }, icon: Icon(Clarity.logout_line,color: primaryBlueColor,size: 18,)),
-
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Logout'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _auth.signOut().then((value) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const SignInScreen()),
+                            );
+                          }).onError((error, stackTrace) {
+                            Utils.toastMessage(context, error.toString(), Icons.warning_amber_rounded);
+                          });
+                        },
+                        child: const Text('Logout'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: Icon(Clarity.logout_line, color: primaryBlueColor, size: 18),
+          ),
         ],
         leading: GestureDetector(
           onTap: () {
             setState(() {
-              _scaffoldState.currentState!.openDrawer();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        UserProfileScreen(user: _auth.currentUser!)),
+              );
             });
           },
-          child: const Padding(
-              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-              child: CircleAvatar(
-                backgroundImage: AssetImage("assets/profiles/profile2.jpg"),
-              )),
-        ),
-      ),
-      body: Column(
-        children: [
-
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: _userPost.length,
-              itemBuilder: (context, index) {
-                final userPostData = _userPost[index];
-                return SinglePostCardWidget(userPostData: userPostData);
-              },
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: CircleAvatar(
+              backgroundImage: _profilePictureUrl.isNotEmpty
+                  ? NetworkImage(_profilePictureUrl)
+                  : const AssetImage("assets/icons/user.png",) as ImageProvider<Object>,
             ),
           ),
-
-  ]),
-
-
+        ),
+      ),
+      body: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Home Page"),
+            ],
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-
-
-              tooltip: 'Connect To Assistant',
-
+        tooltip: 'Connect To Assistant',
         onPressed: () {
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => Chatbot()),
           );
         },
-        child: Icon(Icons.chat),
+        child: const Icon(Icons.chat),
       ),
     );
-
-
   }
 }
 
@@ -954,476 +961,228 @@ class BookMarks_Page extends StatelessWidget {
   }
 }
 
-class AccountSettingsScreen extends StatelessWidget {
+class AccountSettingsScreen extends StatefulWidget {
+  final User user = FirebaseAuth.instance.currentUser!;
   AccountSettingsScreen({super.key});
 
+  @override
+  State<AccountSettingsScreen> createState() => _AccountSettingsScreenState();
+
+}
+
+class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   final auth = FirebaseAuth.instance;
+
+  File? _image;
+  bool isBusinessProfile = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        toolbarHeight: 45,
-        title: CustomSearchBar(
-          controller: TextEditingController(),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: primaryBlueColor,
-                  // Customize the background color as needed
-                  radius: 30,
-                  child: const Icon(
-                    Icons.person,
-                    size: 40, // Adjust the size of the icon as needed
-                    color: Colors.white, // Customize the color as needed
-                  ), // Adjust the size of the avatar as needed
-                ),
-                title: const Text(
-                  'John Doe', // Placeholder for user name
-                  style: TextStyle(
-                    fontSize: 18,
-                    // Adjust the font size of the name as needed
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  'View Profile',
-                  // Add a subtitle for additional action or information
-                  style: TextStyle(
-                    color: primaryBlueColor,
-                    // Customize the color as needed
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                onTap: () {
-                  // Handle viewing the user profile
-                },
-              ),
-            ],
+
+      body:
+      Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          toolbarHeight: 45,
+          title: Text(
+            'Profile',
+            style: TextStyle(
+              color: primaryBlueColor,
+              fontFamily: 'Dubai',
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+
+        ),
+        backgroundColor: Colors.white,
+        body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+          future: FirebaseFirestore.instance
+              .collection('Users')
+              .doc(widget.user.uid)
+              .get(),
+          builder: (context,
+              AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: primaryBlueColor,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              return const Center(child: Text('No data available'));
+            } else {
+              final userData = snapshot.data!.data();
+              if (userData == null) {
+                return const Center(child: Text('User data is null'));
+              }
+              final firstName = userData['firstName'] ?? '';
+              final lastName = userData['lastName'] ?? '';
+              final fullName = '$firstName $lastName';
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Card(
+                      elevation: 4, // Adjust elevation as needed
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16), // Adjust border radius as needed
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16), // Adjust padding as needed
+                        leading: CircleAvatar(
+                          backgroundImage: _image != null
+                              ? FileImage(_image!) as ImageProvider<Object>
+                              : userData['profilePicture'] != null
+                              ? NetworkImage(userData['profilePicture'])
+                              : const AssetImage('assets/icons/person_icon.png') as ImageProvider<Object>,
+                          radius: 32, // Adjust avatar size as needed
+                        ),
+                        title: Text(
+                          fullName.isNotEmpty ? fullName : 'First Name Not Provided',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Dubai',
+                          ),
+                        ),
+                        // Add subtitle if needed
+                        // subtitle: Text('Subtitle Text'),
+                        // Add onTap for interaction
+                        // onTap: () {
+                        //   // Handle onTap event
+                        // },
+                      ),
+                    ),
+                    ListTile(
+                      leading: const Icon(Clarity.user_line),
+                      title: const Text(
+                        'My Profile' ,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  UserProfileScreen(user: _auth.currentUser!)),
+                        );
+                      },
+                    ),
+
+                    ListTile(
+                      leading: const Icon(Clarity.email_line),
+                      title: const Text('Email'),
+                      onTap: () {
+                        // Handle Email settings
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Clarity.lock_line),
+                      title: const Text('Password'),
+                      onTap: () {
+                        // Handle Password settings
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.privacy_tip_outlined),
+                      title: const Text('Privacy'),
+                      onTap: () {
+                        // Handle Privacy settings
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Clarity.notification_line),
+                      title: const Text('Notifications'),
+                      onTap: () {
+                        // Handle Notification settings
+                      },
+                    ),
+                    const Divider(
+                      color: Colors.grey,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30, left: 0),
+                      child: Column(
+                        children: [
+                          //sizeVer(20),
+                          ListTile(
+                            leading: const Icon(Clarity.squid_line),
+                            title: const Text('Business Profile'),
+                            onTap: () {
+                              // Handle Notification settings
+                            },
+                            trailing: Transform.scale(
+                              scale: 0.6,
+                              child: Switch(
+                                value: isBusinessProfile,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isBusinessProfile = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(Clarity.settings_line),
+                            title: const Text('Settings'),
+                            onTap: () {
+                              // Handle Notification settings
+                            },
+                          ),
+
+                          ListTile(
+                            leading: const Icon(Clarity.logout_line),
+                            title: const Text('Logout'),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Logout'),
+                                    content:
+                                    const Text('Are you sure you want to logout?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(); // Close the dialog
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          _auth.signOut().then((value) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                    const SignInScreen()));
+                                          }).onError((error, stackTrace) {
+                                            Utils.toastMessage(context, error.toString(),
+                                                Icons.warning_amber_rounded);
+                                          });
+                                        },
+                                        child: const Text('Logout'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+          },
         ),
       ),
     );

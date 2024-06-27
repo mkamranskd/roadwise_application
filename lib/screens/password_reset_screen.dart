@@ -73,7 +73,7 @@ class PasswordResetPage extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                               child: TextField(
                                 controller: _emailController,
                                 decoration: InputDecoration(
