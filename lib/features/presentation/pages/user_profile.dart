@@ -4,10 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
 import 'package:roadwise_application/global/style.dart';
 
 final _auth = FirebaseAuth.instance;
+
 class UserProfileScreen extends StatefulWidget {
   final User user;
 
@@ -24,45 +26,48 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      if (pickedFile != null) {
+    if (pickedFile != null) {
+      setState(() {
         _image = File(pickedFile.path);
-        _updateProfilePicture(_image);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  Future<void> _updateProfilePicture(File? image) async {
-    if (image != null) {
-      final userRef = FirebaseFirestore.instance.collection('Users').doc(widget.user.uid);
-      await userRef.update({
-        'profilePicture': image.path, // Assuming the path is stored in Firestore
       });
+      await _updateProfilePicture(_image!);
+    } else {
+      print('No image selected.');
     }
   }
 
-  Future<void> _loadProfilePicture() async {
-    final userRef = FirebaseFirestore.instance.collection('Users').doc(widget.user.uid);
-    final snapshot = await userRef.get();
-    final userData = snapshot.data();
-    if (userData != null) {
-      final profilePicturePath = userData['profilePicture'];
-      if (profilePicturePath != null) {
-        setState(() {
-          _image = File(profilePicturePath);
+  Future<void> _updateProfilePicture(File image) async {
+
+
+    final Reference storageRef = FirebaseStorage.instance
+        .ref()
+        .child('profilePictures/${widget.user.uid}');
+    final UploadTask uploadTask = storageRef.putFile(image);
+    try {
+      await uploadTask.whenComplete(() async {
+        final String imageUrl = await storageRef.getDownloadURL();
+        final userRef = FirebaseFirestore.instance
+            .collection('Users')
+            .doc(widget.user.uid);
+        await userRef.update({
+          'profilePicture': imageUrl,
         });
-      }
+        setState(() {
+          _image = null;
+
+        });
+        Navigator.of(context).pop();
+      });
+    } catch (e) {
+      Navigator.of(context).pop();
+      print('Error uploading profile picture: $e');
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _loadProfilePicture(); // Load profile picture when the screen initializes
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +104,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ],
       ),
       body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-        future: FirebaseFirestore.instance.collection('Users').doc(widget.user.uid).get(),
-        builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+        future: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(widget.user.uid)
+            .get(),
+        builder: (context,
+            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
@@ -131,9 +140,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         CircleAvatar(
                           backgroundImage: _image != null
                               ? FileImage(_image!) as ImageProvider<Object>
-                              : NetworkImage(
-                            userData['profilePicture']??  'assets/icons/person_icon.png',
-                          ),
+                              : userData['profilePicture'] != null
+                              ? NetworkImage(userData['profilePicture'])
+                              : AssetImage('assets/icons/person_icon.png') as ImageProvider<Object>,
                           radius: 64,
                         ),
 
@@ -142,67 +151,58 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           left: 97,
                           child: IconButton(
                             onPressed: _getImage,
-                            icon:  Icon(Clarity.camera_solid,color: primaryBlueColor,size: 15,),
+                            icon: Icon(Clarity.camera_solid,
+                                color: primaryBlueColor, size: 15),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  //H3(title: "Personal Information", clr: primaryBlueColor),
                   const SizedBox(height: 20),
-
                   const CAPTION(title: 'Full Name'),
-                  Field(
-                      title: fullName != ''
-                          ? fullName
-                          : 'First Name Not Provided'),
-
+                  Field(title: fullName.isNotEmpty ? fullName : 'First Name Not Provided'),
                   const SizedBox(height: 20),
                   const CAPTION(title: 'Age'),
                   Field(title: userData['age'] ?? 'Not Updated Yet'),
-
                   const SizedBox(height: 20),
                   const CAPTION(title: 'Phone Number'),
                   Field(title: userData['phoneNumber'] ?? 'Not Updated Yet'),
-
                   const SizedBox(height: 20),
                   const CAPTION(title: 'Email'),
-                  Field(title: _auth.currentUser!.email.toString()),
-
+                  Field(title: _auth.currentUser?.email ?? 'Not Updated Yet'),
                   const SizedBox(height: 20),
                   const CAPTION(title: 'Province'),
                   Field(title: userData['province'] ?? 'Not Updated Yet'),
-
                   const SizedBox(height: 20),
                   const CAPTION(title: 'City'),
                   Field(title: userData['city'] ?? 'Not Updated Yet'),
-
                   const SizedBox(height: 20),
                   const CAPTION(title: 'Address'),
                   Field(title: userData['Address'] ?? 'Not Updated Yet'),
-
                   Row(
                     children: [
                       H3(title: "Education", clr: primaryBlueColor),
                       IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Clarity.plus_line,
-                            size: 15,
-                            color: primaryBlueColor,
-                          )),
+                        onPressed: () {},
+                        icon: Icon(
+                          Clarity.plus_line,
+                          size: 15,
+                          color: primaryBlueColor,
+                        ),
+                      ),
                     ],
                   ),
                   Row(
                     children: [
                       H3(title: "Experience", clr: primaryBlueColor),
                       IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Clarity.plus_line,
-                            size: 15,
-                            color: primaryBlueColor,
-                          )),
+                        onPressed: () {},
+                        icon: Icon(
+                          Clarity.plus_line,
+                          size: 15,
+                          color: primaryBlueColor,
+                        ),
+                      ),
                     ],
                   ),
                 ],

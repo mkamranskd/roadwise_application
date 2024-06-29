@@ -79,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Email",
-                                    prefixIcon: Icon(Icons.alternate_email_rounded,size: 20, color: primaryBlueColor,),
+                                    //prefixIcon: Icon(Icons.alternate_email_rounded,size: 20, color: primaryBlueColor,),
                                     hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
                                   ),
 
@@ -96,7 +96,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Password",
-                                    prefixIcon: Icon(Icons.lock_open_outlined,size: 20, color: primaryBlueColor,),
+                                    //prefixIcon: Icon(Icons.lock_open_outlined,size: 20, color: primaryBlueColor,),
                                     hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
                                   ),
 
