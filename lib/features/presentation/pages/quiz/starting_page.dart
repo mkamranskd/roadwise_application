@@ -87,18 +87,27 @@ class _CompleteProfileState extends State<CompleteProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+
       appBar: AppBar(
         actions:[
           TextButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> const DashBoard()));
-          }, child:  Text("Skip For Now",style: TextStyle(color: primaryBlueColor),))
+            Navigator.pop(context);
+          }, child:  Icon(Icons.done,size: 20,color: primaryBlueColor,),//Text("Done",style: TextStyle(color: primaryBlueColor),)
+          )
         ],
-        title:  H3(
-          title: "Tell Us About Yourself",
-          clr: primaryBlueColor,
-        ),
+        title:   ProgressBar(count: _currentQuestionIndex + 1, total: 5)
+        ,
 
+      leading: _currentQuestionIndex>=1? IconButton(onPressed: (){
+        setState(() {
+          _currentQuestionIndex--;
+        });
 
+      }, icon: Icon(Icons.arrow_back_ios_new,size: 15,color: primaryBlueColor,)): IconButton(onPressed: (){
+
+        Navigator.pop(context);
+
+      }, icon: Icon(Icons.arrow_back_ios_new,size: 15,color: primaryBlueColor)),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -117,7 +126,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                       const SizedBox(
                         height: 70,
                       ),
-                      ProgressBar(count: _currentQuestionIndex + 1, total: 5),
+                      //ProgressBar(count: _currentQuestionIndex + 1, total: 5),
                       const SizedBox(
                         height: 20,
                       ),
@@ -150,10 +159,12 @@ class _CompleteProfileState extends State<CompleteProfile> {
       duration: const Duration(milliseconds: 500),
       child: Column(
         children: [
+
            H2(
             title: "Personal Information",
             clr: primaryBlueColor,
           ),
+
           TEXTBOX(
             title: "First Name",
             cont: firstNameController,
@@ -186,7 +197,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   });
                 },
                 child: Container(
-                  height: 45,
+                  height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
@@ -262,7 +273,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   });
                 },
                 child: Container(
-                  height: 45,
+                  height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
@@ -299,7 +310,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
             title: "Which class you've just Passed??",
             clr: primaryBlueColor,
           ),
-
+          const SizedBox(height: 10,),
           CustomComboBox(
             title: "Class*",
             items: const [
@@ -315,6 +326,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
 
 
           ),
+          const SizedBox(height: 10,),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -330,7 +342,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   });
                 },
                 child: Container(
-                  height: 45,
+                  height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
@@ -378,6 +390,29 @@ class _CompleteProfileState extends State<CompleteProfile> {
               'Commerce',
               'not Listed'
             ],
+          ),
+          const SizedBox(height: 10,),
+
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                colors: [
+                  primaryBlueColor,
+                  const Color.fromRGBO(104, 159, 56, 1)
+                ],
+              ),
+            ),
+            child: const Center(
+              child: Text(
+                'Next',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Dubai',
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
         ],
       ),

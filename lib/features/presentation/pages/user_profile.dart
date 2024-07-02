@@ -92,16 +92,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 MaterialPageRoute(builder: (context) => CompleteProfile()),
               );
             },
-            child: const Text(
-              "Complete Profile",
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            child:  Icon(Clarity.edit_line, color: primaryBlueColor,size: 15,),
           ),
         ],
+        leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor,size: 15,)),
       ),
       body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         future: FirebaseFirestore.instance
@@ -158,30 +152,68 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  const CAPTION(title: 'Full Name'),
-                  Field(title: fullName.isNotEmpty ? fullName : 'First Name Not Provided'),
-                  const SizedBox(height: 20),
-                  const CAPTION(title: 'Age'),
-                  Field(title: userData['age'] ?? 'Not Updated Yet'),
-                  const SizedBox(height: 20),
-                  const CAPTION(title: 'Phone Number'),
-                  Field(title: userData['phoneNumber'] ?? 'Not Updated Yet'),
-                  const SizedBox(height: 20),
-                  const CAPTION(title: 'Email'),
-                  Field(title: _auth.currentUser?.email ?? 'Not Updated Yet'),
-                  const SizedBox(height: 20),
-                  const CAPTION(title: 'Province'),
-                  Field(title: userData['province'] ?? 'Not Updated Yet'),
-                  const SizedBox(height: 20),
-                  const CAPTION(title: 'City'),
-                  Field(title: userData['city'] ?? 'Not Updated Yet'),
-                  const SizedBox(height: 20),
-                  const CAPTION(title: 'Address'),
-                  Field(title: userData['Address'] ?? 'Not Updated Yet'),
+                  if(userData["businessAccount"]=="true")...[
+
+                    const SizedBox(height: 20),
+                    Field(heading:"Business Name", title: fullName.isNotEmpty ? fullName : 'First Name Not Provided'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Province", title: userData['province'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"City", title: userData['city'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Address", title: userData['Address'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Location on Map", title: userData['Address'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Office Number", title: userData['phoneNumber'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Email", title: _auth.currentUser?.email ?? 'Not Updated Yet'),
+
+                    Row(
+                      children: [
+                        H3(title: "Add Degree", clr: primaryBlueColor),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Clarity.plus_line,
+                            size: 15,
+                            color: primaryBlueColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        H3(title: "Add Courses", clr: primaryBlueColor),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Clarity.plus_line,
+                            size: 15,
+                            color: primaryBlueColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]
+                  else ...[
+                    const SizedBox(height: 20),
+                    Field(heading:"Full Name", title: fullName.isNotEmpty ? fullName : 'First Name Not Provided'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Age", title: userData['age'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Phone Number", title: userData['phoneNumber'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Email", title: _auth.currentUser?.email ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Province", title: userData['province'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"City", title: userData['city'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(heading:"Address", title: userData['Address'] ?? 'Not Updated Yet'),
                   Row(
                     children: [
-                      H3(title: "Education", clr: primaryBlueColor),
+                      H3(title: "Add Education", clr: primaryBlueColor),
                       IconButton(
                         onPressed: () {},
                         icon: Icon(
@@ -194,7 +226,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   Row(
                     children: [
-                      H3(title: "Experience", clr: primaryBlueColor),
+                      H3(title: "Add Experience", clr: primaryBlueColor),
                       IconButton(
                         onPressed: () {},
                         icon: Icon(
@@ -206,6 +238,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ],
                   ),
                 ],
+          ],
               ),
             );
           }
