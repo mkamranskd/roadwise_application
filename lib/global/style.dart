@@ -19,34 +19,17 @@ class TEXTBOX extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10), // Adjust padding here
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromRGBO(143, 148, 251, .2),
-                blurRadius: 10.0,
-                offset: Offset(0, 5),
-              ),
-            ],
-          ),
-          child: TextField(
-            controller: cont,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: title,
-              hintStyle: TextStyle(
-                color: Colors.grey[700],
-                fontFamily: 'Dubai',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+        const SizedBox(height: 10),
+        TextField(
+          obscureText: false,
+          controller: cont,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            labelText: title,
+            hintText: title,
           ),
         ),
-        const SizedBox(height: 5), // Adjusted SizedBox height
+        const SizedBox(height: 10), // Adjusted SizedBox height
       ],
     );
   }
@@ -55,38 +38,22 @@ class TEXTBOX extends StatelessWidget {
 
 class Field extends StatelessWidget {
   final String title;
-  const Field({Key? key, required this.title, }) : super(key: key);
+
+  final String heading;
+  const Field({super.key, required this.title, required this.heading, });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 1000,
-          height: 50,
-          padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 10), // Adjust padding here
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromRGBO(143, 148, 251, .2),
-                blurRadius: 10.0,
-                offset: Offset(0, 5),
-              ),
-            ],
+        TextField(
+          readOnly: true,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            labelText: heading,
           ),
-          child: Text(
-          title,
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontFamily: 'Dubai',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-
+          controller: TextEditingController(text: title),
+        ),
         const SizedBox(height: 5), // Adjusted SizedBox height
       ],
     );
@@ -105,16 +72,16 @@ class ProgressBar extends StatelessWidget {
         StepProgressIndicator(
           totalSteps: total,
           currentStep: count,
-          selectedColor: Colors.yellow,
+          selectedColor: primaryBlueColor,
           unselectedColor: Colors.grey,
-          customStep: (index, color, _) => color == Colors.yellow
+          customStep: (index, color, _) => color == primaryBlueColor
               ? Container(
             color: color,
-            child: const Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child:  Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               child: Icon(
                 Icons.check_circle,
-                color: Colors.yellow,
+                color: primaryBlueColor,
               ),
             ),
           )
@@ -352,41 +319,26 @@ class _CustomComboBoxState extends State<CustomComboBox> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromRGBO(143, 148, 251, .2),
-                blurRadius: 10.0,
-                offset: Offset(0, 5),
-              ),
-            ],
+        DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Adjust padding here
+            hintText: widget.title,
+            hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
           ),
-          child: DropdownButtonFormField<String>(
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 1.0), // Adjust padding here
-              border: InputBorder.none,
-              hintText: widget.title,
-              hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
-            ),
-            value: _selectedValue,
-            items: widget.items.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedValue = newValue ?? '';
-                _updateFirebaseField(newValue);
-              });
-            },
-          ),
+          value: _selectedValue,
+          items: widget.items.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedValue = newValue ?? '';
+              _updateFirebaseField(newValue);
+            });
+          },
         ),
         const SizedBox(height: 5), // Adjust SizedBox height as needed
       ],
@@ -429,7 +381,7 @@ class CustomButton extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 45,
+            height: 50,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               gradient:  LinearGradient(

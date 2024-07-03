@@ -7,9 +7,12 @@ import 'package:roadwise_application/global/style.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
 import 'package:roadwise_application/features/presentation/pages/jobs_page/job_details.dart';
 import 'package:roadwise_application/global/Utils.dart';
+import '../features/presentation/pages/dashHome.dart';
 import '../features/presentation/pages/user_profile.dart';
 import 'chat_screen.dart';
 import 'chatbot.dart';
+
+import 'package:flutter_treeview/flutter_treeview.dart';
 final _auth = FirebaseAuth.instance;
 
 void main() {
@@ -283,17 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Home Page"),
-            ],
-          ),
-        ],
-      ),
+      body: UsersListScreen(),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Connect To Assistant',
         onPressed: () {
@@ -1041,7 +1034,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                               : userData['profilePicture'] != null
                               ? NetworkImage(userData['profilePicture'])
                               : const AssetImage('assets/icons/person_icon.png') as ImageProvider<Object>,
-                          radius: 32, // Adjust avatar size as needed
+                          radius: 32,
+
                         ),
                         title: Text(
                           fullName.isNotEmpty ? fullName : 'First Name Not Provided',
@@ -1052,56 +1046,46 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                           ),
                         ),
                         // Add subtitle if needed
-                        // subtitle: Text('Subtitle Text'),
-                        // Add onTap for interaction
-                        // onTap: () {
-                        //   // Handle onTap event
-                        // },
-                      ),
-                    ),
-                    ListTile(
-                      leading: const Icon(Clarity.user_line),
-                      title: const Text(
-                        'My Profile' ,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  UserProfileScreen(user: _auth.currentUser!)),
-                        );
-                      },
-                    ),
+                         subtitle: Text(userData["businessAccount"]=="true"? 'Business Account': 'Student Account'),
 
-                    ListTile(
-                      leading: const Icon(Clarity.email_line),
-                      title: const Text('Email'),
-                      onTap: () {
-                        // Handle Email settings
-                      },
+                      ),
                     ),
-                    ListTile(
-                      leading: const Icon(Clarity.lock_line),
-                      title: const Text('Password'),
-                      onTap: () {
-                        // Handle Password settings
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.privacy_tip_outlined),
-                      title: const Text('Privacy'),
-                      onTap: () {
-                        // Handle Privacy settings
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Clarity.notification_line),
-                      title: const Text('Notifications'),
-                      onTap: () {
-                        // Handle Notification settings
-                      },
-                    ),
+                    if(userData["businessAccount"]=="true") ...[
+                      ListTile(
+                        leading: const Icon(Icons.business),
+                        title: const Text(
+                          'Business Profile' ,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    UserProfileScreen(user: _auth.currentUser!)),
+                          );
+                        },
+                      ),
+
+
+
+                    ] else ...[
+                      ListTile(
+                        leading: const Icon(Clarity.user_line),
+                        title: const Text(
+                          'Profile' ,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    UserProfileScreen(user: _auth.currentUser!)),
+                          );
+                        },
+                      ),
+
+                    ],
+
                     const Divider(
                       color: Colors.grey,
                     ),
@@ -1110,24 +1094,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                       child: Column(
                         children: [
                           //sizeVer(20),
-                          ListTile(
-                            leading: const Icon(Clarity.squid_line),
-                            title: const Text('Business Profile'),
-                            onTap: () {
-                              // Handle Notification settings
-                            },
-                            trailing: Transform.scale(
-                              scale: 0.6,
-                              child: Switch(
-                                value: isBusinessProfile,
-                                onChanged: (value) {
-                                  setState(() {
-                                    isBusinessProfile = value;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
+
                           ListTile(
                             leading: const Icon(Clarity.settings_line),
                             title: const Text('Settings'),
@@ -1189,40 +1156,3 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 }
 
-class CustomSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Center(
-      child: Text('Search results for: $query'),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return const Center(
-      child: Text('Type something to search'),
-    );
-  }
-}

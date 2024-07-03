@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_up_page.dart';
 import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
 import 'package:roadwise_application/global/Utils.dart';
 import 'package:roadwise_application/global/style.dart';
+import 'package:roadwise_application/screens/dashboard_screen.dart';
 import 'package:roadwise_application/screens/password_reset_screen.dart';
-import '../../../../screens/common_header.dart';
+import 'package:roadwise_application/screens/common_header.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key});
@@ -21,6 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isObscure = true; // Initial state of password visibility
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -105,7 +108,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: 20),
                     CustomButton(
                       loading: loading,
-                      title: "Login ",
+                      title: "Login",
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
                           login();
@@ -152,12 +155,24 @@ class _SignInScreenState extends State<SignInScreen> {
       _auth.signInWithEmailAndPassword(
         email: emailController.text.toString(),
         password: passwordController.text.toString(),
-      ).then((value) {
-        //Utils.toastMessage(context, value.user!.email.toString(), Icons.check_circle_outline);
+      ).then((value) async {
+        // Check if the user is a business account
+        final user = _auth.currentUser;
+        if (user != null) {
+          final userDoc = await FirebaseFirestore.instance.collection('Users').doc(user.uid).get();
 
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CompleteProfile()));
 
+          if(userDoc.exists && userDoc.data()?['firstName'] ==""){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CompleteProfile()));
+          }
+          if (userDoc.exists && userDoc.data()?['businessAccount'] == "true") {
+            // Navigate to a blank screen if the user is a business account
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard()));
+          } else {
+
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard()));
+          }
+        }
         setState(() {
           loading = false;
         });
@@ -166,42 +181,33 @@ class _SignInScreenState extends State<SignInScreen> {
         IconData icon = Icons.warning;
         String errorMessage = "An error occurred while logging in. Please try again later.";
         if (error is FirebaseAuthException) {
-          setState(() {
-            loading = false;
-          });
           switch (error.code) {
             case 'invalid-email':
               errorMessage = "Invalid email address.";
               break;
             case 'user-not-found':
-              errorMessage =
-              "User not found. Please check your credentials and try again.";
+              errorMessage = "User not found. Please check your credentials and try again.";
               break;
             case 'wrong-password':
               errorMessage = "Wrong password. Please try again.";
               break;
             case 'user-disabled':
-              errorMessage =
-              "Your account has been disabled. Please contact support.";
+              errorMessage = "Your account has been disabled. Please contact support.";
               break;
             case 'too-many-requests':
               errorMessage = "Too many login attempts. Please try again later.";
               break;
             case 'operation-not-allowed':
-              errorMessage =
-              "Email/password sign-in is not enabled. Please contact support.";
+              errorMessage = "Email/password sign-in is not enabled. Please contact support.";
               break;
             case 'email-already-in-use':
-              errorMessage =
-              "The email address is already in use by another account.";
+              errorMessage = "The email address is already in use by another account.";
               break;
             case 'weak-password':
-              errorMessage =
-              "The password is too weak. Please choose a stronger password.";
+              errorMessage = "The password is too weak. Please choose a stronger password.";
               break;
             case 'network-request-failed':
-              errorMessage =
-              "Network error occurred. Please check your internet connection.";
+              errorMessage = "Network error occurred. Please check your internet connection.";
               break;
             case 'invalid-verification-code':
               errorMessage = "Invalid verification code.";
@@ -216,15 +222,13 @@ class _SignInScreenState extends State<SignInScreen> {
               errorMessage = "Invalid Email or Password.";
               break;
             case 'credential-already-in-use':
-              errorMessage =
-              "The credential is already in use by another account.";
+              errorMessage = "The credential is already in use by another account.";
               break;
             case 'user-mismatch':
               errorMessage = "User mismatch error.";
               break;
             case 'expired-action-code':
-              errorMessage =
-              "The action code has expired. Please request a new one.";
+              errorMessage = "The action code has expired. Please request a new one.";
               break;
             case 'invalid-action-code':
               errorMessage = "Invalid action code. Please check and try again.";
@@ -248,5 +252,16 @@ class _SignInScreenState extends State<SignInScreen> {
         });
       });
     }
+  }
+}
+
+// Dummy blank screen for business accounts
+class BlankScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Business Account")),
+      body: Center(child: Text("Welcome to the Business Account!")),
+    );
   }
 }
