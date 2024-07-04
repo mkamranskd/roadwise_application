@@ -35,7 +35,6 @@ class DashBoard extends StatelessWidget {
     );
   }
 }
-
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
 
@@ -85,6 +84,8 @@ class _FirstPageState extends State<FirstPage> {
           return true;
         }
       },
+
+
       child: Scaffold(
         body: PageView(
           controller: _pageController,
