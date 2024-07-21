@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:roadwise_application/features/app/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'global/style.dart';
 
 
 
@@ -10,8 +11,8 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  ifBusinessAccount();
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {

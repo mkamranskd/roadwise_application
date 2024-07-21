@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
@@ -236,19 +235,21 @@ class _SignUpPageState extends State<SignUpPage> {
     ).then((value) {
       if (isBusinessAccount) {
         FirebaseFirestore.instance.collection("Users").doc(_auth.currentUser?.uid).set({
-        "businessAccount": 'true' },SetOptions(merge: true));
+          "businessAccount": 'true',
+          'fullName': businessNameController.text,
+          'Address': businessAddressController.text,
+        },SetOptions(merge: true));
         final user = _auth.currentUser;
         if (user != null) {
 
           FirebaseFirestore.instance.collection('businessAccounts').doc(user.uid).set({
-          'businessName': businessNameController.text,
-          'businessAddress': businessAddressController.text,
+
            });
         }
       }
       Utils.toastMessage(context, "Account Created Successfully\nRedirecting to the Login Screen", Icons.check_circle_outline);
       Timer(
-        const Duration(seconds: 2),
+        const Duration(seconds: 1),
             () => Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const SignInScreen()),

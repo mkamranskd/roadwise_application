@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,11 +12,10 @@ import '../features/presentation/pages/dashHome.dart';
 import '../features/presentation/pages/user_profile.dart';
 import 'chat_screen.dart';
 import 'chatbot.dart';
-
-import 'package:flutter_treeview/flutter_treeview.dart';
 final _auth = FirebaseAuth.instance;
 
 void main() {
+  ifBusinessAccount();
   runApp(const DashBoard());
 }
 
@@ -289,6 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: UsersListScreen(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryBlueColor,
         tooltip: 'Connect To Assistant',
         onPressed: () {
           Navigator.push(
@@ -296,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
             MaterialPageRoute(builder: (context) => Chatbot()),
           );
         },
-        child: const Icon(Icons.chat),
+        child: const Icon(AntDesign.message_fill,color:Colors.white ,),
       ),
     );
   }
@@ -505,61 +506,20 @@ class Screen2 extends StatelessWidget {
               fontWeight: FontWeight.bold),
         ),
       ),
-      body: const MessageCardList(),
+      body:const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Open any Profile to Send Message"),
+          ],
+        ),
+      ],),
     );
   }
 }
 
-class MessageCardList extends StatelessWidget {
-  const MessageCardList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Example data
-    List<Message> messages = [
-      Message(sender: 'Alice', message: 'Hello!', timestamp: 'Yesterday'),
-      Message(sender: 'Bob', message: 'Hi there!', timestamp: 'Jan 30'),
-      Message(sender: 'Eve', message: 'Good morning!', timestamp: 'Feb 1'),
-      Message(sender: 'Charlie', message: 'What\'s up?', timestamp: 'Feb 3'),
-      Message(sender: 'David', message: 'Howdy!', timestamp: 'Feb 5'),
-      Message(
-          sender: 'Frank', message: 'Nice to meet you!', timestamp: 'Feb 7'),
-      Message(
-          sender: 'Grace', message: 'How are you doing?', timestamp: 'Feb 8'),
-      Message(sender: 'Hannah', message: 'Hey!', timestamp: 'Feb 8'),
-      Message(
-          sender: 'Isabel',
-          message: 'Hi, long time no see!',
-          timestamp: 'Feb 8'),
-      Message(sender: 'Jack', message: 'What\'s going on?', timestamp: 'Feb 8'),
-      Message(sender: 'Kelly', message: 'Hey there!', timestamp: 'Feb 8'),
-      Message(sender: 'Liam', message: 'Hello!', timestamp: 'Feb 8'),
-      Message(sender: 'Mia', message: 'Hey!', timestamp: 'Feb 8'),
-      Message(
-          sender: 'Nathan', message: 'How\'s it going?', timestamp: 'Feb 8'),
-      Message(sender: 'Olivia', message: 'Hi!', timestamp: 'Feb 8'),
-      Message(sender: 'Peter', message: 'Hey, what\'s up?', timestamp: 'Feb 8'),
-      Message(sender: 'Rachel', message: 'Hello!', timestamp: 'Feb 8'),
-      Message(sender: 'Sam', message: 'Hi there!', timestamp: 'Feb 8'),
-      Message(sender: 'Tom', message: 'Hey!', timestamp: 'Feb 8'),
-      Message(sender: 'Ursula', message: 'Good evening!', timestamp: 'Feb 8'),
-      Message(sender: 'Victor', message: 'Hey!', timestamp: 'Feb 8'),
-      Message(sender: 'Wendy', message: 'Hello!', timestamp: 'Feb 8'),
-      Message(sender: 'Xavier', message: 'Hi there!', timestamp: 'Feb 8'),
-      Message(sender: 'Yvonne', message: 'Hey!', timestamp: 'Feb 8'),
-      Message(sender: 'Zach', message: 'What\'s up?', timestamp: 'Feb 8')
-
-      // Add more messages as needed
-    ];
-
-    return ListView.builder(
-      itemCount: messages.length,
-      itemBuilder: (context, index) {
-        return MessageCard(message: messages[index]);
-      },
-    );
-  }
-}
 
 class MessageCard extends StatelessWidget {
   final Message message;
@@ -590,11 +550,13 @@ class MessageCard extends StatelessWidget {
 }
 
 class Message {
+  final String image;
   final String sender;
   final String message;
   final String timestamp;
 
   Message({
+    required this.image,
     required this.sender,
     required this.message,
     required this.timestamp,
@@ -1013,9 +975,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               if (userData == null) {
                 return const Center(child: Text('User data is null'));
               }
-              final firstName = userData['firstName'] ?? '';
-              final lastName = userData['lastName'] ?? '';
-              final fullName = '$firstName $lastName';
+              final fullName = userData['fullName'] ?? '';
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
@@ -1039,7 +999,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
                         ),
                         title: Text(
-                          fullName.isNotEmpty ? fullName : 'First Name Not Provided',
+                          fullName.isNotEmpty ? fullName : 'Name Not Provided',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -1047,7 +1007,23 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                           ),
                         ),
                         // Add subtitle if needed
-                         subtitle: Text(userData["businessAccount"]=="true"? 'Business Account': 'Student Account'),
+                         subtitle: Row(
+                           children: [
+                             CircleAvatar(
+                               backgroundColor: Colors.blue,
+                               radius: 8,
+                               child: Icon(
+                                 userData['businessAccount'] == "true"
+                                     ? Icons.business
+                                     : Icons.person,
+                                 size: 10,
+                                 color: Colors.white,
+                               ),
+                             ),
+                             SizedBox(width: 10,),
+                             Text(userData["businessAccount"]=="true"? 'Business Account': 'Student Account'),
+                           ],
+                         ),
 
                       ),
                     ),

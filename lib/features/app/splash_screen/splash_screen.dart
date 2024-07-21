@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
             // Your logo widget
             Image.asset(
 
-              'assets/roadwiselogo.PNG',
+              'assets/roadwiselogo.png',
               width: 350,
               height: 350,
             ),

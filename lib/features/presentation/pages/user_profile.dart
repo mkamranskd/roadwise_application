@@ -37,8 +37,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> _updateProfilePicture(File image) async {
-
-
     final Reference storageRef = FirebaseStorage.instance
         .ref()
         .child('profilePictures/${widget.user.uid}');
@@ -54,7 +52,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         });
         setState(() {
           _image = null;
-
         });
         Navigator.of(context).pop();
       });
@@ -62,6 +59,332 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       Navigator.of(context).pop();
       print('Error uploading profile picture: $e');
     }
+  }
+
+  void _showEducationDialog({DocumentSnapshot? document}) {
+    final TextEditingController degreeController = TextEditingController();
+    final TextEditingController fromController = TextEditingController();
+    final TextEditingController yearController = TextEditingController();
+
+    if (document != null) {
+      final educationData = document.data() as Map<String, dynamic>;
+      degreeController.text = educationData['degree'] ?? '';
+      fromController.text = educationData['from'] ?? '';
+      yearController.text = educationData['year'] ?? '';
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(document == null ? "Add Education" : "Edit Education"),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TEXTBOX(
+                title: "Degree",
+                controller: degreeController,
+              ),
+              TEXTBOX(
+                title: "From",
+                controller: fromController,
+              ),
+              TEXTBOX(
+                title: "Year",
+                controller: yearController,
+              ),
+              CustomButton(
+                title: document == null ? "Add" : "Update",
+                clr1: Colors.blue,
+                clr2: Colors.blue,
+                onTap: () async {
+                  final degree = degreeController.text;
+                  final from = fromController.text;
+                  final year = yearController.text;
+
+                  if (degree.isNotEmpty && from.isNotEmpty && year.isNotEmpty) {
+                    final userRef = FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(widget.user.uid)
+                        .collection('Education');
+
+                    if (document == null) {
+                      await userRef.add({
+                        'degree': degree,
+                        'from': from,
+                        'year': year,
+                      });
+                    } else {
+                      await userRef.doc(document.id).update({
+                        'degree': degree,
+                        'from': from,
+                        'year': year,
+                      });
+                    }
+
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  void _showExperienceDialog({DocumentSnapshot? document}) {
+    final TextEditingController instituteController = TextEditingController();
+    final TextEditingController positionController = TextEditingController();
+    final TextEditingController fromController = TextEditingController();
+    final TextEditingController yearController = TextEditingController();
+
+    if (document != null) {
+      final experienceData = document.data() as Map<String, dynamic>;
+      instituteController.text = experienceData['institute'] ?? '';
+      positionController.text = experienceData['position'] ?? '';
+      fromController.text = experienceData['from'] ?? '';
+      yearController.text = experienceData['year'] ?? '';
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(document == null ? "Add Experience" : "Edit Experience"),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TEXTBOX(
+                title: "Institute",
+                controller: instituteController,
+              ),
+              TEXTBOX(
+                title: "Position",
+                controller: positionController,
+              ),
+              TEXTBOX(
+                title: "From",
+                controller: fromController,
+              ),
+              TEXTBOX(
+                title: "Year",
+                controller: yearController,
+              ),
+              CustomButton(
+                title: document == null ? "Add" : "Update",
+                clr1: Colors.blue,
+                clr2: Colors.blue,
+                onTap: () async {
+                  final institute = instituteController.text;
+                  final position = positionController.text;
+                  final from = fromController.text;
+                  final year = yearController.text;
+
+                  if (institute.isNotEmpty && position.isNotEmpty && from.isNotEmpty && year.isNotEmpty) {
+                    final userRef = FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(widget.user.uid)
+                        .collection('Experience');
+
+                    if (document == null) {
+                      await userRef.add({
+                        'institute': institute,
+                        'position': position,
+                        'from': from,
+                        'year': year,
+                      });
+                    } else {
+                      await userRef.doc(document.id).update({
+                        'institute': institute,
+                        'position': position,
+                        'from': from,
+                        'year': year,
+                      });
+                    }
+
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  void _showCourseDialog({DocumentSnapshot? document}) {
+    final TextEditingController courseController = TextEditingController();
+    final TextEditingController durationController = TextEditingController();
+    final TextEditingController yearController = TextEditingController();
+
+    if (document != null) {
+      final courseData = document.data() as Map<String, dynamic>;
+      courseController.text = courseData['course'] ?? '';
+      durationController.text = courseData['duration'] ?? '';
+      yearController.text = courseData['year'] ?? '';
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(document == null ? "Add Course" : "Edit Course"),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TEXTBOX(
+                title: "Course",
+                controller: courseController,
+              ),
+              TEXTBOX(
+                title: "Duration",
+                controller: durationController,
+              ),
+              TEXTBOX(
+                title: "Year",
+                controller: yearController,
+              ),
+              CustomButton(
+                title: document == null ? "Add" : "Update",
+                clr1: Colors.blue,
+                clr2: Colors.blue,
+                onTap: () async {
+                  final course = courseController.text;
+                  final duration = durationController.text;
+                  final year = yearController.text;
+
+                  if (course.isNotEmpty && duration.isNotEmpty && year.isNotEmpty) {
+                    final userRef = FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(widget.user.uid)
+                        .collection('Courses');
+
+                    if (document == null) {
+                      await userRef.add({
+                        'course': course,
+                        'duration': duration,
+                        'year': year,
+                      });
+                    } else {
+                      await userRef.doc(document.id).update({
+                        'course': course,
+                        'duration': duration,
+                        'year': year,
+                      });
+                    }
+
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  void _showDegreeDialog({DocumentSnapshot? document}) {
+    final TextEditingController degreeController = TextEditingController();
+    final TextEditingController durationController = TextEditingController();
+    final TextEditingController yearController = TextEditingController();
+
+    if (document != null) {
+      final degreeData = document.data() as Map<String, dynamic>;
+      degreeController.text = degreeData['degree'] ?? '';
+      durationController.text = degreeData['duration'] ?? '';
+      yearController.text = degreeData['year'] ?? '';
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(document == null ? "Add Degree" : "Edit Degree"),
+          contentPadding: const EdgeInsets.all(16.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TEXTBOX(
+                title: "Degree",
+                controller: degreeController,
+              ),
+              TEXTBOX(
+                title: "Duration",
+                controller: durationController,
+              ),
+              TEXTBOX(
+                title: "Year",
+                controller: yearController,
+              ),
+              CustomButton(
+                title: document == null ? "Add" : "Update",
+                clr1: Colors.blue,
+                clr2: Colors.blue,
+                onTap: () async {
+                  final degree = degreeController.text;
+                  final institution = durationController.text;
+                  final year = yearController.text;
+
+                  if (degree.isNotEmpty && institution.isNotEmpty && year.isNotEmpty) {
+                    final userRef = FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(widget.user.uid)
+                        .collection('Degree');
+
+                    if (document == null) {
+                      await userRef.add({
+                        'degree': degree,
+                        'duration': institution,
+                        'year': year,
+                      });
+                    } else {
+                      await userRef.doc(document.id).update({
+                        'degree': degree,
+                        'duration': institution,
+                        'year': year,
+                      });
+                    }
+
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  Future<void> _deleteCourse(String docId) async {
+    final userRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(widget.user.uid)
+        .collection('Courses');
+    await userRef.doc(docId).delete();
+  }
+  Future<void> _deleteDegree(String docId) async {
+    final userRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(widget.user.uid)
+        .collection('Degree');
+    await userRef.doc(docId).delete();
+  }
+  Future<void> _deleteEducation(String docId) async {
+    final userRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(widget.user.uid)
+        .collection('Education');
+    await userRef.doc(docId).delete();
+  }
+  Future<void> _deleteExperience(String docId) async {
+    final userRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(widget.user.uid)
+        .collection('Experience');
+    await userRef.doc(docId).delete();
   }
 
   @override
@@ -92,10 +415,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 MaterialPageRoute(builder: (context) => CompleteProfile()),
               );
             },
-            child:  Icon(Clarity.edit_line, color: primaryBlueColor,size: 15,),
+            child: Icon(Clarity.edit_line, color: primaryBlueColor, size: 15),
           ),
         ],
-        leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor,size: 15,)),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor, size: 15),
+        ),
       ),
       body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         future: FirebaseFirestore.instance
@@ -119,9 +447,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             if (userData == null) {
               return const Center(child: Text('User data is null'));
             }
-            final firstName = userData['firstName'] ?? '';
-            final lastName = userData['lastName'] ?? '';
-            final fullName = '$firstName $lastName';
+            final fullName = userData['fullName'] ?? '';
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
@@ -136,10 +462,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               ? FileImage(_image!) as ImageProvider<Object>
                               : userData['profilePicture'] != null
                               ? NetworkImage(userData['profilePicture'])
-                              : AssetImage('assets/icons/person_icon.png') as ImageProvider<Object>,
+                              : const AssetImage(
+                              'assets/icons/person_icon.png')
+                          as ImageProvider<Object>,
                           radius: 64,
                         ),
-
                         Positioned(
                           bottom: -18,
                           left: 97,
@@ -152,93 +479,364 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ],
                     ),
                   ),
-                  if(userData["businessAccount"]=="true")...[
+                  if (userData["businessAccount"] == "true") ...[
+                    const SizedBox(height: 20),
+                    Field(
+                        heading: "Business Name",
+                        title: userData['fullName'] ??
+                            'Business Name Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(
+                        heading: "Bio",
+                        title: userData['bio'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(
+                        heading: "Address",
+                        title: userData['Address'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(
+                        heading: "City",
+                        title: userData['city'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(
+                        heading: "Province",
+                        title: userData['province'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
 
+                    Field(
+                        heading: "Location on Map",
+                        title: userData['Address'] ?? 'Not Updated Yet'),
                     const SizedBox(height: 20),
-                    Field(heading:"Business Name", title: fullName.isNotEmpty ? fullName : 'First Name Not Provided'),
+                    Field(
+                        heading: "Office Number",
+                        title: userData['phoneNumber'] ?? 'Not Updated Yet'),
                     const SizedBox(height: 20),
-                    Field(heading:"Province", title: userData['province'] ?? 'Not Updated Yet'),
-                    const SizedBox(height: 20),
-                    Field(heading:"City", title: userData['city'] ?? 'Not Updated Yet'),
-                    const SizedBox(height: 20),
-                    Field(heading:"Address", title: userData['Address'] ?? 'Not Updated Yet'),
-                    const SizedBox(height: 20),
-                    Field(heading:"Location on Map", title: userData['Address'] ?? 'Not Updated Yet'),
-                    const SizedBox(height: 20),
-                    Field(heading:"Office Number", title: userData['phoneNumber'] ?? 'Not Updated Yet'),
-                    const SizedBox(height: 20),
-                    Field(heading:"Email", title: _auth.currentUser?.email ?? 'Not Updated Yet'),
-
+                    Field(
+                        heading: "Email",
+                        title: _auth.currentUser?.email ?? 'Not Updated Yet'),
                     Row(
                       children: [
                         H3(title: "Add Degree", clr: primaryBlueColor),
+                        const Expanded(child: SizedBox(width: 10)),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _showDegreeDialog();
+                          },
                           icon: Icon(
-                            Clarity.plus_line,
-                            size: 15,
+                            Clarity.plus_circle_solid,
+                            size: 20,
                             color: primaryBlueColor,
                           ),
                         ),
                       ],
                     ),
+
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(widget.user.uid)
+                          .collection('Degree')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(
+                            color: primaryBlueColor,
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No Degree data available');
+                        } else {
+                          final educationDocs = snapshot.data!.docs;
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: educationDocs.length,
+                            itemBuilder: (context, index) {
+                              final courseData =
+                              educationDocs[index].data()
+                              as Map<String, dynamic>;
+                              return ListTile(
+                                title: Text(courseData['degree'] ?? ''),
+                                subtitle: Text(
+                                    '${courseData['duration'] ?? ''} (${courseData['year'] ?? ''})'),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Clarity.edit_line,
+                                        color: Colors.blue,size: 15,),
+                                      onPressed: () {
+                                        _showDegreeDialog(document: educationDocs[index]);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Clarity.trash_line,
+                                        color: Colors.red,size: 15,),
+                                      onPressed: () async {
+                                        await _deleteDegree(educationDocs[index].id);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+
                     Row(
                       children: [
                         H3(title: "Add Courses", clr: primaryBlueColor),
+                        const Expanded(child: SizedBox(width: 10)),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _showCourseDialog();
+                          },
                           icon: Icon(
-                            Clarity.plus_line,
-                            size: 15,
+                            Clarity.plus_circle_solid,
+                            size: 20,
                             color: primaryBlueColor,
                           ),
                         ),
                       ],
                     ),
-                  ]
-                  else ...[
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(widget.user.uid)
+                          .collection('Courses')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(
+                            color: primaryBlueColor,
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No Course data available');
+                        } else {
+                          final educationDocs = snapshot.data!.docs;
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: educationDocs.length,
+                            itemBuilder: (context, index) {
+                              final courseData =
+                              educationDocs[index].data()
+                              as Map<String, dynamic>;
+                              return ListTile(
+                                title: Text(courseData['course'] ?? ''),
+                                subtitle: Text(
+                                    '${courseData['duration'] ?? ''} (${courseData['year'] ?? ''})'),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Clarity.edit_line,
+                                        color: Colors.blue,size: 15,),
+                                      onPressed: () {
+                                        _showCourseDialog(document: educationDocs[index]);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Clarity.trash_line,
+                                        color: Colors.red,size: 15,),
+                                      onPressed: () async {
+                                        await _deleteCourse(educationDocs[index].id);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ] else ...[
                     const SizedBox(height: 20),
-                    Field(heading:"Full Name", title: fullName.isNotEmpty ? fullName : 'First Name Not Provided'),
+                    Field(
+                        heading: "Full Name",
+                        title: fullName.isNotEmpty
+                            ? fullName
+                            : 'First Name Not Provided'),
                     const SizedBox(height: 20),
-                    Field(heading:"Age", title: userData['age'] ?? 'Not Updated Yet'),
+                    Field(
+                        heading: "Bio",
+                        title: userData['bio'] ?? 'Not Updated Yet'),
                     const SizedBox(height: 20),
-                    Field(heading:"Phone Number", title: userData['phoneNumber'] ?? 'Not Updated Yet'),
+                    Field(
+                        heading: "Age",
+                        title: userData['age'] ?? 'Not Updated Yet'),
                     const SizedBox(height: 20),
-                    Field(heading:"Email", title: _auth.currentUser?.email ?? 'Not Updated Yet'),
+                    Field(
+                        heading: "Phone Number",
+                        title: userData['phoneNumber'] ?? 'Not Updated Yet'),
                     const SizedBox(height: 20),
-                    Field(heading:"Province", title: userData['province'] ?? 'Not Updated Yet'),
+                    Field(
+                        heading: "Email",
+                        title: _auth.currentUser?.email ?? 'Not Updated Yet'),
                     const SizedBox(height: 20),
-                    Field(heading:"City", title: userData['city'] ?? 'Not Updated Yet'),
+                    Field(
+                        heading: "Province",
+                        title: userData['province'] ?? 'Not Updated Yet'),
                     const SizedBox(height: 20),
-                    Field(heading:"Address", title: userData['Address'] ?? 'Not Updated Yet'),
-                  Row(
-                    children: [
-                      H3(title: "Add Education", clr: primaryBlueColor),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Clarity.plus_line,
-                          size: 15,
-                          color: primaryBlueColor,
+                    Field(
+                        heading: "City",
+                        title: userData['city'] ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20),
+                    Field(
+                        heading: "Address",
+                        title: userData['Address'] ?? 'Not Updated Yet'),
+                    Row(
+                      children: [
+                        H3(title: "Education", clr: primaryBlueColor),
+                        const Expanded(child: SizedBox(width: 10)),
+                        IconButton(
+                          onPressed: () {
+                            _showEducationDialog();
+                          },
+                          icon: Icon(
+                            Clarity.plus_circle_solid,
+                            size: 20,
+                            color: primaryBlueColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      H3(title: "Add Experience", clr: primaryBlueColor),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Clarity.plus_line,
-                          size: 15,
-                          color: primaryBlueColor,
+                      ],
+                    ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(widget.user.uid)
+                          .collection('Education')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(
+                            color: primaryBlueColor,
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No education data available');
+                        } else {
+                          final educationDocs = snapshot.data!.docs;
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: educationDocs.length,
+                            itemBuilder: (context, index) {
+                              final educationData =
+                              educationDocs[index].data()
+                              as Map<String, dynamic>;
+                              return ListTile(
+                                title: Text(educationData['degree'] ?? ''),
+                                subtitle: Text(
+                                    '${educationData['from'] ?? ''} (${educationData['year'] ?? ''})'),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Clarity.edit_line,
+                                          color: Colors.blue,size: 15,),
+                                      onPressed: () {
+                                        _showEducationDialog(document: educationDocs[index]);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Clarity.trash_line,
+                                        color: Colors.red,size: 15,),
+                                      onPressed: () async {
+                                        await _deleteEducation(educationDocs[index].id);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    Row(
+                      children: [
+                        H3(title: "Experience", clr: primaryBlueColor),
+                        const Expanded(child: SizedBox(width: 10)),
+                        IconButton(
+                          onPressed: () {
+                            _showExperienceDialog();
+                          },
+                          icon: Icon(
+                            Clarity.plus_circle_solid,
+                            size: 20,
+                            color: primaryBlueColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('Users')
+                          .doc(widget.user.uid)
+                          .collection('Experience')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator(
+                            color: primaryBlueColor,
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text('No experience data available');
+                        } else {
+                          final experienceDocs = snapshot.data!.docs;
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: experienceDocs.length,
+                            itemBuilder: (context, index) {
+                              final experienceData =
+                              experienceDocs[index].data()
+                              as Map<String, dynamic>;
+                              return ListTile(
+                                title: Text(experienceData['institute'] ?? ''),
+                                subtitle: Text(
+                                    '${experienceData['position'] ?? ''} (${experienceData['from'] ?? ''} - ${experienceData['year'] ?? ''})'),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Clarity.edit_line,
+                                          color: Colors.blue,size: 15,),
+                                      onPressed: () {
+                                        _showExperienceDialog(document: experienceDocs[index]);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Clarity.trash_line,
+                                          color: Colors.red,size: 15,),
+                                      onPressed: () async {
+                                        await _deleteExperience(experienceDocs[index].id);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 ],
-          ],
               ),
             );
           }

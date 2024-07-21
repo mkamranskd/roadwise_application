@@ -41,6 +41,9 @@ dependencies:
   sound_stream: ^0.4.1
   animated_toggle_switch: ^0.8.2
   flutter_treeview: ^1.0.7+1
+  panorama_viewer: ^1.0.3
+  url_launcher: ^6.3.0
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +67,9 @@ flutter:
     - assets/icons/person_icon.png
     - assets/icons/roadmap-planning.png
     - assets/icons/user.png
+    - lib/vr/vr.jpg
+    - lib/vr/vr1.jpg
+    - lib/vr/vr2.jpg
   fonts:
     - family: Dubai
       fonts:

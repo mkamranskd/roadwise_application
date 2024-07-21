@@ -12,8 +12,8 @@ Color primaryBlueColor =  const Color(0xff0094fd);
 
 class TEXTBOX extends StatelessWidget {
   final String title;
-  final TextEditingController? cont;
-  const TEXTBOX({Key? key, required this.title, this.cont}) : super(key: key);
+  final TextEditingController? controller;
+   TEXTBOX({Key? key, required this.title, this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class TEXTBOX extends StatelessWidget {
         const SizedBox(height: 10),
         TextField(
           obscureText: false,
-          controller: cont,
+          controller: controller,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
             labelText: title,
@@ -362,7 +362,7 @@ class CustomButton extends StatelessWidget {
   final String title;// Make navigateTo parameter optional
   final Color clr1;
   final Color clr2;// Added onPressed parameter
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool loading;
 
   CustomButton({
@@ -381,7 +381,7 @@ class CustomButton extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 50,
+            height: 40,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               gradient:  LinearGradient(
@@ -401,7 +401,7 @@ class CustomButton extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 15,),
+
         ],
       ),
     );
@@ -569,6 +569,82 @@ class CustomSearchBar extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+class BadgeWidget extends StatefulWidget {
+  final String text;
+
+  const BadgeWidget({Key? key, required this.text}) : super(key: key);
+
+  @override
+  _BadgeWidgetState createState() => _BadgeWidgetState();
+}
+
+class _BadgeWidgetState extends State<BadgeWidget> {
+  bool _isSelected = false;
+
+  void _toggleSelected() {
+    setState(() {
+      _isSelected = !_isSelected;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _toggleSelected,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: _isSelected ? Colors.blue : Colors.grey.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Text(
+          widget.text,
+          style:  TextStyle(
+            color: _isSelected ? Colors.white: Colors.black,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+bool isBusinessAccount = false;
+ifBusinessAccount() async {
+  final userData =
+  await FirebaseFirestore.instance.collection("Users").doc(_auth.currentUser?.uid).get();
+  if(userData["businessAccount"]=="true"){
+    isBusinessAccount = false;
+  }
+  else{
+    isBusinessAccount = true;
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
