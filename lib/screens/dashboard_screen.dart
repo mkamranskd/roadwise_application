@@ -26,7 +26,7 @@ class DashBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Flutter ',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black87),
         useMaterial3: true,
