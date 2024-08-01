@@ -2,8 +2,6 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 
-
-
 class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -178,7 +176,8 @@ class ExampleApp extends StatelessWidget {
                   description: const Text('This is a description message'),
                   themeColor: Colors.green,
                   toastPosition: Position.bottom,
-                  Layout: ToastLayout.rtl,
+                  textDirection: TextDirection.rtl,
+                  // Corrected here
                   animationType: AnimationType.fromRight,
                   action: const Text(
                     'انقر هنا',
@@ -208,7 +207,7 @@ class ExampleApp extends StatelessWidget {
                   ),
                   action: const Text('هذا النص كتب بالعربية'),
                   actionHandler: () {},
-                  layout: ToastLayout.rtl,
+                  textDirection: TextDirection.rtl,
                 ).show(context);
               },
             ),

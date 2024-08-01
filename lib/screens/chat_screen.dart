@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
+import '../global/style.dart';
 import 'dashboard_screen.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -11,116 +13,66 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(message.sender),
-        backgroundColor: Colors.transparent,
-        leading: Container(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
+        title: Container(
+          padding: EdgeInsets.only(left: 8.0), // Adjust padding as needed
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(message.image.toString()) as ImageProvider<Object>,
+              ),
+              SizedBox(width: 8.0), // Adjust spacing between the CircleAvatar and Text
+              Text(
+                message.sender,
+                style: TextStyle(
+                  color: primaryBlueColor,
+                  fontFamily: 'Dubai',
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
-          child: CircleAvatar(
+        ),
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor, size: 15),
+        ),
+        actions: [
+          CircleAvatar(
             backgroundColor: Colors.white,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black),
+              icon: Icon(Icons.call, size: 20, color: primaryBlueColor),
               onPressed: () {
-                Navigator.pop(context);
+                // Add your call functionality here
               },
             ),
           ),
-        ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: IconButton(
-                icon: const Icon(Icons.call, size: 20, color: Colors.black),
-                onPressed: () {},
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: IconButton(
-                icon: const Icon(
-                    Icons.more_vert_rounded, size: 20, color: Colors.black),
-                onPressed: () {},
-              ),
+          SizedBox(width: 8.0), // Add spacing between action icons if needed
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            child: IconButton(
+              icon: Icon(Icons.more_vert_rounded, size: 20, color: primaryBlueColor),
+              onPressed: () {
+                // Add your additional functionality here
+              },
             ),
           ),
         ],
       ),
       body: Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                // Assuming 'message' is a list of messages and each message has 'message' and 'time' properties
-
-
-                // Return widget for each message
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.lightBlueAccent, // Change color according to your preference
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        message.message,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      const SizedBox(width: 5.0),
-                      const Text(
-                        "time",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+          const Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Say Hello",
+                  style: TextStyle(fontSize: 50),
+                ),
+              ],
             ),
           ),
 
@@ -138,7 +90,7 @@ class ChatScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 8.0),
                 IconButton(
-                  icon: const Icon(Icons.send),
+                  icon: const Icon(AntDesign.send_outline),
                   onPressed: () {
                     // Send message logic here
                   },

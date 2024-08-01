@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:roadwise_application/global/style.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:roadwise_application/screens/dashboard_screen.dart';
 
 final _auth = FirebaseAuth.instance;
 
@@ -17,8 +14,9 @@ class CompleteProfile extends StatefulWidget {
 class _CompleteProfileState extends State<CompleteProfile> {
 
   int _currentQuestionIndex = 0;
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
+  final sinceController = TextEditingController();
+  final fullNameController = TextEditingController();
+  final bioController = TextEditingController();
   final ageController = TextEditingController();
   final phoneController = TextEditingController();
   final addressController = TextEditingController();
@@ -27,22 +25,28 @@ class _CompleteProfileState extends State<CompleteProfile> {
   final classController = TextEditingController();
   bool loading = false;
 
+
   @override
   void initState() {
     super.initState();
     _checkUserFields();
+    ifBusinessAccount();
   }
 
-   _checkUserFields() async {
+
+
+
+
+  _checkUserFields() async {
     final userData =
     await FirebaseFirestore.instance.collection("Users").doc(_auth.currentUser?.uid).get();
     if (userData.exists) {
       setState(() {
 
-        firstNameController.text = userData.data()!['firstName'].toString();
-        lastNameController.text = userData.data()!['lastName'].toString();
+        fullNameController.text = userData.data()!['fullName'].toString();
         ageController.text = userData.data()!['age'].toString();
-
+        bioController.text = userData.data()!['bio'].toString();
+        sinceController.text = userData.data()!['since'].toString();
          phoneController.text = userData.data()!['phoneNumber'].toString();
          addressController.text = userData.data()!['Address'].toString();
          cityController.text = userData.data()!['city'].toString();
@@ -87,18 +91,27 @@ class _CompleteProfileState extends State<CompleteProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+
       appBar: AppBar(
         actions:[
           TextButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> const DashBoard()));
-          }, child:  Text("Skip For Now",style: TextStyle(color: primaryBlueColor),))
+            Navigator.pop(context);
+          }, child:  Icon(Icons.done,size: 20,color: primaryBlueColor,),//Text("Done",style: TextStyle(color: primaryBlueColor),)
+          )
         ],
-        title:  H3(
-          title: "Tell Us About Yourself",
-          clr: primaryBlueColor,
-        ),
+        title:   ProgressBar(count: _currentQuestionIndex + 1, total: 5)
+        ,
 
+      leading: _currentQuestionIndex>=1? IconButton(onPressed: (){
+        setState(() {
+          _currentQuestionIndex--;
+        });
 
+      }, icon: Icon(Icons.arrow_back_ios_new,size: 15,color: primaryBlueColor,)): IconButton(onPressed: (){
+
+        Navigator.pop(context);
+
+      }, icon: Icon(Icons.arrow_back_ios_new,size: 15,color: primaryBlueColor)),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -117,13 +130,14 @@ class _CompleteProfileState extends State<CompleteProfile> {
                       const SizedBox(
                         height: 70,
                       ),
-                      ProgressBar(count: _currentQuestionIndex + 1, total: 5),
+                      //ProgressBar(count: _currentQuestionIndex + 1, total: 5),
                       const SizedBox(
                         height: 20,
                       ),
                       // Assuming there are 3 questions
                       if (_currentQuestionIndex == 0) ...[
-                        _buildQuestion1(),
+                        isBusinessAccount == true ? _buildQuestion1() : _buildBusinessQuestion1(),
+
                       ] else if (_currentQuestionIndex == 1) ...[
                         _buildQuestion2(),
                       ] else if (_currentQuestionIndex == 2) ...[
@@ -145,26 +159,28 @@ class _CompleteProfileState extends State<CompleteProfile> {
     );
   }
 
-  Widget _buildQuestion1() {
+  Widget _buildBusinessQuestion1() {
     return FadeInUp(
       duration: const Duration(milliseconds: 500),
       child: Column(
         children: [
-           H2(
-            title: "Personal Information",
+          H2(
+            title: "Add Business Information",
             clr: primaryBlueColor,
           ),
+
           TEXTBOX(
-            title: "First Name",
-            cont: firstNameController,
+            title: "Business Name",
+            controller: fullNameController,
+          ),
+
+          TEXTBOX(
+            title: "Since",
+            controller: sinceController,
           ),
           TEXTBOX(
-            title: "Last Name",
-            cont: lastNameController,
-          ),
-          TEXTBOX(
-            title: "Age",
-            cont: ageController,
+            title: "Add Bio",
+            controller: bioController,
           ),
 
           const SizedBox(height: 10,),
@@ -176,8 +192,75 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   await FirebaseFirestore.instance.collection("Users").doc(_auth.currentUser?.uid).set({
                     "updatedAt": DateTime.now(),
                     "userId": _auth.currentUser?.uid,
-                    "firstName":firstNameController.text.toString(),
-                    "lastName":lastNameController.text.toString(),
+                    "fullName":fullNameController.text.toString(),
+                    "since":sinceController.text.toString(),
+                    "bio":bioController.text.toString()
+
+                  },SetOptions(merge: true));
+                  setState(() {
+                    _currentQuestionIndex++;
+                  });
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(
+                      colors: [
+                        primaryBlueColor,
+                        const Color.fromRGBO(104, 159, 56, 1)
+                      ],
+                    ),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Next',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Dubai',
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuestion1() {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 500),
+      child: Column(
+        children: [
+          H2(
+            title: "Personal Information",
+            clr: primaryBlueColor,
+          ),
+
+          TEXTBOX(
+            title: "Full Name",
+            controller: fullNameController,
+          ),
+
+          TEXTBOX(
+            title: "Age",
+            controller: ageController,
+          ),
+
+          const SizedBox(height: 10,),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () async{
+                  await FirebaseFirestore.instance.collection("Users").doc(_auth.currentUser?.uid).set({
+                    "updatedAt": DateTime.now(),
+                    "userId": _auth.currentUser?.uid,
+                    "fullName":fullNameController.text.toString(),
+
                     "age":ageController.text.toString()
 
                   },SetOptions(merge: true));
@@ -186,7 +269,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   });
                 },
                 child: Container(
-                  height: 45,
+                  height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
@@ -226,7 +309,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
           ),
           TEXTBOX(
             title: "Phone",
-            cont: phoneController,
+            controller: phoneController,
           ),
           CustomComboBox(
             title: "Class*",
@@ -243,7 +326,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
           ),
           TEXTBOX(
             title: "Address",
-            cont: addressController,
+            controller: addressController,
           ),
           const SizedBox(height: 10,),
           Column(
@@ -262,7 +345,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   });
                 },
                 child: Container(
-                  height: 45,
+                  height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
@@ -299,7 +382,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
             title: "Which class you've just Passed??",
             clr: primaryBlueColor,
           ),
-
+          const SizedBox(height: 10,),
           CustomComboBox(
             title: "Class*",
             items: const [
@@ -315,6 +398,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
 
 
           ),
+          const SizedBox(height: 10,),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -330,7 +414,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                   });
                 },
                 child: Container(
-                  height: 45,
+                  height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: LinearGradient(
@@ -378,6 +462,29 @@ class _CompleteProfileState extends State<CompleteProfile> {
               'Commerce',
               'not Listed'
             ],
+          ),
+          const SizedBox(height: 10,),
+
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                colors: [
+                  primaryBlueColor,
+                  const Color.fromRGBO(104, 159, 56, 1)
+                ],
+              ),
+            ),
+            child: const Center(
+              child: Text(
+                'Next',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Dubai',
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
         ],
       ),
