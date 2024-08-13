@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:roadwise_application/vr/thumbnail.dart';
 import '../global/style.dart';
+import 'cameraScreen.dart';
 
 class vrHomeScreen extends StatelessWidget {
   const vrHomeScreen({
@@ -31,9 +33,25 @@ class vrHomeScreen extends StatelessWidget {
               fontSize: 15,
               fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>  CameraScreen(),
+              ),
+            );
+
+
+
+          }, icon: Icon(Clarity.camera_solid, color: primaryBlueColor,size: 15,))
+
+
+        ],
         leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor,size: 15,)),
 
       ),
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),

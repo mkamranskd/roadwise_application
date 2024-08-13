@@ -31,12 +31,14 @@ class DashBoard extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black87),
         useMaterial3: true,
       ),
-      home: const FirstPage(),
+      home: FirstPage(),
     );
   }
 }
+
 class FirstPage extends StatefulWidget {
-  const FirstPage({Key? key}) : super(key: key);
+  static _FirstPageState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_FirstPageState>();
 
   @override
   _FirstPageState createState() => _FirstPageState();
@@ -63,7 +65,18 @@ class _FirstPageState extends State<FirstPage> {
       _currentIndex = index;
       _pageController.animateToPage(
         index,
-        duration: const Duration(milliseconds: 10),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
+  void navigateToPage(int index) {
+    setState(() {
+      _currentIndex = index;
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     });
@@ -74,18 +87,14 @@ class _FirstPageState extends State<FirstPage> {
     return WillPopScope(
       onWillPop: () async {
         if (_currentIndex != 0) {
-          // If not on the HomeScreen, navigate back to the HomeScreen
           setState(() {
             _currentIndex = 0;
           });
-          return false; // Return false to prevent default back button behavior
+          return false;
         } else {
-          // If already on the HomeScreen, allow back button press to exit the app
           return true;
         }
       },
-
-
       child: Scaffold(
         body: PageView(
           controller: _pageController,
@@ -102,6 +111,7 @@ class _FirstPageState extends State<FirstPage> {
             AccountSettingsScreen(),
           ],
         ),
+
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Colors.white,
           selectedItemColor: primaryBlueColor,
@@ -111,66 +121,67 @@ class _FirstPageState extends State<FirstPage> {
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,
+          selectedIconTheme: IconThemeData(size: 32),
           iconSize: 20,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: _currentIndex == 0
                   ? Icon(
-                      Clarity.home_solid,
-                      color: primaryBlueColor,
-                    )
+                Clarity.home_solid,
+                color: primaryBlueColor,
+              )
                   : const Icon(
-                      Clarity.home_line,
-                      color: Colors.grey,
-                    ),
+                Clarity.home_line,
+                color: Colors.grey,
+              ),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: _currentIndex == 1
                   ? Icon(
-                      Clarity.email_solid,
-                      color: primaryBlueColor,
-                    )
+                Clarity.email_solid,
+                color: primaryBlueColor,
+              )
                   : const Icon(
-                      Clarity.email_line,
-                      color: Colors.grey,
-                    ),
+                Clarity.email_line,
+                color: Colors.grey,
+              ),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: _currentIndex == 2
                   ? Icon(
-                      Clarity.notification_solid,
-                      color: primaryBlueColor,
-                    )
+                Icons.search_rounded,
+                color: primaryBlueColor,
+              )
                   : const Icon(
-                      Clarity.notification_line,
-                      color: Colors.grey,
-                    ),
+                Clarity.search_line,
+                color: Colors.grey,
+              ),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: _currentIndex == 3
                   ? Icon(
-                      Clarity.book_solid,
-                      color: primaryBlueColor,
-                    )
+                Clarity.book_solid,
+                color: primaryBlueColor,
+              )
                   : const Icon(
-                      Clarity.book_line,
-                      color: Colors.grey,
-                    ),
+                Clarity.book_line,
+                color: Colors.grey,
+              ),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: _currentIndex == 4
                   ? Icon(
-                      Clarity.user_solid,
-                      color: primaryBlueColor,
-                    )
+                Clarity.user_solid,
+                color: primaryBlueColor,
+              )
                   : const Icon(
-                      Clarity.user_line,
-                      color: Colors.grey,
-                    ),
+                Clarity.user_line,
+                color: Colors.grey,
+              ),
               label: "",
             ),
           ],
@@ -212,7 +223,33 @@ class _HomeScreenState extends State<HomeScreen> {
       print('Error loading profile picture: $e');
     }
   }
+  void _showCustomDialog(BuildContext context,String msg) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context,) {
+        return AlertDialog(
 
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+
+          ),
+          icon: Image.asset('assets/roadwiselogo.png',height: 100,),
+          content: Text(
+            msg,
+            style: const TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -220,13 +257,15 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         toolbarHeight: 45,
-        title: Text(
-          "Home",
-          style: TextStyle(
-            color: primaryBlueColor,
-            fontFamily: 'Dubai',
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
+        title: Center(
+          child: Text(
+            "Home",
+            style: TextStyle(
+              color: primaryBlueColor,
+              fontFamily: 'Dubai',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         actions: [
@@ -263,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               );
             },
-            icon: Icon(Clarity.logout_line, color: primaryBlueColor, size: 18),
+            icon: Icon(Clarity.logout_line, color: primaryBlueColor, size: 23),
           ),
         ],
         leading: GestureDetector(
@@ -287,7 +326,248 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: UsersListScreen(),
+      body:  SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+        
+            children: [
+
+              /*Welcome to roadwise*/
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF1C7EF4), Color(0xFF1976D2)], // Adjust colors as needed
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  image: DecorationImage(
+                    image: const AssetImage('assets/images/cardBackblue.jpg'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5), // Adjust opacity as needed
+                      BlendMode.dstATop,
+                    ),
+                  ),
+                ),
+        
+                child:
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      Image.asset('assets/roadwiselogo.png',height: 110,),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Welcome to ROADWISE',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Dubai',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+        
+                      const Text(
+                        "Find Your Roadmap To Success.",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                          fontFamily: 'Dubai',
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:Colors.white , // Button background color
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          'Start Now',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: primaryBlueColor,
+                            fontFamily: 'Dubai',
+                          ),
+                        ),
+                      ),
+        
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: (){
+                        FirstPage.of(context)?.navigateToPage(2);
+                      },
+                      child: Container(
+                        height: 200,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)], // Adjust colors as needed
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Clarity.search_line,size: 35,color:Colors.white),
+                              SizedBox(height: 10),
+                              Text(
+                                'Search',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Dubai',
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Popular Institutes\nBright Students",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 16,
+                                  fontFamily: 'Dubai',
+                                ),
+                              ),
+                              SizedBox(height: 15),
+
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserProfileScreen(user: _auth.currentUser!)),
+                        );
+                        },
+                      child: Container(
+                        height: 200,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF1C7EF4), Color(0xFF90EE90)], // Adjust colors as needed
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(Clarity.user_line,size: 35,color:Colors.white),
+                              SizedBox(height: 10),
+                              Text(
+                                'My Profile',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Dubai',
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "View Profile\nEdit Profile",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 16,
+                                  fontFamily: 'Dubai',
+                                ),
+                              ),
+                              SizedBox(height: 15),
+
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10,),
+
+              GestureDetector(
+                onTap: (){
+                  _showCustomDialog(context,"Front-end\n          Neha Urooj\nBack-end\n          Muhammad Kamran");
+                },
+                child: Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF000000), Color(0xFF1C7EF4)], // Adjust colors as needed
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+
+                  ),
+
+                  child:
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Bootstrap.code,size: 35,color:Colors.white),
+                        SizedBox(height: 10),
+                        Text(
+                          'About Developers',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Dubai',
+                          ),
+                        ),
+                        SizedBox(height: 10),
+
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: primaryBlueColor,
         tooltip: 'Connect To Assistant',
@@ -497,13 +777,15 @@ class Screen2 extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         toolbarHeight: 45,
-        title: Text(
-          'Messages',
-          style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 15,
-              fontWeight: FontWeight.bold),
+        title: Center(
+          child: Text(
+            'Messages',
+            style: TextStyle(
+                color: primaryBlueColor,
+                fontFamily: 'Dubai',
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ),
       body:const Column(
@@ -569,19 +851,8 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        toolbarHeight: 45,
-        title: Text(
-          'Notifications',
-          style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 15,
-              fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: const NotificationList(),
+
+      body: UsersListScreen(),
     );
   }
 }
@@ -812,13 +1083,15 @@ class NotificationDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 45,
-        title: Text(
-          'Notification Details',
-          style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 15,
-              fontWeight: FontWeight.bold),
+        title: Center(
+          child: Text(
+            'Notification Details',
+            style: TextStyle(
+                color: primaryBlueColor,
+                fontFamily: 'Dubai',
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ),
       body: Padding(
@@ -852,13 +1125,15 @@ class BookMarks_Page extends StatelessWidget {
         // You can customize the color as needed
 
         toolbarHeight: 45,
-        title: Text(
-          'Bookmarks',
-          style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 15,
-              fontWeight: FontWeight.bold),
+        title: Center(
+          child: Text(
+            'Bookmarks',
+            style: TextStyle(
+                color: primaryBlueColor,
+                fontFamily: 'Dubai',
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ),
       body: SizedBox(
@@ -941,13 +1216,15 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           toolbarHeight: 45,
-          title: Text(
-            'Profile',
-            style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+          title: Center(
+            child: Text(
+              'Profile',
+              style: TextStyle(
+                color: primaryBlueColor,
+                fontFamily: 'Dubai',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
 
@@ -983,11 +1260,13 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Card(
+
                       elevation: 4, // Adjust elevation as needed
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16), // Adjust border radius as needed
+                        borderRadius: BorderRadius.circular(5), // Adjust border radius as needed
                       ),
                       child: ListTile(
+
                         contentPadding: const EdgeInsets.all(16), // Adjust padding as needed
                         leading: CircleAvatar(
                           backgroundImage: _image != null
@@ -1011,16 +1290,16 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                            children: [
                              CircleAvatar(
                                backgroundColor: Colors.blue,
-                               radius: 8,
+                               radius: 12,
                                child: Icon(
                                  userData['businessAccount'] == "true"
                                      ? Icons.business
                                      : Icons.person,
-                                 size: 10,
+                                 size: 15,
                                  color: Colors.white,
                                ),
                              ),
-                             SizedBox(width: 10,),
+                             const SizedBox(width: 10,),
                              Text(userData["businessAccount"]=="true"? 'Business Account': 'Student Account'),
                            ],
                          ),
