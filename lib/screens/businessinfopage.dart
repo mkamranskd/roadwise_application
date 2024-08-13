@@ -7,7 +7,7 @@ import 'package:roadwise_application/screens/dashboard_screen.dart';
 import '../features/presentation/pages/quiz/starting_page.dart';
 import '../global/Utils.dart';
 import '../global/style.dart';
-import '../vr/vrGallery.dart';
+import '../vr/galleryVr.dart';
 import 'chat_screen.dart';
 
 final _auth = FirebaseAuth.instance;
@@ -191,7 +191,7 @@ class BusinessPageScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const vrHomeScreen(),
+                                  builder: (context) => GalleryVr(businessData: businessData,),
                                 ),
                               );
                             },

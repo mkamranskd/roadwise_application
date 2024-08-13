@@ -15,27 +15,27 @@ class Thumbnail extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     double thumbWidth = screenWidth;
     if (kIsWeb) {
-      thumbWidth = 300;
+      thumbWidth = 100;
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: InkWell(
-        child: Image.asset(
+    return InkWell(
+      child: Transform.rotate(
+        angle: 1.5708, // 90 degrees in radians
+        child: Image.network(
           thumbPath,
           cacheWidth: thumbWidth.toInt(),
           cacheHeight: (thumbWidth ~/ 2),
         ),
-        onTap: () {
-          // move to image screen
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ImageScreen(
-                Image.asset(imagePath),
-              ),
-            ),
-          );
-        },
       ),
+      onTap: () {
+        // move to image screen
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ImageScreen(
+              Image.network(imagePath),
+            ),
+          ),
+        );
+      },
     );
   }
 }

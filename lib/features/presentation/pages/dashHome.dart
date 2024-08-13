@@ -7,13 +7,7 @@ import '../../../global/style.dart'; // Ensure this path is correct
 import '../../../screens/businessinfopage.dart';
 
 // Define the EducationPath class and sample data
-class EducationPath {
-  final String title;
-  final IconData iconData; // Use IconData for icons instead of imageUrl
-  final List<EducationPath> children;
 
-  EducationPath({required this.title, required this.iconData, this.children = const []});
-}
 
 class UsersListScreen extends StatefulWidget {
   @override
