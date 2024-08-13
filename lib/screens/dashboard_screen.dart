@@ -84,6 +84,8 @@ class _FirstPageState extends State<FirstPage> {
           return true;
         }
       },
+
+
       child: Scaffold(
         body: PageView(
           controller: _pageController,
@@ -197,16 +199,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadProfilePicture() async {
     try {
-      final userDoc = FirebaseFirestore.instance
-          .collection('Users')
-          .doc(_auth.currentUser!.uid);
+      final userDoc = FirebaseFirestore.instance.collection('Users').doc(_auth.currentUser!.uid);
       final userData = await userDoc.get();
 
       if (userData.exists) {
         final profilePictureUrl = userData['profilePicture'];
         setState(() {
-          _profilePictureUrl =
-              profilePictureUrl ?? ''; // Set the profile picture URL
+          _profilePictureUrl = profilePictureUrl ?? ''; // Set the profile picture URL
         });
       }
     } catch (e) {
@@ -251,12 +250,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           _auth.signOut().then((value) {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SignInScreen()),
+                              MaterialPageRoute(builder: (context) => const SignInScreen()),
                             );
                           }).onError((error, stackTrace) {
-                            Utils.toastMessage(context, error.toString(),
-                                Icons.warning_amber_rounded);
+                            Utils.toastMessage(context, error.toString(), Icons.warning_amber_rounded);
                           });
                         },
                         child: const Text('Logout'),
@@ -285,9 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CircleAvatar(
               backgroundImage: _profilePictureUrl.isNotEmpty
                   ? NetworkImage(_profilePictureUrl)
-                  : const AssetImage(
-                      "assets/icons/user.png",
-                    ) as ImageProvider<Object>,
+                  : const AssetImage("assets/icons/user.png",) as ImageProvider<Object>,
             ),
           ),
         ),
@@ -302,10 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
             MaterialPageRoute(builder: (context) => Chatbot()),
           );
         },
-        child: const Icon(
-          AntDesign.message_fill,
-          color: Colors.white,
-        ),
+        child: const Icon(AntDesign.message_fill,color:Colors.white ,),
       ),
     );
   }
@@ -514,17 +506,16 @@ class Screen2 extends StatelessWidget {
               fontWeight: FontWeight.bold),
         ),
       ),
-      body: const Column(
+      body:const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Open any Profile to Send Message"),
-            ],
-          ),
-        ],
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Open any Profile to Send Message"),
+          ],
+        ),
+      ],),
     );
   }
 }
@@ -932,6 +923,7 @@ class AccountSettingsScreen extends StatefulWidget {
 
   @override
   State<AccountSettingsScreen> createState() => _AccountSettingsScreenState();
+
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
@@ -943,7 +935,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Scaffold(
+
+      body:
+      Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           toolbarHeight: 45,
@@ -956,6 +950,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
+
         ),
         backgroundColor: Colors.white,
         body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -990,21 +985,18 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                     Card(
                       elevation: 4, // Adjust elevation as needed
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            16), // Adjust border radius as needed
+                        borderRadius: BorderRadius.circular(16), // Adjust border radius as needed
                       ),
                       child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        // Adjust padding as needed
+                        contentPadding: const EdgeInsets.all(16), // Adjust padding as needed
                         leading: CircleAvatar(
                           backgroundImage: _image != null
                               ? FileImage(_image!) as ImageProvider<Object>
                               : userData['profilePicture'] != null
-                                  ? NetworkImage(userData['profilePicture'])
-                                  : const AssetImage(
-                                          'assets/icons/person_icon.png')
-                                      as ImageProvider<Object>,
+                              ? NetworkImage(userData['profilePicture'])
+                              : const AssetImage('assets/icons/person_icon.png') as ImageProvider<Object>,
                           radius: 32,
+
                         ),
                         title: Text(
                           fullName.isNotEmpty ? fullName : 'Name Not Provided',
@@ -1015,60 +1007,62 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                           ),
                         ),
                         // Add subtitle if needed
-                        subtitle: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.blue,
-                              radius: 8,
-                              child: Icon(
-                                userData['businessAccount'] == "true"
-                                    ? Icons.business
-                                    : Icons.person,
-                                size: 10,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(userData["businessAccount"] == "true"
-                                ? 'Business Account'
-                                : 'Student Account'),
-                          ],
-                        ),
+                         subtitle: Row(
+                           children: [
+                             CircleAvatar(
+                               backgroundColor: Colors.blue,
+                               radius: 8,
+                               child: Icon(
+                                 userData['businessAccount'] == "true"
+                                     ? Icons.business
+                                     : Icons.person,
+                                 size: 10,
+                                 color: Colors.white,
+                               ),
+                             ),
+                             SizedBox(width: 10,),
+                             Text(userData["businessAccount"]=="true"? 'Business Account': 'Student Account'),
+                           ],
+                         ),
+
                       ),
                     ),
-                    if (userData["businessAccount"] == "true") ...[
+                    if(userData["businessAccount"]=="true") ...[
                       ListTile(
                         leading: const Icon(Icons.business),
                         title: const Text(
-                          'Business Profile',
+                          'Business Profile' ,
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => UserProfileScreen(
-                                    user: _auth.currentUser!)),
+                                builder: (context) =>
+                                    UserProfileScreen(user: _auth.currentUser!)),
                           );
                         },
                       ),
+
+
+
                     ] else ...[
                       ListTile(
                         leading: const Icon(Clarity.user_line),
                         title: const Text(
-                          'Profile',
+                          'Profile' ,
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => UserProfileScreen(
-                                    user: _auth.currentUser!)),
+                                builder: (context) =>
+                                    UserProfileScreen(user: _auth.currentUser!)),
                           );
                         },
                       ),
+
                     ],
+
                     const Divider(
                       color: Colors.grey,
                     ),
@@ -1095,13 +1089,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text('Logout'),
-                                    content: const Text(
-                                        'Are you sure you want to logout?'),
+                                    content:
+                                    const Text('Are you sure you want to logout?'),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(); // Close the dialog
+                                          Navigator.of(context).pop(); // Close the dialog
                                         },
                                         child: const Text('Cancel'),
                                       ),
@@ -1112,11 +1105,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const SignInScreen()));
+                                                    const SignInScreen()));
                                           }).onError((error, stackTrace) {
-                                            Utils.toastMessage(
-                                                context,
-                                                error.toString(),
+                                            Utils.toastMessage(context, error.toString(),
                                                 Icons.warning_amber_rounded);
                                           });
                                         },

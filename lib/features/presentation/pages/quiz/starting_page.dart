@@ -136,7 +136,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                       ),
                       // Assuming there are 3 questions
                       if (_currentQuestionIndex == 0) ...[
-                        isBusinessAccount == true ? _buildQuestion1() : _buildBusinessQuestion1(),
+                        isBusinessAccount == true ? _buildBusinessQuestion1() : _buildQuestion1(),
 
                       ] else if (_currentQuestionIndex == 1) ...[
                         _buildQuestion2(),
@@ -319,8 +319,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
           ),
           CustomComboBox(
             title: "Class*",
-            items: const ['Sakrand'
-            ],
+            items: const ['Sakrand','Nawabshah'],
             firebaseFieldName: "city",
 
           ),

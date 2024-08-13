@@ -45,7 +45,6 @@ dependencies:
   url_launcher: ^6.3.0
   permission_handler: ^11.3.1
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,6 +67,9 @@ flutter:
     - assets/icons/person_icon.png
     - assets/icons/roadmap-planning.png
     - assets/icons/user.png
+    - lib/vr/vr.jpg
+    - lib/vr/vr1.jpg
+    - lib/vr/vr2.jpg
   fonts:
     - family: Dubai
       fonts:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Import Font Awesome Icons
+import 'package:icons_plus/icons_plus.dart';
 import '../../../global/Utils.dart';
 import '../../../global/style.dart'; // Ensure this path is correct
 import '../../../screens/businessinfopage.dart';
@@ -14,55 +15,6 @@ class EducationPath {
   EducationPath({required this.title, required this.iconData, this.children = const []});
 }
 
-final List<EducationPath> educationPaths = [
-  EducationPath(
-    title: '10th Grade',
-    iconData: FontAwesomeIcons.school,
-    children: [
-      EducationPath(
-        title: '12th Grade',
-        iconData: FontAwesomeIcons.graduationCap,
-        children: [
-          EducationPath(title: 'Science', iconData: FontAwesomeIcons.flask),
-          EducationPath(title: 'Commerce', iconData: FontAwesomeIcons.chartLine),
-          EducationPath(title: 'Arts', iconData: FontAwesomeIcons.paintBrush),
-        ],
-      ),
-      EducationPath(
-        title: 'Diploma',
-        iconData: FontAwesomeIcons.certificate,
-        children: [
-          EducationPath(title: 'Engineering', iconData: FontAwesomeIcons.cogs),
-          EducationPath(title: 'Pharmacy', iconData: FontAwesomeIcons.pills),
-        ],
-      ),
-    ],
-  ),
-  EducationPath(
-    title: 'Undergraduate',
-    iconData: FontAwesomeIcons.university,
-    children: [
-      EducationPath(
-        title: 'Engineering',
-        iconData: FontAwesomeIcons.tools,
-        children: [
-          EducationPath(title: 'Computer Science', iconData: FontAwesomeIcons.laptopCode),
-          EducationPath(title: 'Mechanical', iconData: FontAwesomeIcons.cog),
-        ],
-      ),
-      EducationPath(title: 'Business Administration', iconData: FontAwesomeIcons.chartBar),
-    ],
-  ),
-  EducationPath(
-    title: 'Postgraduate',
-    iconData: FontAwesomeIcons.graduationCap,
-    children: [
-      EducationPath(title: 'MBA', iconData: FontAwesomeIcons.chartLine),
-      EducationPath(title: 'M.Tech', iconData: FontAwesomeIcons.microchip),
-    ],
-  ),
-];
-
 class UsersListScreen extends StatefulWidget {
   @override
   _UsersListScreenState createState() => _UsersListScreenState();
@@ -72,117 +24,209 @@ class _UsersListScreenState extends State<UsersListScreen> {
   late List<DocumentSnapshot> usersList = [];
   late List<DocumentSnapshot> filteredUsersList = [];
   bool isLoading = true;
-  bool showEducationPaths = true; // Set to true to show education paths by default
+  bool showEducationPaths = true;
   String searchQuery = "";
+  final FocusNode _searchFocusNode = FocusNode();
+  bool showBusinessAccountsOnly = false;
+  int filteredCount = 0;
+  String? selectedCity; // Add variable for selected city
+  List<String> cities = []; // List of cities for the dropdown
 
   @override
   void initState() {
     super.initState();
     fetchUsers();
-  }
-
-  void fetchUsers() async {
-    var snapshot = await FirebaseFirestore.instance.collection('Users').get();
-
-    setState(() {
-      usersList = snapshot.docs;
-      filteredUsersList = []; // Start with an empty list
-      isLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchFocusNode.requestFocus();
     });
   }
 
-  void filterUsers(String query) {
-    if (query == '*') {
-      setState(() {
-        filteredUsersList = usersList; // Show all users
-        searchQuery = query;
-      });
-      return;
-    }
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
 
-    if (query.isEmpty) {
+  void fetchUsers() async {
+    try {
+      var snapshot = await FirebaseFirestore.instance.collection('Users').get();
       setState(() {
+        usersList = snapshot.docs;
         filteredUsersList = [];
-        searchQuery = query;
+        filteredCount = 0;
+        isLoading = false;
       });
-      return;
+
+      // Assuming 'city' field is a list of cities in Firestore
+      List<String> dynamicCities = usersList
+          .map((user) => user['city']?.toString() ?? 'Unknown')
+          .toList();
+
+      // Remove duplicates and sort the list of cities
+      List<String> distinctCities = dynamicCities.toSet().toList()..sort();
+
+      setState(() {
+        cities = distinctCities;
+      });
+    } catch (e) {
+      print('Error fetching users: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void filterUsers(String query) {
+    List<DocumentSnapshot> filteredUsers;
+
+    if (query == '*') {
+      filteredUsers = usersList;
+    } else if (query.isEmpty) {
+      filteredUsers = [];
+    } else {
+      filteredUsers = usersList.where((user) {
+        String fullName = user['fullName'].toString().toLowerCase();
+        return fullName.contains(query.toLowerCase());
+      }).toList();
     }
 
-    List<DocumentSnapshot> filteredUsers = usersList.where((user) {
-      String fullName = user['fullName'].toString().toLowerCase();
-      return fullName.contains(query.toLowerCase());
-    }).toList();
+    if (showBusinessAccountsOnly) {
+      filteredUsers = filteredUsers.where((user) {
+        var userData = user.data() as Map<String, dynamic>;
+        return userData.containsKey('businessAccount') && userData['businessAccount'] == "true";
+      }).toList();
+    }
+
+    if (selectedCity != null && selectedCity!.isNotEmpty) {
+      filteredUsers = filteredUsers.where((user) {
+        return user['city'] == selectedCity;
+      }).toList();
+    }
 
     setState(() {
       filteredUsersList = filteredUsers;
+      filteredCount = filteredUsers.length;
       searchQuery = query;
     });
   }
 
-  Widget _buildExpansionTile(EducationPath path) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      child: ExpansionTile(
-        tilePadding: const EdgeInsets.all(15), // Increase padding inside the tile
-        childrenPadding: const EdgeInsets.symmetric(horizontal: 15), // Increase padding for the children
-        title: Text(
-          path.title,
-          style: const TextStyle(
-            fontSize: 18, // Increase font size
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: Icon(path.iconData, size: 30),
-        children: path.children.map((child) => _buildExpansionTile(child)).toList(),
-      ),
+  void _showFilterDialog() {
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Filter Options',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const Expanded(child: SizedBox(width: 1,)),
+                      Icon(Clarity.filter_line),
+
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Divider(height: 5,color: Colors.black,),
+                  const SizedBox(height: 20),
+
+                  SwitchListTile(
+                    title: Text(
+                      showBusinessAccountsOnly
+                          ? "Showing All Accounts"
+                          : "Show Business Accounts",
+                    ),
+                    value: showBusinessAccountsOnly,
+                    onChanged: (bool value) {
+                      setState(() {
+                        showBusinessAccountsOnly = value;
+                      });
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: selectedCity,
+                    hint: const Text('Select City'),
+                    items: cities.map((city) {
+                      return DropdownMenuItem(
+                        value: city,
+                        child: Text(city),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCity = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            filterUsers(searchQuery);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Apply Filters'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
   Widget _buildUserCard(DocumentSnapshot user) {
     var userData = user.data() as Map<String, dynamic>? ?? {};
     String fullName = userData['fullName'] ?? 'Unknown';
-
     String city = userData['city'] ?? 'Unknown';
     String province = userData['province'] ?? 'Unknown';
     String profilePicture = userData['profilePicture'] ?? '';
+
     if (userData['fullName'] == "Neha Urooj") {
       fullName = "Unknown Unknown";
-
       profilePicture =
       "https://firebasestorage.googleapis.com/v0/b/roadwise-application-54684.appspot.com/o/profilePictures%2F8Qlio7yvEUhbdrwArb7mZxkOGXw1?alt=media&token=2495a17f-bb4c-41a9-a6e3-c802e2fa72dc";
     }
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-      ),
       child: ListTile(
         tileColor: Colors.white,
         leading: CircleAvatar(
-
           backgroundImage: NetworkImage(profilePicture),
         ),
         title: Text(
           '$fullName ',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        trailing:
-          IconButton(onPressed: () {
+        trailing: IconButton(
+          onPressed: () {
             Utils.toastMessage(context, "Not Integrated Yet", Icons.warning);
-          }, icon: Icon(FontAwesomeIcons.plus,size: 15,color: primaryBlueColor,))
-        ,
-
+          },
+          icon: Icon(FontAwesomeIcons.plus, size: 15, color: primaryBlueColor),
+        ),
         subtitle: Row(
           children: [
             CircleAvatar(
               backgroundColor: Colors.blue,
               radius: 8,
               child: Icon(
-                userData['businessAccount'] == "true"
-                    ? Icons.business
-                    : Icons.person,
+                userData['businessAccount'] == "true" ? Icons.business : Icons.person,
                 size: 10,
                 color: Colors.white,
               ),
@@ -209,44 +253,52 @@ class _UsersListScreenState extends State<UsersListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            Expanded(
-              child: H2(title: 'Users List', clr: primaryBlueColor),
-            ),
-
-          ],
-        ),
-      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: TextField(
-              onChanged: (value) {
-                filterUsers(value);
-              },
-              decoration: const InputDecoration(
-                labelText: 'Search users...',
-                border: OutlineInputBorder(),
+          : Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextField(
+                focusNode: _searchFocusNode,
+                onChanged: (value) {
+                  filterUsers(value);
+                },
+                decoration: InputDecoration(
+                  icon: Icon(Clarity.search_line, color: primaryBlueColor),
+                  labelText: 'Search',
+                  labelStyle: TextStyle(
+                    color: primaryBlueColor,
+                  ),
+                  helper: Text(
+                    showBusinessAccountsOnly
+                        ? "Showing $filteredCount Business Accounts"
+                        : "Showing $filteredCount Accounts",
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  suffix: IconButton(
+                    onPressed: () {
+                      _showFilterDialog();
+                    },
+                    icon: Icon(Clarity.filter_line),
+                  ),
+                ),
               ),
             ),
-          ),
-
-          Expanded(
-            child: ListView(
-              children: [
-                if (searchQuery.isNotEmpty)
-                  ...filteredUsersList.map((user) => _buildUserCard(user)),
-
-              ],
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView(
+                children: [
+                  if (searchQuery.isNotEmpty)
+                    ...filteredUsersList.map((user) => _buildUserCard(user)),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
