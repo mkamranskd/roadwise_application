@@ -244,23 +244,23 @@ class _UploadPictureScreenState extends State<UploadPictureScreen> {
       _isUploading = true;
     });
 
-    final Reference storageRef = FirebaseStorage.instance
-        .ref()
-        .child('profilePictures/${_auth.currentUser!.uid}/${DateTime.now()}.png');
-    final UploadTask uploadTask = storageRef.putFile(image);
-
     try {
-      await uploadTask.whenComplete(() async {
-        final String imageUrl = await storageRef.getDownloadURL();
-        final userRef = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(_auth.currentUser!.uid);
-        await userRef.update({
-          'profilePicture': imageUrl,
-        });
+      final Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('businessVrImages/${_auth.currentUser!.uid}/${DateTime.now().toIso8601String()}.png');
+      final UploadTask uploadTask = storageRef.putFile(image);
 
-        Navigator.of(context).pop();
+      final TaskSnapshot snapshot = await uploadTask.whenComplete(() {});
+      final String imageUrl = await snapshot.ref.getDownloadURL();
+
+      final userRef = FirebaseFirestore.instance
+          .collection('Users')
+          .doc(_auth.currentUser!.uid);
+      await userRef.update({
+        'businessVrImages': FieldValue.arrayUnion([imageUrl]),
       });
+
+      Navigator.of(context).pop();
     } catch (e) {
       print('Error uploading profile picture: $e');
     } finally {
@@ -269,6 +269,7 @@ class _UploadPictureScreenState extends State<UploadPictureScreen> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

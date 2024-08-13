@@ -7,39 +7,39 @@ import '../global/style.dart';
 import 'cameraScreen.dart';
 
 
-class GalleryV extends StatefulWidget {
+
+class GalleryVr extends StatefulWidget {
   final DocumentSnapshot businessData;
 
-  GalleryV({required this.businessData});
+  GalleryVr({required this.businessData});
 
   @override
-  State<GalleryV> createState() => _GalleryVState();
+  State<GalleryVr> createState() => _GalleryVrState();
 }
 
-class _GalleryVState extends State<GalleryV> {
+class _GalleryVrState extends State<GalleryVr> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late List<Thumbnail> thumbList = [];
   bool _isLoading = true;
   String? _errorMessage;
   bool _showCameraIcon = false;
 
-
   @override
   void initState() {
     super.initState();
-    _checkUserAndLoadImages();
+    _loadBusinessImages();
   }
 
-  Future<void> _checkUserAndLoadImages() async {
+  Future<void> _loadBusinessImages() async {
     try {
       final currentUser = _auth.currentUser;
       if (currentUser != null) {
         print('Current User ID: ${currentUser.uid}');
         final userRef = FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
         final docSnapshot = await userRef.get();
+        final userIdFromFirestore = docSnapshot.data()?['userId'] as String?;
 
         if (docSnapshot.exists) {
-          final userIdFromFirestore = docSnapshot.data()?['userId'] as String?;
           print('User ID from Firestore: $userIdFromFirestore');
 
           if (userIdFromFirestore == currentUser.uid) {
@@ -53,16 +53,23 @@ class _GalleryVState extends State<GalleryV> {
               _showCameraIcon = false;
             });
           }
-
-          final List<dynamic>? images = docSnapshot.data()?['businessVrImages'] as List<dynamic>?;
-          if (images != null) {
-            setState(() {
-              thumbList = images.map((imageUrl) => Thumbnail(imagePath: imageUrl, thumbPath: imageUrl)).toList();
-            });
-          }
         } else {
           setState(() {
             _errorMessage = 'User document not found.';
+          });
+        }
+
+        // Cast businessData to a Map<String, dynamic> before accessing its keys
+        final data = widget.businessData.data() as Map<String, dynamic>;
+        final List<dynamic>? images = data['businessVrImages'] as List<dynamic>?;
+
+        if (images != null && images.isNotEmpty) {
+          setState(() {
+            thumbList = images.map((imageUrl) => Thumbnail(imagePath: imageUrl, thumbPath: imageUrl)).toList();
+          });
+        } else {
+          setState(() {
+            _errorMessage = 'No images found for this business.';
           });
         }
       } else {
@@ -81,12 +88,10 @@ class _GalleryVState extends State<GalleryV> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    ifBusinessAccount();
     Map<String, dynamic> data = widget.businessData.data() as Map<String, dynamic>;
-;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -99,7 +104,7 @@ class _GalleryVState extends State<GalleryV> {
               fontWeight: FontWeight.bold),
         ),
         actions: [
-          if (_auth.currentUser?.uid.toString() == data["userId"]) ...[
+          if (_showCameraIcon && _auth.currentUser?.uid.toString() == data["userId"]) ...[
             IconButton(
               onPressed: () {
                 Navigator.push(

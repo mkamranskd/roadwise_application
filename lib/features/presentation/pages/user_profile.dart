@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
 import 'package:roadwise_application/global/style.dart';
-
 final _auth = FirebaseAuth.instance;
 
 class UserProfileScreen extends StatefulWidget {
@@ -408,14 +407,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CompleteProfile()),
-              );
-            },
-            child: Icon(Clarity.edit_line, color: primaryBlueColor, size: 15),
+          Row(
+            children: [
+
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CompleteProfile()),
+                  );
+                },
+                child: Icon(Clarity.edit_line, color: primaryBlueColor, size: 15),
+              ),
+              TextButton(
+                  onPressed: (){},
+                  child: const Text("Vr Gallery",  style: TextStyle(
+                  color: Colors.blue,
+                  fontFamily: 'Dubai',
+                  fontWeight: FontWeight.bold),)),
+            ],
           ),
         ],
         leading: IconButton(
@@ -479,7 +489,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ],
                     ),
                   ),
+
                   if (userData["businessAccount"] == "true") ...[
+
+
                     const SizedBox(height: 20),
                     Field(
                         heading: "Business Name",
@@ -511,6 +524,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         heading: "Office Number",
                         title: userData['phoneNumber'] ?? 'Not Updated Yet'),
                     const SizedBox(height: 20),
+
                     Field(
                         heading: "Email",
                         title: _auth.currentUser?.email ?? 'Not Updated Yet'),
@@ -658,6 +672,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         }
                       },
                     ),
+
                   ] else ...[
                     const SizedBox(height: 20),
                     Field(
