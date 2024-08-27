@@ -36,7 +36,7 @@ class BusinessPageScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Profile',
+          'Profilee',
           style: TextStyle(
             color: primaryBlueColor,
             fontFamily: 'Dubai',
