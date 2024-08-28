@@ -84,108 +84,96 @@ class _FirstPageState extends State<FirstPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (_currentIndex != 0) {
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
           setState(() {
-            _currentIndex = 0;
+            _currentIndex = index;
           });
-          return false;
-        } else {
-          return true;
-        }
-      },
-      child: Scaffold(
-        body: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          children: [
-            const HomeScreen(),
-            const Screen2(),
-            const NotificationScreen(),
-            BookMarks_Page(),
-            AccountSettingsScreen(),
-          ],
-        ),
+        },
+        children: [
+          const HomeScreen(),
+          const Screen2(),
+          const NotificationScreen(),
+          BookMarks_Page(),
+          AccountSettingsScreen(),
+        ],
+      ),
 
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          selectedItemColor: primaryBlueColor,
-          unselectedItemColor: Colors.white,
-          currentIndex: _currentIndex,
-          onTap: _onItemTapped,
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          selectedIconTheme: IconThemeData(size: 32),
-          iconSize: 20,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: _currentIndex == 0
-                  ? Icon(
-                Clarity.home_solid,
-                color: primaryBlueColor,
-              )
-                  : const Icon(
-                Clarity.home_line,
-                color: Colors.grey,
-              ),
-              label: "",
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: primaryBlueColor,
+        unselectedItemColor: Colors.white,
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedIconTheme: IconThemeData(size: 32),
+        iconSize: 20,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: _currentIndex == 0
+                ? Icon(
+              Clarity.home_solid,
+              color: primaryBlueColor,
+            )
+                : const Icon(
+              Clarity.home_line,
+              color: Colors.grey,
             ),
-            BottomNavigationBarItem(
-              icon: _currentIndex == 1
-                  ? Icon(
-                Clarity.email_solid,
-                color: primaryBlueColor,
-              )
-                  : const Icon(
-                Clarity.email_line,
-                color: Colors.grey,
-              ),
-              label: "",
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: _currentIndex == 1
+                ? Icon(
+              Clarity.email_solid,
+              color: primaryBlueColor,
+            )
+                : const Icon(
+              Clarity.email_line,
+              color: Colors.grey,
             ),
-            BottomNavigationBarItem(
-              icon: _currentIndex == 2
-                  ? Icon(
-                Icons.search_rounded,
-                color: primaryBlueColor,
-              )
-                  : const Icon(
-                Clarity.search_line,
-                color: Colors.grey,
-              ),
-              label: "",
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: _currentIndex == 2
+                ? Icon(
+              Icons.search_rounded,
+              color: primaryBlueColor,
+            )
+                : const Icon(
+              Clarity.search_line,
+              color: Colors.grey,
             ),
-            BottomNavigationBarItem(
-              icon: _currentIndex == 3
-                  ? Icon(
-                Clarity.book_solid,
-                color: primaryBlueColor,
-              )
-                  : const Icon(
-                Clarity.book_line,
-                color: Colors.grey,
-              ),
-              label: "",
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: _currentIndex == 3
+                ? Icon(
+              Clarity.book_solid,
+              color: primaryBlueColor,
+            )
+                : const Icon(
+              Clarity.book_line,
+              color: Colors.grey,
             ),
-            BottomNavigationBarItem(
-              icon: _currentIndex == 4
-                  ? Icon(
-                Clarity.user_solid,
-                color: primaryBlueColor,
-              )
-                  : const Icon(
-                Clarity.user_line,
-                color: Colors.grey,
-              ),
-              label: "",
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: _currentIndex == 4
+                ? Icon(
+              Clarity.user_solid,
+              color: primaryBlueColor,
+            )
+                : const Icon(
+              Clarity.user_line,
+              color: Colors.grey,
             ),
-          ],
-        ),
+            label: "",
+          ),
+        ],
       ),
     );
   }
@@ -524,7 +512,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   _showCustomDialog(context,"Front-end\n          Neha Urooj\nBack-end\n          Muhammad Kamran");
                 },
                 child: Container(
-                  height: 200,
+                  height: 150,
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),

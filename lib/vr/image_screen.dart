@@ -10,6 +10,7 @@ class ImageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: Text(
           'VR Image',
           style: TextStyle(
@@ -18,11 +19,13 @@ class ImageScreen extends StatelessWidget {
               fontSize: 15,
               fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
+        //backgroundColor: Colors.transparent,
         leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor,size: 15,)),
       ),
       body: PanoramaViewer(
-        animSpeed: 5,
+        animSpeed: 1,
+        sensorControl: SensorControl.absoluteOrientation,
         child: image,
       ),
     );

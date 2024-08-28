@@ -9,7 +9,6 @@ class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key, required this.message});
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -40,57 +39,76 @@ class ChatScreen extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor, size: 15),
         ),
+
         actions: [
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: Icon(Icons.call, size: 20, color: primaryBlueColor),
-              onPressed: () {
-                // Add your call functionality here
-              },
-            ),
+          IconButton(
+            icon: Icon(Icons.call, color: primaryBlueColor),
+            onPressed: () {
+              // Add your call functionality here
+            },
           ),
-          SizedBox(width: 8.0), // Add spacing between action icons if needed
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: Icon(Icons.more_vert_rounded, size: 20, color: primaryBlueColor),
-              onPressed: () {
-                // Add your additional functionality here
-              },
-            ),
+          PopupMenuButton<int>(
+            icon: Icon(Icons.more_vert_rounded, color: primaryBlueColor),
+            onSelected: (item) => onSelected(context, item),
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(value: 0, child: Text('Clear Chat')),
+              PopupMenuItem<int>(value: 1, child: Text('Delete Chat2')),
+              PopupMenuItem<int>(value: 2, child: Text('Archive Chat')),
+              PopupMenuItem<int>(value: 3, child: Text('Close Chat4')),
+            ],
           ),
         ],
       ),
       body: Column(
         children: [
-          const Expanded(
-            child:
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-            Text("Say Hello",style: TextStyle(fontSize: 50),),
-          ],),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.all(16.0),
+              children: [
+                // Add your chat messages here
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 4.0),
+                    padding: EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      "Say Hello",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Type a message...',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[200],
                     ),
                   ),
                 ),
-                const SizedBox(width: 8.0),
-                IconButton(
-                  icon: const Icon(AntDesign.send_outline),
-                  onPressed: () {
-                    // Send message logic here
-                  },
+                SizedBox(width: 8.0),
+                CircleAvatar(
+                  backgroundColor: primaryBlueColor,
+                  child: IconButton(
+                    icon: Icon(AntDesign.send_outline, color: Colors.white),
+                    onPressed: () {
+                      // Send message logic here
+                    },
+                  ),
                 ),
               ],
             ),
@@ -98,5 +116,22 @@ class ChatScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+      // Handle Option 1
+        break;
+      case 1:
+      // Handle Option 2
+        break;
+      case 2:
+      // Handle Option 3
+        break;
+      case 3:
+      // Handle Option 4
+        break;
+    }
   }
 }

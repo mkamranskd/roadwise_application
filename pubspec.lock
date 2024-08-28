@@ -217,14 +217,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  dialogflow_grpc:
-    dependency: "direct main"
-    description:
-      name: dialogflow_grpc
-      sha256: "89fd90c79c61c0d1b34ebd025a2dce9648ee51bb57e4e51dac6a1d38128c7eb3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.9"
   fake_async:
     dependency: transitive
     description:
@@ -393,14 +385,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.9.7"
-  fixnum:
-    dependency: transitive
-    description:
-      name: fixnum
-      sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   flare_flutter:
     dependency: "direct main"
     description:
@@ -544,14 +528,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  grpc:
-    dependency: transitive
-    description:
-      name: grpc
-      sha256: e93ee3bce45c134bf44e9728119102358c7cd69de7832d9a874e2e74eb8cab40
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.4"
   html:
     dependency: transitive
     description:
@@ -568,14 +544,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.6"
-  http2:
-    dependency: transitive
-    description:
-      name: http2
-      sha256: "9ced024a160b77aba8fb8674e38f70875e321d319e6f303ec18e87bd5a4b0c1d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.0"
   http_parser:
     dependency: transitive
     description:
@@ -912,14 +880,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  protobuf:
-    dependency: transitive
-    description:
-      name: protobuf
-      sha256: "01dd9bd0fa02548bf2ceee13545d4a0ec6046459d847b6b061d8a27237108a08"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   rxdart:
     dependency: "direct main"
     description:
@@ -1093,14 +1053,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  uuid:
-    dependency: transitive
-    description:
-      name: uuid
-      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.7"
   vector_graphics:
     dependency: transitive
     description:

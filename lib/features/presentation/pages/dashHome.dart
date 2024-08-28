@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Import Font Awesome Icons
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../../../global/Utils.dart';
-import '../../../global/style.dart'; // Ensure this path is correct
+import '../../../global/style.dart';
 import '../../../screens/businessinfopage.dart';
 
-// Define the EducationPath class and sample data
 
 
 class UsersListScreen extends StatefulWidget {
@@ -43,7 +42,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
 
   void fetchUsers() async {
     try {
-      var snapshot = await FirebaseFirestore.instance.collection('Users').get();
+      var snapshot = await FirebaseFirestore.instance.collection("Users").get();
       setState(() {
         usersList = snapshot.docs;
         filteredUsersList = [];
@@ -51,9 +50,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
         isLoading = false;
       });
 
-      // Assuming 'city' field is a list of cities in Firestore
+      // Extracting the city field from each user document
       List<String> dynamicCities = usersList
-          .map((user) => user['city']?.toString() ?? 'Unknown')
+          .map((user) => (user.data() as Map<String, dynamic>)['city']?.toString() ?? 'Unknown')
           .toList();
 
       // Remove duplicates and sort the list of cities
@@ -79,7 +78,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
       filteredUsers = [];
     } else {
       filteredUsers = usersList.where((user) {
-        String fullName = user['fullName'].toString().toLowerCase();
+        String fullName = (user.data() as Map<String, dynamic>)['fullName'].toString().toLowerCase();
         return fullName.contains(query.toLowerCase());
       }).toList();
     }
@@ -93,7 +92,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
 
     if (selectedCity != null && selectedCity!.isNotEmpty) {
       filteredUsers = filteredUsers.where((user) {
-        return user['city'] == selectedCity;
+        return (user.data() as Map<String, dynamic>)['city'] == selectedCity;
       }).toList();
     }
 
@@ -108,7 +107,6 @@ class _UsersListScreenState extends State<UsersListScreen> {
     showModalBottomSheet(
       backgroundColor: Colors.white,
       context: context,
-
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -121,17 +119,17 @@ class _UsersListScreenState extends State<UsersListScreen> {
                     children: [
                       Text(
                         'Filter Options',
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: TextStyle(
+                            color: primaryBlueColor,
+                            fontFamily: 'Dubai',
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
                       ),
                       const Expanded(child: SizedBox(width: 1,)),
-                      Icon(Clarity.filter_line),
-
+                      Icon(Clarity.filter_line, color: primaryBlueColor),
                     ],
                   ),
-                  const SizedBox(height: 5),
-                  Divider(height: 5,color: Colors.black,),
-                  const SizedBox(height: 20),
-
+                  const SizedBox(height: 10),
                   SwitchListTile(
                     title: Text(
                       showBusinessAccountsOnly
@@ -172,6 +170,20 @@ class _UsersListScreenState extends State<UsersListScreen> {
                           child: const Text('Apply Filters'),
                         ),
                       ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              showBusinessAccountsOnly = false;
+                              selectedCity = null;
+                            });
+                            filterUsers(searchQuery);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Clear Filters'),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -190,11 +202,11 @@ class _UsersListScreenState extends State<UsersListScreen> {
     String province = userData['province'] ?? 'Unknown';
     String profilePicture = userData['profilePicture'] ?? '';
 
-    if (userData['fullName'] == "Neha Urooj") {
+    /*if (userData['fullName'] == "Neha Urooj") {
       fullName = "Unknown Unknown";
       profilePicture =
       "https://firebasestorage.googleapis.com/v0/b/roadwise-application-54684.appspot.com/o/profilePictures%2F8Qlio7yvEUhbdrwArb7mZxkOGXw1?alt=media&token=2495a17f-bb4c-41a9-a6e3-c802e2fa72dc";
-    }
+    }*/
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
@@ -217,15 +229,15 @@ class _UsersListScreenState extends State<UsersListScreen> {
         subtitle: Row(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.blue,
-              radius: 8,
+              backgroundColor: Colors.white,
+              radius: 12,
               child: Icon(
                 userData['businessAccount'] == "true" ? Icons.business : Icons.person,
-                size: 10,
-                color: Colors.white,
+                size: 14,
+                color: primaryBlueColor,
               ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 5),
             Text('From $city, $province')
           ],
         ),
@@ -261,6 +273,10 @@ class _UsersListScreenState extends State<UsersListScreen> {
                 onChanged: (value) {
                   filterUsers(value);
                 },
+                onSubmitted: (value) {
+                  filterUsers(value); // Trigger search on submit
+                  _searchFocusNode.unfocus(); // Optionally clear focus
+                },
                 decoration: InputDecoration(
                   icon: Icon(Clarity.search_line, color: primaryBlueColor),
                   labelText: 'Search',
@@ -275,6 +291,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
                   ),
                   suffix: IconButton(
                     onPressed: () {
+                      fetchUsers();
                       _showFilterDialog();
                     },
                     icon: Icon(Clarity.filter_line),

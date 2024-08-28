@@ -288,75 +288,6 @@ class CAPTION extends StatelessWidget {
   }
 }
 
-class CustomComboBox extends StatefulWidget {
-  final String title;
-  final List<String> items;
-  final String firebaseFieldName; // New parameter to specify the Firebase field name
-  final TextEditingController? controller;
-  final String defaultValue;
-  CustomComboBox({
-    required this.title,
-    required this.items,
-    required this.firebaseFieldName,
-    this.controller,
-    this.defaultValue = '',
-  });
-
-  @override
-  _CustomComboBoxState createState() => _CustomComboBoxState();
-}
-
-class _CustomComboBoxState extends State<CustomComboBox> {
-  late String _selectedValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedValue = widget.items.first; // Initialize selected value with the first item
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DropdownButtonFormField<String>(
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Adjust padding here
-            hintText: widget.title,
-            hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
-          ),
-          value: _selectedValue,
-          items: widget.items.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedValue = newValue ?? '';
-              _updateFirebaseField(newValue);
-            });
-          },
-        ),
-        const SizedBox(height: 5), // Adjust SizedBox height as needed
-      ],
-    );
-  }
-
-  void _updateFirebaseField(String? newValue) async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      await FirebaseFirestore.instance
-          .collection("Users")
-          .doc(user.uid)
-          .set({
-        widget.firebaseFieldName: newValue,
-      }, SetOptions(merge: true));
-    }
-  }
-}
 
 class CustomButton extends StatelessWidget {
   final String title;// Make navigateTo parameter optional
@@ -571,14 +502,6 @@ class CustomSearchBar extends StatelessWidget {
 }
 
 
-
-
-
-
-
-
-
-
 class BadgeWidget extends StatefulWidget {
   final String text;
 
@@ -638,15 +561,373 @@ ifBusinessAccount() async {
 
 
 
+class CustomComboBox extends StatefulWidget {
+  final String title;
+  final String firebaseFieldName;
+  final TextEditingController? controller;
+  final String defaultValue;
+
+  CustomComboBox({
+    required this.title,
+    required this.firebaseFieldName,
+    this.controller,
+    this.defaultValue = '',
+  });
+
+  @override
+  _CustomComboBoxState createState() => _CustomComboBoxState();
+}
+
+class _CustomComboBoxState extends State<CustomComboBox> {
+  String _selectedValue = "Select City"; // Initialize with the default placeholder
+  List<String> _items = ["Select City"]; // Add the default placeholder as the first item
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCities();
+  }
+
+  Future<void> _fetchCities() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        // Fetch cities from Firestore by retrieving the document IDs
+        final snapshot = await FirebaseFirestore.instance
+            .collection("cities")
+            .get();
+
+        final cities = snapshot.docs.map((doc) => doc.id).toList(); // Use document IDs
+
+        setState(() {
+          _items.addAll(cities); // Add fetched cities to the list after "Select City"
+          _isLoading = false;
+        });
+      } catch (e) {
+        print("Error fetching cities: $e");
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return CircularProgressIndicator(); // Show loader while loading cities
+    }
+
+    return Column(
+      children: [
+        DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            hintText: widget.title,
+            hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+          ),
+          value: _selectedValue,
+          items: _items.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null && newValue != "Select City") {
+              setState(() {
+                _selectedValue = newValue;
+                _updateFirebaseField(newValue);
+              });
+            }
+          },
+        ),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  void _updateFirebaseField(String? newValue) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(user.uid)
+          .set({
+        widget.firebaseFieldName: newValue,
+      }, SetOptions(merge: true));
+    }
+  }
+}
 
 
+class CascadingDropdowns extends StatefulWidget {
+  @override
+  _CascadingDropdownsState createState() => _CascadingDropdownsState();
+}
 
+class _CascadingDropdownsState extends State<CascadingDropdowns> {
+  String? _selectedCountry;
+  String? _selectedState;
+  String? _selectedCity;
 
+  List<String> _countries = [];
+  List<String> _states = [];
+  List<String> _cities = [];
 
+  bool _isLoadingCountry = true;
+  bool _isLoadingState = false;
+  bool _isLoadingCity = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
 
+  Future<void> _fetchUserData() async {
+    try {
+      final userId = _auth.currentUser?.uid; // Replace with your authentication method
+      if (userId != null) {
+        final userDoc = await FirebaseFirestore.instance.collection('Users').doc(userId).get();
+        final userData = userDoc.data();
 
+        if (userData != null) {
+          _selectedCountry = userData['country'].toString().trim();
+          _selectedState = userData['state'].toString().trim();
+          _selectedCity = userData['city'].toString().trim();
+        }
 
+        await _fetchCountries();
+      } else {
+        await _fetchCountries();
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+      await _fetchCountries();
+    }
+  }
+
+  Future<void> _fetchCountries() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection('countries').get();
+      final countries = snapshot.docs.map((doc) => doc.id).toList();
+
+      setState(() {
+        _countries = ["Select Country"] + countries;
+        _isLoadingCountry = false;
+
+        // Debugging: Print the fetched countries
+        print("Fetched countries: $_countries");
+
+        if (_selectedCountry != null && _countries.contains(_selectedCountry)) {
+          _fetchStates(_selectedCountry!);
+        }
+      });
+    } catch (e) {
+      print("Error fetching countries: $e");
+      setState(() {
+        _isLoadingCountry = false;
+      });
+    }
+  }
+
+  Future<void> _fetchStates(String countryId) async {
+    setState(() {
+      _isLoadingState = true;
+      _states = ["Select State"];
+      _selectedState = null;
+      _cities = ["Select City"];
+      _selectedCity = null;
+    });
+
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('countries')
+          .doc(countryId)
+          .collection('states')
+          .get();
+      final states = snapshot.docs.map((doc) => doc.id).toList();
+
+      setState(() {
+        _states = ["Select State"] + states;
+        _isLoadingState = false;
+
+        // Debugging: Print the fetched states
+        print("Fetched states for country $countryId: $_states");
+
+        if (_selectedState != null && _states.contains(_selectedState)) {
+          _fetchCities(countryId, _selectedState!);
+        }
+      });
+    } catch (e) {
+      print("Error fetching states: $e");
+      setState(() {
+        _isLoadingState = false;
+      });
+    }
+  }
+
+  Future<void> _fetchCities(String countryId, String stateId) async {
+    setState(() {
+      _isLoadingCity = true;
+      _cities = ["Select City"];
+      _selectedCity = null;
+    });
+
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('countries')
+          .doc(countryId)
+          .collection('states')
+          .doc(stateId)
+          .collection('cities')
+          .get();
+      final cities = snapshot.docs.map((doc) => doc.id).toList();
+
+      setState(() {
+        _cities = ["Select City"] + cities;
+        _isLoadingCity = false;
+
+        // Debugging: Print the fetched cities
+        print("Fetched cities for state $stateId: $_cities");
+
+        // Set the previously selected city
+        if (_selectedCity != null && _cities.contains(_selectedCity)) {
+          _selectedCity = _selectedCity;
+        }
+      });
+    } catch (e) {
+      print("Error fetching cities: $e");
+      setState(() {
+        _isLoadingCity = false;
+      });
+    }
+  }
+
+  Future<void> _updateSelection(String? country, String? state, String? city) async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId != null) {
+        await FirebaseFirestore.instance.collection("Users").doc(userId).set({
+          "updatedAt": DateTime.now(),
+          "country": country,
+          "state": state,
+          "city": city
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      print("Error updating selection: $e");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Country Dropdown
+        DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            hintText: "Select Country",
+          ),
+          value: _selectedCountry,
+          items: _countries.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null && newValue != "Select Country") {
+              setState(() {
+                _selectedCountry = newValue;
+                _fetchStates(newValue);
+                _updateSelection(newValue, _selectedState, _selectedCity);
+              });
+            } else {
+              setState(() {
+                _selectedCountry = null;
+                _states = ["Select State"];
+                _selectedState = null;
+                _cities = ["Select City"];
+                _selectedCity = null;
+                _updateSelection(null, null, null);
+              });
+            }
+          },
+        ),
+        const SizedBox(height: 10),
+
+        // State Dropdown
+        DropdownButtonFormField<String>(
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            hintText: "Select State",
+          ),
+          value: _selectedState,
+          items: _states.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null && newValue != "Select State") {
+              setState(() {
+                _selectedState = newValue;
+                _fetchCities(_selectedCountry!, newValue);
+                _updateSelection(_selectedCountry, newValue, _selectedCity);
+              });
+            } else {
+              setState(() {
+                _selectedState = null;
+                _cities = ["Select City"];
+                _selectedCity = null;
+                _updateSelection(_selectedCountry, null, null);
+              });
+            }
+          },
+        ),
+        const SizedBox(height: 10),
+
+        // City Dropdown
+        DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            hintText: "Select City",
+          ),
+          value: _selectedCity,
+          items: _cities.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null && newValue != "Select City") {
+              setState(() {
+                _selectedCity = newValue;
+                _updateSelection(_selectedCountry, _selectedState, newValue);
+              });
+            } else {
+              setState(() {
+                _selectedCity = null;
+                _updateSelection(_selectedCountry, _selectedState, null);
+              });
+            }
+          },
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+}
 
 
 

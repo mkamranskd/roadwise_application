@@ -6,12 +6,12 @@ import 'package:animate_do/animate_do.dart';
 
 final _auth = FirebaseAuth.instance;
 
-class CompleteProfile extends StatefulWidget {
+class EditProfile extends StatefulWidget {
   @override
-  _CompleteProfileState createState() => _CompleteProfileState();
+  _EditProfileState createState() => _EditProfileState();
 }
 
-class _CompleteProfileState extends State<CompleteProfile> {
+class _EditProfileState extends State<EditProfile> {
 
   int _currentQuestionIndex = 0;
   final sinceController = TextEditingController();
@@ -93,25 +93,26 @@ class _CompleteProfileState extends State<CompleteProfile> {
       extendBodyBehindAppBar: true,
 
       appBar: AppBar(
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(
+              color: primaryBlueColor,
+              fontFamily: 'Dubai',
+              fontSize: 15,
+              fontWeight: FontWeight.bold),
+        ),
         actions:[
           TextButton(onPressed: (){
             Navigator.pop(context);
           }, child:  Icon(Icons.done,size: 20,color: primaryBlueColor,),//Text("Done",style: TextStyle(color: primaryBlueColor),)
           )
         ],
-        title:   ProgressBar(count: _currentQuestionIndex + 1, total: 5)
-        ,
+        leading: IconButton(
+          onPressed: () { Navigator.pop(context); },
+          icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor, size: 15,),
+        ),
+        //title:   ProgressBar(count: _currentQuestionIndex + 1, total: 5),
 
-      leading: _currentQuestionIndex>=1? IconButton(onPressed: (){
-        setState(() {
-          _currentQuestionIndex--;
-        });
-
-      }, icon: Icon(Icons.arrow_back_ios_new,size: 15,color: primaryBlueColor,)): IconButton(onPressed: (){
-
-        Navigator.pop(context);
-
-      }, icon: Icon(Icons.arrow_back_ios_new,size: 15,color: primaryBlueColor)),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -131,15 +132,10 @@ class _CompleteProfileState extends State<CompleteProfile> {
                         height: 70,
                       ),
                       //ProgressBar(count: _currentQuestionIndex + 1, total: 5),
-                      const SizedBox(
-                        height: 20,
-                      ),
+
                       // Assuming there are 3 questions
                       if (_currentQuestionIndex == 0) ...[
                         isBusinessAccount == true ? _buildQuestion1() : _buildBusinessQuestion1(),
-
-                      ] else if (_currentQuestionIndex == 1) ...[
-                        _buildQuestion2(),
                       ] else if (_currentQuestionIndex == 2) ...[
                         _buildQuestion3(),
                       ] else if (_currentQuestionIndex == 3) ...[
@@ -159,13 +155,14 @@ class _CompleteProfileState extends State<CompleteProfile> {
     );
   }
 
+
   Widget _buildBusinessQuestion1() {
     return FadeInUp(
       duration: const Duration(milliseconds: 500),
       child: Column(
         children: [
           H2(
-            title: "Add Business Information",
+            title: "Business Information",
             clr: primaryBlueColor,
           ),
 
@@ -179,27 +176,46 @@ class _CompleteProfileState extends State<CompleteProfile> {
             controller: sinceController,
           ),
           TEXTBOX(
-            title: "Add Bio",
+            title: "Bio",
             controller: bioController,
           ),
+          H2(
+            title: "Contact Details?",
+            clr: primaryBlueColor,
+          ),
+          TEXTBOX(
+            title: "Phone",
+            controller: phoneController,
+          ),
 
+
+
+          TEXTBOX(
+            title: "Address",
+            controller: addressController,
+          ),
           const SizedBox(height: 10,),
+
+
+          CascadingDropdowns(),
+
+
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               InkWell(
                 onTap: () async{
                   await FirebaseFirestore.instance.collection("Users").doc(_auth.currentUser?.uid).set({
-                    "updatedAt": DateTime.now(),
                     "userId": _auth.currentUser?.uid,
+                    "updatedAt": DateTime.now(),
+                    "phoneNumber":phoneController.text.toString(),
+                    "Address":addressController.text.toString(),
                     "fullName":fullNameController.text.toString(),
                     "since":sinceController.text.toString(),
                     "bio":bioController.text.toString()
-
                   },SetOptions(merge: true));
-                  setState(() {
-                    _currentQuestionIndex++;
-                  });
+                  Navigator.pop(context);
+
                 },
                 child: Container(
                   height: 50,
@@ -213,18 +229,26 @@ class _CompleteProfileState extends State<CompleteProfile> {
                     ),
                   ),
                   child: const Center(
-                    child: Text(
-                      'Next',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Dubai',
-                          fontWeight: FontWeight.bold),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Save',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Dubai',
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(width: 20,),
+                        Icon(Icons.done,size: 20,color: Colors.white,),
+                      ],
                     ),
                   ),
                 ),
               ),
             ],
           ),
+
         ],
       ),
     );
@@ -249,8 +273,26 @@ class _CompleteProfileState extends State<CompleteProfile> {
             title: "Age",
             controller: ageController,
           ),
+          H2(
+            title: "Contact Details?",
+            clr: primaryBlueColor,
+          ),
+          TEXTBOX(
+            title: "Phone",
+            controller: phoneController,
+          ),
 
+
+
+
+          TEXTBOX(
+            title: "Address",
+            controller: addressController,
+          ),
+
+          CascadingDropdowns(),
           const SizedBox(height: 10,),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -260,88 +302,11 @@ class _CompleteProfileState extends State<CompleteProfile> {
                     "updatedAt": DateTime.now(),
                     "userId": _auth.currentUser?.uid,
                     "fullName":fullNameController.text.toString(),
-
-                    "age":ageController.text.toString()
-
-                  },SetOptions(merge: true));
-                  setState(() {
-                    _currentQuestionIndex++;
-                  });
-                },
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: LinearGradient(
-                      colors: [
-                        primaryBlueColor,
-                        const Color.fromRGBO(104, 159, 56, 1)
-                      ],
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Next',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Dubai',
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuestion2() {
-    return FadeInUp(
-
-      duration: const Duration(milliseconds: 500),
-      child: Column(
-        children: [
-           H2(
-            title: "Contact Details?",
-            clr: primaryBlueColor,
-          ),
-          TEXTBOX(
-            title: "Phone",
-            controller: phoneController,
-          ),
-          CustomComboBox(
-            title: "Class*",
-            items: const ['Sindh'],firebaseFieldName: "province",
-
-
-          ),
-          CustomComboBox(
-            title: "Class*",
-            items: const ['Sakrand','Nawabshah'],
-            firebaseFieldName: "city",
-
-          ),
-          TEXTBOX(
-            title: "Address",
-            controller: addressController,
-          ),
-          const SizedBox(height: 10,),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              InkWell(
-                onTap: () async{
-                  await FirebaseFirestore.instance.collection("Users").doc(_auth.currentUser?.uid).set({
-                    "updatedAt": DateTime.now(),
+                    "age":ageController.text.toString(),
                     "phoneNumber":phoneController.text.toString(),
                     "Address":addressController.text.toString()
-
                   },SetOptions(merge: true));
-                  setState(() {
-                    _currentQuestionIndex++;
-                  });
+                  Navigator.pop(context);
                 },
                 child: Container(
                   height: 50,
@@ -371,6 +336,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
       ),
     );
   }
+
 
   Widget _buildQuestion3() {
     return FadeInUp(
@@ -382,21 +348,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
             clr: primaryBlueColor,
           ),
           const SizedBox(height: 10,),
-          CustomComboBox(
-            title: "Class*",
-            items: const [
-              'Matric',
-              'Enter',
-              'BS',
-              'BSC',
-              'MS',
-              'M-PHIL',
-              'PHD'
-            ],
-            firebaseFieldName: "justPassedClass",
 
-
-          ),
           const SizedBox(height: 10,),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,

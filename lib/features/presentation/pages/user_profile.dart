@@ -5,9 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:roadwise_application/features/presentation/pages/quiz/starting_page.dart';
+import 'package:roadwise_application/features/presentation/pages/quiz/EditProfile.dart';
 import 'package:roadwise_application/global/style.dart';
-final _auth = FirebaseAuth.instance;
+
+import '../../../vr/galleryVr.dart';
+
 
 class UserProfileScreen extends StatefulWidget {
   final User user;
@@ -21,6 +23,33 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   File? _image;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _navigateToGallery() async {
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      final userRef = FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
+      final docSnapshot = await userRef.get();
+      if (docSnapshot.exists) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GalleryVr(businessData: docSnapshot),
+          ),
+        );
+      } else {
+        // Handle user document not found
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('User document not found.'),
+        ));
+      }
+    } else {
+      // Handle user not logged in
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('You need to be logged in to access the gallery.'),
+      ));
+    }
+  }
   Future<void> _getImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -406,28 +435,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          Row(
-            children: [
-
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CompleteProfile()),
-                  );
-                },
-                child: Icon(Clarity.edit_line, color: primaryBlueColor, size: 15),
-              ),
-              TextButton(
-                  onPressed: (){},
-                  child: const Text("Vr Gallery",  style: TextStyle(
-                  color: Colors.blue,
-                  fontFamily: 'Dubai',
-                  fontWeight: FontWeight.bold),)),
-            ],
-          ),
-        ],
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -464,18 +471,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Center(
-                    child: Stack(
+
+              if (userData["businessAccount"] == "true") ...[
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
                       children: [
-                        CircleAvatar(
-                          backgroundImage: _image != null
-                              ? FileImage(_image!) as ImageProvider<Object>
-                              : userData['profilePicture'] != null
-                              ? NetworkImage(userData['profilePicture'])
-                              : const AssetImage(
-                              'assets/icons/person_icon.png')
-                          as ImageProvider<Object>,
-                          radius: 64,
+                        GestureDetector(
+                          onTap:_getImage,
+                          child: CircleAvatar(
+                            backgroundImage: _image != null
+                                ? FileImage(_image!) as ImageProvider<Object>
+                                : userData['profilePicture'] != null
+                                ? NetworkImage(userData['profilePicture'])
+                                : const AssetImage(
+                                'assets/icons/person_icon.png')
+                            as ImageProvider<Object>,
+                            radius: 64,
+                          ),
                         ),
                         Positioned(
                           bottom: -18,
@@ -488,9 +503,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(width: 30,),
+                    GestureDetector(
+                      onTap: _navigateToGallery,
+                      child: const Stack(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: AssetImage('assets/icons/addVr.png',)
+                            as ImageProvider<Object>,
+                            radius: 35,
+                          ),
 
-                  if (userData["businessAccount"] == "true") ...[
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
 
 
                     const SizedBox(height: 20),
@@ -528,6 +556,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     Field(
                         heading: "Email",
                         title: _auth.currentUser?.email ?? 'Not Updated Yet'),
+                    const SizedBox(height: 20,),
+
                     Row(
                       children: [
                         H3(title: "Add Degree", clr: primaryBlueColor),
@@ -672,8 +702,74 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         }
                       },
                     ),
+                const SizedBox(height: 20,),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          gradient: LinearGradient(
+                            colors: [
+                              primaryBlueColor,
+                              const Color.fromRGBO(104, 159, 56, 1)
+                            ],
+                          ),
+                        ),
+                        child: TextButton(
+                          onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => EditProfile()),
+                            );
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Clarity.edit_solid, color: Colors.white, size: 15),
+                              SizedBox(width: 15,),
+                              Text("Edit Personal Information ",   style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Dubai',
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20,),
 
                   ] else ...[
+                Center(
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: _image != null
+                            ? FileImage(_image!) as ImageProvider<Object>
+                            : userData['profilePicture'] != null
+                            ? NetworkImage(userData['profilePicture'])
+                            : const AssetImage(
+                            'assets/icons/person_icon.png')
+                        as ImageProvider<Object>,
+                        radius: 64,
+                      ),
+                      Positioned(
+                        bottom: -18,
+                        left: 97,
+                        child: IconButton(
+                          onPressed: _getImage,
+                          icon: Icon(Clarity.camera_solid,
+                              color: primaryBlueColor, size: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                     const SizedBox(height: 20),
                     Field(
                         heading: "Full Name",
@@ -850,6 +946,47 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         }
                       },
                     ),
+                const SizedBox(height: 20,),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          gradient: LinearGradient(
+                            colors: [
+                              primaryBlueColor,
+                              const Color.fromRGBO(104, 159, 56, 1)
+                            ],
+                          ),
+                        ),
+                        child: TextButton(
+                          onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => EditProfile()),
+                            );
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Clarity.edit_solid, color: Colors.white, size: 15),
+                              SizedBox(width: 15,),
+                              Text("Edit Personal Information ",   style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Dubai',
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20,),
                   ],
                 ],
               ),

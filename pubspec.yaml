@@ -37,7 +37,6 @@ dependencies:
   firebase_database: ^10.5.0
   dialogflow_flutter: ^1.0.0
   rxdart: ^0.27.7
-  dialogflow_grpc: ^0.2.9
   sound_stream: ^0.4.1
   animated_toggle_switch: ^0.8.2
   flutter_treeview: ^1.0.7+1

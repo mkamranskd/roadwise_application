@@ -43,7 +43,8 @@ android {
     defaultConfig {
         applicationId "com.roadwise.roadwise_application"
         minSdkVersion 23
-        targetSdkVersion flutter.targetSdkVersion
+        //targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

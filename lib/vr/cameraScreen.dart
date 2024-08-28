@@ -165,45 +165,39 @@ class ConfirmPictureScreen extends StatelessWidget {
           },
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.blue, size: 15), // Replace with primaryBlueColor if defined
         ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Clarity.refresh_line, size: 15, color: Colors.blue), // Replace with primaryBlueColor if defined
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 10,),
+              IconButton(
+                icon: const Icon(Clarity.check_line, size: 15, color: Colors.blue), // Replace with primaryBlueColor if defined
+                onPressed: () async {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UploadPictureScreen(imagePath: imagePath),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
       body: FutureBuilder<void>(
         future: _loadImage(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(child: SizedBox(height: 20,)),
-                Transform.rotate(
-                  angle: 1.5708, // 90 degrees in radians
-                  child: Image.file(File(imagePath), fit: BoxFit.cover,),
-                ),
-                const SizedBox(height: 120,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Clarity.refresh_line, size: 30, color: Colors.blue), // Replace with primaryBlueColor if defined
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    const SizedBox(width: 80,),
-                    IconButton(
-                      icon: const Icon(Clarity.check_line, size: 35, color: Colors.blue), // Replace with primaryBlueColor if defined
-                      onPressed: () async {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => UploadPictureScreen(imagePath: imagePath),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                const Expanded(child: SizedBox(height: 20,)),
-              ],
+            return Center(
+              child: Image.file(File(imagePath),
+              ),
             );
           } else {
             return const Center(
@@ -215,7 +209,6 @@ class ConfirmPictureScreen extends StatelessWidget {
     );
   }
 }
-
 
 
 
@@ -260,6 +253,7 @@ class _UploadPictureScreenState extends State<UploadPictureScreen> {
         'businessVrImages': FieldValue.arrayUnion([imageUrl]),
       });
 
+      Navigator.of(context).pop();
       Navigator.of(context).pop();
     } catch (e) {
       print('Error uploading profile picture: $e');

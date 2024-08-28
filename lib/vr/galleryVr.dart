@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:roadwise_application/vr/thumbnail.dart';
+import '../global/Utils.dart';
 import '../global/style.dart';
 import 'cameraScreen.dart';
-
-
 
 class GalleryVr extends StatefulWidget {
   final DocumentSnapshot businessData;
@@ -21,6 +20,7 @@ class _GalleryVrState extends State<GalleryVr> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late List<Thumbnail> thumbList = [];
   bool _isLoading = true;
+  bool _isRemoving = false;
   String? _errorMessage;
   bool _showCameraIcon = false;
 
@@ -88,10 +88,65 @@ class _GalleryVrState extends State<GalleryVr> {
     }
   }
 
+  Future<void> _removeImage(String imageUrl) async {
+    setState(() {
+      _isRemoving = true;
+    });
+
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        final userRef = FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
+
+        final data = widget.businessData.data() as Map<String, dynamic>;
+        final List<dynamic>? images = data['businessVrImages'] as List<dynamic>?;
+
+        if (images != null && images.isNotEmpty) {
+          images.remove(imageUrl);
+          await userRef.update({'businessVrImages': images});
+          setState(() {
+            thumbList.removeWhere((thumb) => thumb.imagePath == imageUrl);
+            Utils.toastMessage(context, "Image Deleted Successfully", Icons.check);
+          });
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Failed to remove the image. Please try again later.';
+      });
+    } finally {
+      setState(() {
+        _isRemoving = false;
+      });
+    }
+  }
+
+  void _showDeleteDialog(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Remove Image'),
+        content: const Text('Are you sure you want to remove this image?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _removeImage(imageUrl);
+            },
+            child: const Text('Remove'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = widget.businessData.data() as Map<String, dynamic>;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -123,27 +178,56 @@ class _GalleryVrState extends State<GalleryVr> {
           icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor, size: 15,),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _errorMessage != null
-              ? Center(child: Text(_errorMessage!))
-              : GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
-              childAspectRatio: 1.0,
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _errorMessage != null
+                  ? Center(child: Text(_errorMessage!))
+                  : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 50,
+                  childAspectRatio: 1.0,
+                ),
+                itemCount: thumbList.length,
+                itemBuilder: (context, index) {
+                  final imageUrl = thumbList[index].imagePath;
+                  return GestureDetector(
+                    onLongPress: () => _showDeleteDialog(imageUrl),
+                    child: thumbList[index],
+                  );
+                },
+              ),
             ),
-            itemCount: thumbList.length,
-            itemBuilder: (context, index) {
-              return thumbList[index];
-            },
           ),
-        ),
+          if (_isRemoving)
+            Center(
+              child: Container(
+                color: Colors.black54,
+                child: const CircularProgressIndicator(),
+              ),
+            ),
+          const Positioned(
+            bottom: 10,
+            right: 0,
+            left: 0,
+            child: Text(
+              'Note: Long press to remove Image',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
       ),
+
     );
   }
 }
