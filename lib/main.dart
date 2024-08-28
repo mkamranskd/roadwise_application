@@ -6,6 +6,8 @@ import 'global/style.dart';
 
 
 
+
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

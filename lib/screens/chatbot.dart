@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roadwise_application/firebase_services/chatbot_service.dart';
 
-import '../global/style.dart';
-
 class Chatbot extends StatefulWidget {
   @override
   _ChatbotState createState() => _ChatbotState();
@@ -48,20 +46,7 @@ class _ChatbotState extends State<Chatbot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'ChatBot',
-          style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 15,
-              fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor, size: 15),
-        ),
+        title: Text('Chatbot'),
       ),
       body: Column(
         children: <Widget>[
