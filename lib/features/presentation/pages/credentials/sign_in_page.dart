@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_up_page.dart';
-import 'package:roadwise_application/features/presentation/pages/quiz/EditProfile.dart';
-import 'package:roadwise_application/global/Utils.dart';
+import 'package:roadwise_application/features/presentation/pages/user/user_complete_profile.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:roadwise_application/global/style.dart';
-import 'package:roadwise_application/screens/dashboard_screen.dart';
-import 'package:roadwise_application/screens/password_reset_screen.dart';
-import 'package:roadwise_application/screens/common_header.dart';
+import 'package:roadwise_application/global/svg_illustrations.dart';
+import 'package:roadwise_application/main.dart';
+import 'package:roadwise_application/features/presentation/pages/credentials/forgot_password_page.dart';
+
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key});
@@ -22,7 +27,28 @@ class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool _isObscure = true; // Initial state of password visibility
+  bool _isObscure = true;
+  bool _isButtonEnabled = false;
+
+  void _validateForm() {
+    setState(() {
+      // Check if the email is valid and password is at least 6 characters long
+      if (emailController.text.contains('@') &&
+          emailController.text.contains('.') &&
+          passwordController.text.length >= 6) {
+        _isButtonEnabled = true;
+      } else {
+        _isButtonEnabled = false;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,106 +57,214 @@ class _SignInScreenState extends State<SignInScreen> {
         child: Column(
           children: <Widget>[
             //SizedBox(height: 100,),
-            CommonHeader(title: "title"),
+            const CommonHeader(title: "title"),
             H1(title: "Login First", clr: primaryBlueColor),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Column(
                 children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color.fromRGBO(143, 148, 251, 1)),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromRGBO(143, 148, 251, .2),
-                          blurRadius: 20.0,
-                          offset: Offset(0, 10),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: emailController,
+                          onChanged: (email) => _validateForm(),
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            hintText: "Enter your email",
+                            labelText: "Email",
+                            suffixIcon: Icon(
+                              Clarity.email_line,
+                              color: primaryBlueColor,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: passwordController,
+                          obscureText: _isObscure,
+                          onChanged: (password) => _validateForm(),
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            hintText: "Enter your password",
+                            labelText: "Password",
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isObscure
+                                    ? Clarity.eye_show_line
+                                    : Clarity.eye_hide_line,
+                                color: primaryBlueColor,
+                                size: 20, // You can adjust the size here
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure =
+                                      !_isObscure; // Toggle password visibility
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PasswordResetPage()));
+                              },
+                              child: const Text(
+                                "Forget Password?",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            decoration: const BoxDecoration(
-                              border: Border(bottom: BorderSide(color: Color.fromRGBO(143, 148, 251, 1))),
-                            ),
-                            child: TextFormField(
-                              keyboardType: TextInputType.emailAddress,
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Email",
-                                //prefixIcon: Icon(Icons.alternate_email_rounded, size: 20, color: primaryBlueColor),
-                                hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
+                  ),
+                  ZoomTapAnimation(
+                    child: ElevatedButton(
+                      onPressed: _isButtonEnabled
+                          ? () {
+                              if (_formKey.currentState!.validate()) {
+                                login();
+                              }
+                            }
+                          : null, // Disable button if not valid
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: const Color(0xFFFF7643),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 48),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                      ),
+                      child: Center(
+                        child: loading
+                            ? LoadingAnimationWidget.inkDrop(
+                                color: Colors.white,
+                                size: 25,
+                              )
+                            : const Text(
+                                "Continue",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500),
                               ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            child: TextFormField(
-                              keyboardType: TextInputType.text,
-                              controller: passwordController,
-                              obscureText: _isObscure, // Toggle based on _isObscure state
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "Password",
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _isObscure ? Icons.visibility_off : Icons.visibility,
-                                    color: Colors.grey[700],
-                                    size: 15,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isObscure = !_isObscure; // Toggle visibility
-                                    });
-                                  },
-                                ),
-                                hintStyle: TextStyle(color: Colors.grey[700], fontFamily: 'Dubai'),
-                              ),
-                            ),
-                          )
-                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  CustomButton(
-                    loading: loading,
-                    title: "Login",
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        login();
-                      }
-                    },
-                    clr1: primaryBlueColor,
-                    clr2: primaryBlueColor,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("Don't Have an Account?"),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpPage()));
-                        },
-                        child: const Text("Sign Up"),
+                      ZoomTapAnimation(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignUpPage()));
+                          },
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  CustomButton(
-                    title: "Forgot Password?",
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PasswordResetPage()));
-                    },
-                    clr1: const Color.fromRGBO(255, 0, 0, 1),
-                    clr2: const Color.fromRGBO(255, 0, 0, 1),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SocialCard(
+                        icon: SvgPicture.string(googleIcon),
+                        press: () async {
+                          setState(() {
+                            loading = true;
+                          });
+                          final userCredential = await _signInWithGoogle();
+
+                          if (userCredential != null) {
+                            final user = userCredential.user;
+                            if (user != null) {
+                              final userDoc = await FirebaseFirestore.instance
+                                  .collection('Users')
+                                  .doc(user.uid)
+                                  .get();
+
+                              if (userDoc.exists) {
+                                final userData = userDoc.data();
+                                final fullName = userData?['fullName'];
+
+                                if (fullName != null && fullName.isNotEmpty) {
+                                  // Navigate to main app
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const MyApp()),
+                                  );
+                                } else {
+                                  // Navigate to complete profile screen
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            UserCompleteProfile()),
+                                  );
+                                }
+                              } else {
+                                // Navigate to complete profile screen
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          UserCompleteProfile()),
+                                );
+                              }
+                            }
+                          }
+
+                          setState(() {
+                            loading = false;
+                          });
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SocialCard(
+                          icon: SvgPicture.string(facebookIcon),
+                          press: () {},
+                        ),
+                      ),
+                      SocialCard(
+                        icon: SvgPicture.string(twitterIcon),
+                        press: () {},
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "By continuing your confirm that you agree \nwith our Term and Condition",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Dubai',
+                    ),
                   ),
                 ],
               ),
@@ -141,31 +275,64 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void login() {
+  void login() async {
+
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       setState(() {
         loading = true;
       });
-      _auth.signInWithEmailAndPassword(
+      _auth
+          .signInWithEmailAndPassword(
         email: emailController.text.toString(),
         password: passwordController.text.toString(),
-      ).then((value) async {
+      )
+          .then((value) async {
         // Check if the user is a business account
         final user = _auth.currentUser;
         if (user != null) {
-          final userDoc = await FirebaseFirestore.instance.collection('Users').doc(user.uid).get();
+          final userDoc = await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(user.uid)
+              .get();
 
+          if (userDoc.exists) {
+            // Check if the fullName field exists and has data
+            final userData = userDoc.data(); // Get the data from the document
+            final fullName = userData?['fullName']; // Access the fullName field
 
-          if(userDoc.exists && userDoc.data()?['firstName'] ==""){
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EditProfile()));
-          }
-          if (userDoc.exists && userDoc.data()?['businessAccount'] == "true") {
-            // Navigate to a blank screen if the user is a business account
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard()));
+            if (fullName != null && fullName.isNotEmpty) {
+              // fullName exists and is not empty, navigate to profile screen
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const MyApp()),
+              );
+            } else {
+              // fullName is missing or empty, navigate to complete profile screen
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => UserCompleteProfile()),
+              );
+            }
           } else {
-
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard()));
+            // Document does not exist, navigate to complete profile screen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => UserCompleteProfile()),
+            );
           }
+
+          /*if (userDoc.exists && userDoc.data()?['businessAccount'] == "true") {
+            // Navigate to a blank screen if the user is a business account
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const RestartWidget(child: MyApp())));
+          } else {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const RestartWidget(child: MyApp())));
+          }*/
         }
         setState(() {
           loading = false;
@@ -173,35 +340,42 @@ class _SignInScreenState extends State<SignInScreen> {
       }).catchError((error) {
         // Check the type of error to provide specific feedback
         IconData icon = Icons.warning;
-        String errorMessage = "An error occurred while logging in. Please try again later.";
+        String errorMessage =
+            "An error occurred while logging in. Please try again later.";
         if (error is FirebaseAuthException) {
           switch (error.code) {
             case 'invalid-email':
               errorMessage = "Invalid email address.";
               break;
             case 'user-not-found':
-              errorMessage = "User not found. Please check your credentials and try again.";
+              errorMessage =
+                  "User not found. Please check your credentials and try again.";
               break;
             case 'wrong-password':
               errorMessage = "Wrong password. Please try again.";
               break;
             case 'user-disabled':
-              errorMessage = "Your account has been disabled. Please contact support.";
+              errorMessage =
+                  "Your account has been disabled. Please contact support.";
               break;
             case 'too-many-requests':
               errorMessage = "Too many login attempts. Please try again later.";
               break;
             case 'operation-not-allowed':
-              errorMessage = "Email/password sign-in is not enabled. Please contact support.";
+              errorMessage =
+                  "Email/password sign-in is not enabled. Please contact support.";
               break;
             case 'email-already-in-use':
-              errorMessage = "The email address is already in use by another account.";
+              errorMessage =
+                  "The email address is already in use by another account.";
               break;
             case 'weak-password':
-              errorMessage = "The password is too weak. Please choose a stronger password.";
+              errorMessage =
+                  "The password is too weak. Please choose a stronger password.";
               break;
             case 'network-request-failed':
-              errorMessage = "Network error occurred. Please check your internet connection.";
+              errorMessage =
+                  "Network error occurred. Please check your internet connection.";
               break;
             case 'invalid-verification-code':
               errorMessage = "Invalid verification code.";
@@ -216,13 +390,15 @@ class _SignInScreenState extends State<SignInScreen> {
               errorMessage = "Invalid Email or Password.";
               break;
             case 'credential-already-in-use':
-              errorMessage = "The credential is already in use by another account.";
+              errorMessage =
+                  "The credential is already in use by another account.";
               break;
             case 'user-mismatch':
               errorMessage = "User mismatch error.";
               break;
             case 'expired-action-code':
-              errorMessage = "The action code has expired. Please request a new one.";
+              errorMessage =
+                  "The action code has expired. Please request a new one.";
               break;
             case 'invalid-action-code':
               errorMessage = "Invalid action code. Please check and try again.";
@@ -247,15 +423,31 @@ class _SignInScreenState extends State<SignInScreen> {
       });
     }
   }
-}
 
-// Dummy blank screen for business accounts
-class BlankScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Business Account")),
-      body: Center(child: Text("Welcome to the Business Account!")),
-    );
+  Future<UserCredential?> _signInWithGoogle() async {
+    try {
+      // Trigger the Google Authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      return userCredential;
+    } catch (error) {
+      Utils.toastMessage(context, "Google Sign-In failed: $error", Icons.error);
+      print("Google Sign-In failed: $error");
+      return null;
+    }
   }
 }

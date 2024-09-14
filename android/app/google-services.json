@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "79663037799",
+    "firebase_url": "https://roadwise-application-54684-default-rtdb.firebaseio.com",
     "project_id": "roadwise-application-54684",
     "storage_bucket": "roadwise-application-54684.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.roadwise.roadwise_application"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "79663037799-pe5bt94druvmjq4uljvlkh0bkaq471uj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.roadwise.roadwise_application",
+            "certificate_hash": "8ee7eb1a4274381d310213ba0ef05a2bbc57c71f"
+          }
+        },
+        {
+          "client_id": "79663037799-03j52g5fksu65uc30a9824ag4t7nd1hh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAIBmz8bRTSw8_zMv5Gd4ZF8NuiNF9w_9g"
@@ -20,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79663037799-03j52g5fksu65uc30a9824ag4t7nd1hh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "79663037799-3icft0h4n6a965g7mg4srpchb1bf19l6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.roadwise.roadwiseApplication"
+              }
+            }
+          ]
         }
       }
     }

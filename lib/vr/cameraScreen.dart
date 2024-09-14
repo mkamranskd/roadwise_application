@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -85,7 +86,7 @@ class _CameraScreenState extends State<CameraScreen> {
             color: primaryBlueColor,
             fontFamily: 'Dubai',
             fontSize: 15,
-            fontWeight: FontWeight.bold),
+            fontWeight: FontWeight.w500),
       ),
         leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor,size: 15,)),
 
@@ -108,7 +109,10 @@ class _CameraScreenState extends State<CameraScreen> {
                   ),
                 );
               } else {
-                return const Center(child: CircularProgressIndicator());
+                return  Center(child: LoadingAnimationWidget.inkDrop(
+                                color: Colors.blue,
+                                size: 25,
+                              ));
               }
             },
           ),
@@ -151,33 +155,33 @@ class ConfirmPictureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title:  Text(
           'Confirm Picture',
           style: TextStyle(
-              color: Colors.blue, // Replace with primaryBlueColor if defined
+              color:  primaryBlueColor, // Replace with primaryBlueColor if defined
               fontFamily: 'Dubai',
               fontSize: 15,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.w500),
         ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.blue, size: 15), // Replace with primaryBlueColor if defined
+          icon:  Icon(Icons.arrow_back_ios_new, color:  primaryBlueColor, size: 15), // Replace with primaryBlueColor if defined
         ),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: const Icon(Clarity.refresh_line, size: 15, color: Colors.blue), // Replace with primaryBlueColor if defined
+                icon:  Icon(Clarity.refresh_line, size: 15, color:  primaryBlueColor), // Replace with primaryBlueColor if defined
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               const SizedBox(width: 10,),
               IconButton(
-                icon: const Icon(Clarity.check_line, size: 15, color: Colors.blue), // Replace with primaryBlueColor if defined
+                icon:  Icon(Clarity.check_line, size: 15, color:  primaryBlueColor), // Replace with primaryBlueColor if defined
                 onPressed: () async {
                   Navigator.pushReplacement(
                     context,
@@ -200,8 +204,11 @@ class ConfirmPictureScreen extends StatelessWidget {
               ),
             );
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return  Center(
+              child: LoadingAnimationWidget.inkDrop(
+                                color: Colors.blue,
+                                size: 25,
+                              ),
             );
           }
         },
@@ -269,19 +276,19 @@ class _UploadPictureScreenState extends State<UploadPictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title:  Text(
           'Upload Picture',
           style: TextStyle(
-              color: Colors.blue, // Replace with primaryBlueColor if defined
+              color:  primaryBlueColor, // Replace with primaryBlueColor if defined
               fontFamily: 'Dubai',
               fontSize: 15,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.w500),
         ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.blue, size: 15), // Replace with primaryBlueColor if defined
+          icon:  Icon(Icons.arrow_back_ios_new, color:  primaryBlueColor, size: 15), // Replace with primaryBlueColor if defined
         ),
       ),
       body: Center(
@@ -289,14 +296,17 @@ class _UploadPictureScreenState extends State<UploadPictureScreen> {
             ?  Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator( color: primaryBlueColor,),
+            LoadingAnimationWidget.inkDrop(
+                                color: Colors.blue,
+                                size: 25,
+                              ),
             const SizedBox(height: 10),
-            const Text('Image is uploading, please wait...',
+             Text('Image is uploading, please wait...',
               style: TextStyle(
-                color: Colors.blue, // Replace with primaryBlueColor if defined
+                color:  primaryBlueColor, // Replace with primaryBlueColor if defined
                 fontFamily: 'Dubai',
                 fontSize: 15,
-                fontWeight: FontWeight.bold),),
+                fontWeight: FontWeight.w500),),
           ],
         )
             : const Text('Upload complete'),

@@ -20,7 +20,6 @@ class _MyNetworkPageState extends State<MyNetworkPage> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue[800],
           onPressed: () {},
           child: const Icon(Icons.person_add_alt_1_rounded),
         ),

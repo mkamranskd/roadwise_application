@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../global/style.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -30,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: Colors.blue, // LinkedIn Blue
+        backgroundColor:  primaryBlueColor, // LinkedIn Blue
       ),
       body: SingleChildScrollView(
         child: FadeInUp(
@@ -73,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   'Edit Profile',
                   style: TextStyle(
                     fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -81,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   'Personal Information',
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     color: Color(0xFF0077B5), // LinkedIn Blue
                   ),
                 ),
@@ -96,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   'Additional Information',
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     color: Color(0xFF0077B5), // LinkedIn Blue
                   ),
                 ),
@@ -131,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         'Save Profile',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -150,8 +152,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(),
+          // Remove hint text
+          hintText: null,
+
+          // Add a prefix icon
+          prefixIcon: Icon(Icons.search), // Replace with your desired icon
+
+          // Style the border with rounded corners
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30), // Adjust radius for rounded corners
+          ),
+
+          // Style the focused border with rounded corners
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30), // Adjust radius for rounded corners
+            borderSide: BorderSide(color:  primaryBlueColor, width: 2), // Optional: change color and width for focus
+          ),
+
+          // Style the enabled border with rounded corners
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30), // Adjust radius for rounded corners
+            borderSide: BorderSide(color: Colors.grey, width: 1), // Optional: change color and width for enabled state
+          ),
+
+          // Add content padding
           contentPadding: const EdgeInsets.all(15),
         ),
       ),

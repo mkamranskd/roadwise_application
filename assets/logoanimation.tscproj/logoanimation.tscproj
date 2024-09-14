@@ -1,0 +1,763 @@
+{
+  "title" : "",
+  "description" : "",
+  "author" : "",
+  "targetLoudness" : -18.0,
+  "shouldApplyLoudnessNormalization" : true,
+  "videoFormatFrameRate" : 60,
+  "audioFormatSampleRate" : 44100,
+  "allowSubFrameEditing" : false,
+  "width" : 1080.0,
+  "height" : 1200.0,
+  "version" : "7.0",
+  "editRate" : 705600000,
+  "authoringClientName" :  {
+    "name" : "Camtasia",
+    "platform" : "Windows",
+    "version" : "2023.2.0"
+  },
+  "sourceBin" : [
+    {
+      "id" : 1,
+      "src" : "roadwiselogo1.png",
+      "rect" : [0, 0, 2000, 2000],
+      "lastMod" : "20240831T094554",
+      "loudnessNormalization" : true,
+      "sourceTracks" : [
+        {
+          "range" : [0, 1],
+          "type" : 1,
+          "editRate" : 10000000,
+          "trackRect" : [0, 0, 2000, 2000],
+          "sampleRate" : 0,
+          "bitDepth" : 32,
+          "numChannels" : 0,
+          "integratedLUFS" : 100.0,
+          "peakLevel" : -1.0,
+          "metaData" : ""
+        }
+      ],
+      "metadata" : {
+        "timeAdded" : "20240831T094644.037865"
+      }
+    },
+    {
+      "id" : 2,
+      "src" : "roadwiselogo1 copy.png",
+      "rect" : [0, 0, 2000, 2000],
+      "lastMod" : "20240831T094528",
+      "loudnessNormalization" : true,
+      "sourceTracks" : [
+        {
+          "range" : [0, 1],
+          "type" : 1,
+          "editRate" : 10000000,
+          "trackRect" : [0, 0, 2000, 2000],
+          "sampleRate" : 0,
+          "bitDepth" : 32,
+          "numChannels" : 0,
+          "integratedLUFS" : 100.0,
+          "peakLevel" : -1.0,
+          "metaData" : ""
+        }
+      ],
+      "metadata" : {
+        "timeAdded" : "20240831T094652.665149"
+      }
+    }
+  ],
+  "timeline" : {
+    "id" : 3,
+    "sceneTrack" : {
+      "scenes" : [
+        {
+          "csml" : {
+            "tracks" : [
+              {
+                "trackIndex" : 0,
+                "medias" : [
+                  {
+                    "id" : 4,
+                    "_type" : "IMFile",
+                    "src" : 1,
+                    "trackNumber" : 0,
+                    "trimStartSum" : 352800000,
+                    "attributes" : {
+                      "ident" : "roadwiselogo1"
+                    },
+                    "parameters" : {
+                      "translation0" : {
+                        "type" : "double",
+                        "defaultValue" : 20.8009054210403,
+                        "keyframes" : [
+                          {
+                            "endTime" : 929040000,
+                            "time" : 352800000,
+                            "value" : -221.597340333831,
+                            "duration" : 576240000
+                          }
+                        ]
+                      },
+                      "translation1" : {
+                        "type" : "double",
+                        "defaultValue" : 29.4535005224703,
+                        "keyframes" : [
+                          {
+                            "endTime" : 929040000,
+                            "time" : 352800000,
+                            "value" : 27.4801377395951,
+                            "duration" : 576240000
+                          }
+                        ]
+                      },
+                      "rotation2" : {
+                        "type" : "double",
+                        "defaultValue" : 0.0,
+                        "keyframes" : [
+                          {
+                            "endTime" : 929040000,
+                            "time" : 352800000,
+                            "value" : 0.0,
+                            "duration" : 576240000
+                          }
+                        ]
+                      },
+                      "shear0" : {
+                        "type" : "double",
+                        "defaultValue" : 0.0,
+                        "keyframes" : [
+                          {
+                            "endTime" : 929040000,
+                            "time" : 352800000,
+                            "value" : 0.0,
+                            "duration" : 576240000
+                          }
+                        ]
+                      },
+                      "scale0" : {
+                        "type" : "double",
+                        "defaultValue" : 0.280291370065637,
+                        "keyframes" : [
+                          {
+                            "endTime" : 929040000,
+                            "time" : 352800000,
+                            "value" : 0.284979900754839,
+                            "duration" : 576240000
+                          }
+                        ]
+                      },
+                      "scale1" : {
+                        "type" : "double",
+                        "defaultValue" : 0.283137931034483,
+                        "keyframes" : [
+                          {
+                            "endTime" : 929040000,
+                            "time" : 352800000,
+                            "value" : 0.287874077133527,
+                            "duration" : 576240000
+                          }
+                        ]
+                      },
+                      "geometryCrop0" : 0.0,
+                      "geometryCrop1" : 0.0,
+                      "geometryCrop2" : 0.0,
+                      "geometryCrop3" : 0.0,
+                      "opacity" : {
+                        "type" : "double",
+                        "defaultValue" : 1.0,
+                        "keyframes" : [
+                          {
+                            "endTime" : 10231200000,
+                            "time" : 9878400000,
+                            "value" : 0.0,
+                            "duration" : 352800000
+                          }
+                        ]
+                      }
+                    },
+                    "effects" : [
+
+                    ],
+                    "start" : 705600000,
+                    "duration" : 9878400000,
+                    "mediaStart" : 0,
+                    "mediaDuration" : 1,
+                    "scalar" : 1,
+                    "metadata" : {
+                      "clipSpeedAttribute" : false,
+                      "default-anchor0" : 0.0,
+                      "default-anchor1" : 0.0,
+                      "default-anchor2" : 0.0,
+                      "default-height" : 1080.0,
+                      "default-opacity" : 1.0,
+                      "default-rotation0" : 0.0,
+                      "default-rotation1" : 0.0,
+                      "default-rotation2" : 0.0,
+                      "default-scale0" : 0.54,
+                      "default-scale1" : 0.54,
+                      "default-scale2" : 1.0,
+                      "default-shear0" : 0.0,
+                      "default-shear1" : 0.0,
+                      "default-shear2" : 0.0,
+                      "default-translation0" : 0.0,
+                      "default-translation1" : 0.0,
+                      "default-translation2" : 0.0,
+                      "default-width" : 1080.0
+                    },
+                    "animationTracks" : {
+                      "visual" : [
+                        {
+                          "endTime" : 929040000,
+                          "duration" : 576240000,
+                          "range" : [ 352800000, 576240000]
+                        },
+                        {
+                          "endTime" : 10231200000,
+                          "duration" : 352800000,
+                          "range" : [ 9878400000, 352800000]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "trackIndex" : 1,
+                "medias" : [
+                  {
+                    "id" : 5,
+                    "_type" : "IMFile",
+                    "src" : 2,
+                    "trackNumber" : 0,
+                    "trimStartSum" : 0,
+                    "attributes" : {
+                      "ident" : "roadwiselogo1 copy"
+                    },
+                    "parameters" : {
+                      "translation0" : {
+                        "type" : "double",
+                        "defaultValue" : 12.0000000000001,
+                        "keyframes" : [
+                          {
+                            "endTime" : 705600000,
+                            "time" : 0,
+                            "value" : 55.9999999999999,
+                            "duration" : 705600000
+                          }
+                        ]
+                      },
+                      "translation1" : {
+                        "type" : "double",
+                        "defaultValue" : 180.60606060606,
+                        "keyframes" : [
+                          {
+                            "endTime" : 705600000,
+                            "time" : 0,
+                            "value" : 168.606060606068,
+                            "duration" : 705600000
+                          }
+                        ]
+                      },
+                      "scale0" : {
+                        "type" : "double",
+                        "defaultValue" : 0.00993678887484197,
+                        "keyframes" : [
+                          {
+                            "endTime" : 705600000,
+                            "time" : 0,
+                            "value" : 0.426288242730721,
+                            "duration" : 705600000
+                          }
+                        ]
+                      },
+                      "scale1" : {
+                        "type" : "double",
+                        "defaultValue" : 0.01,
+                        "keyframes" : [
+                          {
+                            "endTime" : 705600000,
+                            "time" : 0,
+                            "value" : 0.429,
+                            "duration" : 705600000
+                          }
+                        ]
+                      },
+                      "geometryCrop0" : 0.0,
+                      "geometryCrop1" : 0.0,
+                      "geometryCrop2" : 0.0,
+                      "geometryCrop3" : 0.0,
+                      "opacity" : {
+                        "type" : "double",
+                        "defaultValue" : 0.0,
+                        "keyframes" : [
+                          {
+                            "endTime" : 705600000,
+                            "time" : 0,
+                            "value" : 1.0,
+                            "duration" : 705600000
+                          },
+                          {
+                            "endTime" : 10584000000,
+                            "time" : 10231200000,
+                            "value" : 0.0,
+                            "duration" : 352800000
+                          }
+                        ]
+                      }
+                    },
+                    "effects" : [
+
+                    ],
+                    "start" : 0,
+                    "duration" : 10584000000,
+                    "mediaStart" : 0,
+                    "mediaDuration" : 1,
+                    "scalar" : 1,
+                    "metadata" : {
+                      "clipSpeedAttribute" : false,
+                      "default-anchor0" : 0.0,
+                      "default-anchor1" : 0.0,
+                      "default-anchor2" : 0.0,
+                      "default-height" : 1080.0,
+                      "default-opacity" : 1.0,
+                      "default-rotation0" : 0.0,
+                      "default-rotation1" : 0.0,
+                      "default-rotation2" : 0.0,
+                      "default-scale0" : 0.54,
+                      "default-scale1" : 0.54,
+                      "default-scale2" : 1.0,
+                      "default-shear0" : 0.0,
+                      "default-shear1" : 0.0,
+                      "default-shear2" : 0.0,
+                      "default-translation0" : 0.0,
+                      "default-translation1" : 0.0,
+                      "default-translation2" : 0.0,
+                      "default-width" : 1080.0
+                    },
+                    "animationTracks" : {
+                      "visual" : [
+                        {
+                          "endTime" : 705600000,
+                          "duration" : 705600000,
+                          "range" : [ 0, 705600000]
+                        },
+                        {
+                          "endTime" : 10584000000,
+                          "duration" : 352800000,
+                          "range" : [ 10231200000, 352800000]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "trackIndex" : 2,
+                "medias" : [
+                  {
+                    "id" : 6,
+                    "_type" : "Callout",
+                    "def" : {
+                        "kind" : "remix",
+                        "shape" : "text",
+                        "style" : "basic",
+                        "enable-ligatures" : 1.0,
+                        "height" : 250.0,
+                        "line-spacing" : 0.0,
+                        "width" : 400.0,
+                        "word-wrap" : 1.0,
+                        "horizontal-alignment" : "center",
+                        "resize-behavior" : "resizeText",
+                        "text" : "RightWay",
+                        "vertical-alignment" : "center",
+                        "font" : {
+                          "color-blue" : 1.0,
+                          "color-green" : 1.0,
+                          "color-red" : 1.0,
+                          "size" : 96.0,
+                          "tracking" : 0.0,
+                          "name" : "Montserrat",
+                          "weight" : "Regular"
+                        },
+                        "textAttributes" : {
+                          "type" : "textAttributeList",
+                          "keyframes" : [
+                            {
+                              "endTime" : 0,
+                              "time" : 0,
+                              "value" : [{"name":"fontSize","rangeEnd":8,"rangeStart":0,"value":96.0,"valueType":"double"},{"name":"kerning","rangeEnd":8,"rangeStart":0,"value":0.0,"valueType":"double"},{"name":"fgColor","rangeEnd":8,"rangeStart":0,"value":"(0,148,253,255)","valueType":"color"},{"name":"fontItalic","rangeEnd":8,"rangeStart":0,"value":0,"valueType":"int"},{"name":"strikethrough","rangeEnd":8,"rangeStart":0,"value":0,"valueType":"int"},{"name":"fontName","rangeEnd":8,"rangeStart":0,"value":"Futura Md BT","valueType":"string"},{"name":"underline","rangeEnd":8,"rangeStart":0,"value":0,"valueType":"int"},{"name":"fontWeight","rangeEnd":8,"rangeStart":0,"value":700,"valueType":"int"}],
+                              "duration" : 0
+                            }
+                          ]
+                        }
+                    },
+                    "attributes" : {
+                      "ident" : "",
+                      "autoRotateText" : true
+                    },
+                    "parameters" : {
+                      "translation1" : -416.822510822503,
+                      "geometryCrop0" : 0.0,
+                      "geometryCrop1" : 0.0,
+                      "geometryCrop2" : 0.0,
+                      "geometryCrop3" : 0.0,
+                      "opacity" : {
+                        "type" : "double",
+                        "defaultValue" : 1.0,
+                        "keyframes" : [
+                          {
+                            "endTime" : 9878400000,
+                            "time" : 9525600000,
+                            "value" : 0.0,
+                            "duration" : 352800000
+                          }
+                        ]
+                      }
+                    },
+                    "effects" : [
+                        {
+                          "_type" : "GenericBehaviorEffect",
+                          "effectName" : "scale",
+                          "bypassed" : false,
+                          "start" : 0,
+                          "duration" : 9878400000                        ,
+                          "in" : {
+                            "attributes" : {
+                              "name" : "grow",
+                              "type" : 1,
+                              "characterOrder" : 6,
+                              "offsetBetweenCharacters" : 23520000,
+                              "suggestedDurationPerCharacter" : 423360000,
+                              "overlapProportion" : "3/4",
+                              "movement" : 30,
+                              "springDamping" : 5.0,
+                              "springStiffness" : 50.0,
+                              "bounceBounciness" : 0.45
+                            }
+                          
+                          },
+                          "center" : {
+                            "attributes" : {
+                              "name" : "none",
+                              "type" : 1,
+                              "characterOrder" : 6,
+                              "offsetBetweenCharacters" : 0,
+                              "secondsPerLoop" : 1,
+                              "numberOfLoops" : -1,
+                              "delayBetweenLoops" : 0
+                            }
+                          
+                          },
+                          "out" : {
+                            "attributes" : {
+                              "name" : "none",
+                              "type" : 1,
+                              "characterOrder" : 6,
+                              "offsetBetweenCharacters" : 0,
+                              "suggestedDurationPerCharacter" : 0,
+                              "overlapProportion" : 0,
+                              "movement" : -1,
+                              "springDamping" : 5.0,
+                              "springStiffness" : 50.0,
+                              "bounceBounciness" : 0.45
+                            }
+                          
+                          },
+                          "metadata" : {
+                            "default-behavior-out-style" : "shrink",
+                            "presetName" : "Scale"
+                          }
+                        }
+                    ],
+                    "start" : 705600000,
+                    "duration" : 9878400000,
+                    "mediaStart" : 0,
+                    "mediaDuration" : 9878400000,
+                    "scalar" : 1,
+                    "metadata" : {
+                      "clipSpeedAttribute" : false,
+                      "default-HAlign" : "center",
+                      "default-LineSpace" : 0.0,
+                      "default-VAlign" : "center",
+                      "default-anchor0" : 0.0,
+                      "default-anchor1" : 0.0,
+                      "default-anchor2" : 0.0,
+                      "default-height" : 250.0,
+                      "default-opacity" : 1.0,
+                      "default-rotation0" : 0.0,
+                      "default-rotation1" : 0.0,
+                      "default-rotation2" : 0.0,
+                      "default-scale0" : 1.0,
+                      "default-scale1" : 1.0,
+                      "default-scale2" : 1.0,
+                      "default-shear0" : 0.0,
+                      "default-shear1" : 0.0,
+                      "default-shear2" : 0.0,
+                      "default-text-attributes" : "[{\"name\":\"kerning\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":0.0,\"valueType\":\"double\"},{\"name\":\"fontWeight\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":400,\"valueType\":\"int\"},{\"name\":\"fgColor\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":\"(0,148,253,255)\",\"valueType\":\"color\"},{\"name\":\"fontSize\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":96.0,\"valueType\":\"double\"},{\"name\":\"fontName\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":\"Montserrat\",\"valueType\":\"string\"},{\"name\":\"underline\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":0,\"valueType\":\"int\"}]",
+                      "default-translation0" : 0.0,
+                      "default-translation1" : 0.0,
+                      "default-translation2" : 0.0,
+                      "default-width" : 400.0
+                    },
+                    "animationTracks" : {
+                      "visual" : [
+                        {
+                          "endTime" : 9878400000,
+                          "duration" : 352800000,
+                          "range" : [ 9525600000, 352800000]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "trackIndex" : 3,
+                "medias" : [
+                  {
+                    "id" : 7,
+                    "_type" : "Callout",
+                    "def" : {
+                        "kind" : "remix",
+                        "shape" : "text",
+                        "style" : "basic",
+                        "enable-ligatures" : 1.0,
+                        "height" : 250.0,
+                        "line-spacing" : 0.0,
+                        "width" : 1080.0,
+                        "word-wrap" : 1.0,
+                        "horizontal-alignment" : "center",
+                        "resize-behavior" : "resizeText",
+                        "text" : "Find Your Right Way To Success.\r",
+                        "vertical-alignment" : "center",
+                        "font" : {
+                          "color-blue" : 1.0,
+                          "color-green" : 1.0,
+                          "color-red" : 1.0,
+                          "size" : 96.0,
+                          "tracking" : 0.0,
+                          "name" : "Montserrat",
+                          "weight" : "Regular"
+                        },
+                        "textAttributes" : {
+                          "type" : "textAttributeList",
+                          "keyframes" : [
+                            {
+                              "endTime" : 0,
+                              "time" : 0,
+                              "value" : [{"name":"fgColor","rangeEnd":32,"rangeStart":0,"value":"(0,0,0,255)","valueType":"color"},{"name":"fontName","rangeEnd":32,"rangeStart":0,"value":"Futura Bk BT","valueType":"string"},{"name":"fontSize","rangeEnd":32,"rangeStart":0,"value":47.0,"valueType":"double"},{"name":"underline","rangeEnd":32,"rangeStart":0,"value":0,"valueType":"int"},{"name":"fontItalic","rangeEnd":32,"rangeStart":0,"value":0,"valueType":"int"},{"name":"fontWeight","rangeEnd":32,"rangeStart":0,"value":400,"valueType":"int"},{"name":"strikethrough","rangeEnd":32,"rangeStart":0,"value":0,"valueType":"int"},{"name":"kerning","rangeEnd":32,"rangeStart":0,"value":0.0,"valueType":"double"}],
+                              "duration" : 0
+                            }
+                          ]
+                        }
+                    },
+                    "attributes" : {
+                      "ident" : "",
+                      "autoRotateText" : true
+                    },
+                    "parameters" : {
+                      "translation1" : -573.965367965359,
+                      "geometryCrop0" : 0.0,
+                      "geometryCrop1" : 0.0,
+                      "geometryCrop2" : 0.0,
+                      "geometryCrop3" : 0.0,
+                      "opacity" : {
+                        "type" : "double",
+                        "defaultValue" : 1.0,
+                        "keyframes" : [
+                          {
+                            "endTime" : 9302160000,
+                            "time" : 8949360000,
+                            "value" : 0.0,
+                            "duration" : 352800000
+                          }
+                        ]
+                      }
+                    },
+                    "effects" : [
+                        {
+                          "_type" : "GenericBehaviorEffect",
+                          "effectName" : "scale",
+                          "bypassed" : false,
+                          "start" : 0,
+                          "duration" : 9302160000                        ,
+                          "in" : {
+                            "attributes" : {
+                              "name" : "grow",
+                              "type" : 1,
+                              "characterOrder" : 6,
+                              "offsetBetweenCharacters" : 23520000,
+                              "suggestedDurationPerCharacter" : 423360000,
+                              "overlapProportion" : "3/4",
+                              "movement" : 30,
+                              "springDamping" : 5.0,
+                              "springStiffness" : 50.0,
+                              "bounceBounciness" : 0.45
+                            }
+                          
+                          },
+                          "center" : {
+                            "attributes" : {
+                              "name" : "none",
+                              "type" : 1,
+                              "characterOrder" : 6,
+                              "offsetBetweenCharacters" : 0,
+                              "secondsPerLoop" : 1,
+                              "numberOfLoops" : -1,
+                              "delayBetweenLoops" : 0
+                            }
+                          
+                          },
+                          "out" : {
+                            "attributes" : {
+                              "name" : "none",
+                              "type" : 1,
+                              "characterOrder" : 6,
+                              "offsetBetweenCharacters" : 0,
+                              "suggestedDurationPerCharacter" : 0,
+                              "overlapProportion" : 0,
+                              "movement" : -1,
+                              "springDamping" : 5.0,
+                              "springStiffness" : 50.0,
+                              "bounceBounciness" : 0.45
+                            }
+                          
+                          },
+                          "metadata" : {
+                            "default-behavior-out-style" : "shrink",
+                            "presetName" : "Scale"
+                          }
+                        }
+                    ],
+                    "start" : 1281840000,
+                    "duration" : 9302160000,
+                    "mediaStart" : 0,
+                    "mediaDuration" : 9302160000,
+                    "scalar" : 1,
+                    "metadata" : {
+                      "clipSpeedAttribute" : false,
+                      "default-HAlign" : "center",
+                      "default-LineSpace" : 0.0,
+                      "default-VAlign" : "center",
+                      "default-anchor0" : 0.0,
+                      "default-anchor1" : 0.0,
+                      "default-anchor2" : 0.0,
+                      "default-height" : 250.0,
+                      "default-opacity" : 1.0,
+                      "default-rotation0" : 0.0,
+                      "default-rotation1" : 0.0,
+                      "default-rotation2" : 0.0,
+                      "default-scale0" : 1.0,
+                      "default-scale1" : 1.0,
+                      "default-scale2" : 1.0,
+                      "default-shear0" : 0.0,
+                      "default-shear1" : 0.0,
+                      "default-shear2" : 0.0,
+                      "default-text-attributes" : "[{\"name\":\"kerning\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":0.0,\"valueType\":\"double\"},{\"name\":\"fontWeight\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":400,\"valueType\":\"int\"},{\"name\":\"fgColor\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":\"(0,148,253,255)\",\"valueType\":\"color\"},{\"name\":\"fontSize\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":96.0,\"valueType\":\"double\"},{\"name\":\"fontName\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":\"Montserrat\",\"valueType\":\"string\"},{\"name\":\"underline\",\"rangeEnd\":3,\"rangeStart\":0,\"value\":0,\"valueType\":\"int\"}]",
+                      "default-translation0" : 0.0,
+                      "default-translation1" : 0.0,
+                      "default-translation2" : 0.0,
+                      "default-width" : 400.0
+                    },
+                    "animationTracks" : {
+                      "visual" : [
+                        {
+                          "endTime" : 9302160000,
+                          "duration" : 352800000,
+                          "range" : [ 8949360000, 352800000]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }            ]
+          }
+        }
+      ]
+    },
+    "trackAttributes" : [
+      {
+        "ident" : "",
+        "audioMuted" : false,
+        "videoHidden" : false,
+        "magnetic" : false,
+        "matte" : 0,
+        "solo" : false,
+        "metadata" : {
+          "IsLocked" : "False",
+          "WinTrackHeight" : "56"
+        }
+      },
+      {
+        "ident" : "",
+        "audioMuted" : false,
+        "videoHidden" : false,
+        "magnetic" : false,
+        "matte" : 0,
+        "solo" : false,
+        "metadata" : {
+          "IsLocked" : "False",
+          "WinTrackHeight" : "56"
+        }
+      },
+      {
+        "ident" : "",
+        "audioMuted" : false,
+        "videoHidden" : false,
+        "magnetic" : false,
+        "matte" : 0,
+        "solo" : false,
+        "metadata" : {
+          "IsLocked" : "False",
+          "WinTrackHeight" : "56"
+        }
+      },
+      {
+        "ident" : "",
+        "audioMuted" : false,
+        "videoHidden" : false,
+        "magnetic" : false,
+        "matte" : 0,
+        "solo" : false,
+        "metadata" : {
+          "IsLocked" : "False",
+          "WinTrackHeight" : "56"
+        }
+      }
+    ],
+    "captionAttributes" : {
+      "enabled" : true,
+      "fontName" : "Arial",
+      "fontSize" : 39,
+      "backgroundColor" : [ 0, 0, 0, 191],
+      "foregroundColor" : [ 255, 255, 255, 255],
+      "lang" : "en",
+      "alignment" : 0,
+      "defaultFontSize" : true,
+      "opacity" : 0.5,
+      "backgroundEnabled" : true,
+      "backgroundOnlyAroundText" : true
+    },
+    "gain" : 1.0,
+    "legacyAttenuateAudioMix" : false,
+    "backgroundColor" : [ 255, 255, 255, 255]
+  },
+  "metadata" : {
+    "AutoSaveFile" : "C:\\Users\\m-kamran\\AppData\\Local\\TechSmith\\Camtasia Studio\\23.0\\Auto-Saves\\logoanimation2b91c24.autosave.tscproj",
+    "CanvasZoom" : 40,
+    "Date" : "2024-08-31 02:46:37 PM",
+    "Fit" : 1,
+    "IsAutoSave" : false,
+    "IsStandalone" : true,
+    "Language" : "ENU",
+    "ProfileName" : "",
+    "ProjectDimensionsChanged" : "1",
+    "ProjectThumbnail" : "iVBORw0KGgoAAAANSUhEUgAAAUQAAAFoCAYAAAAvhIKLAAAAAXNSR0IArs4c6QAAAARnQU1BAACx\r\njwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAP4SURBVHhe7dQBDQAwEAOh+TfdJZ+TASJ4A+AI\r\nESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEg\r\nQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIE\r\niBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQ\r\nASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEi\r\nRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSA\r\nCBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgR\r\nIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBC\r\nBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSI\r\nEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBAB\r\nIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJE\r\ngAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAI\r\nESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEg\r\nQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIE\r\niBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQ\r\nASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEi\r\nRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSA\r\nCBEgQgSIEAEiRIAIESBCBIgQASJEgAgRIEIEiBABIkSACBEgQgSIEAEiRIAIESBCBIgQASJEgAgR\r\nIEIEiBABIkSACBEgQgSIEAHO9gExL8va0F46XAAAAABJRU5ErkJggg==",
+    "RulerGuidesX" : [],
+    "RulerGuidesY" : [],
+    "RulerShowing" : false,
+    "Title" : "logoanimation",
+    "audioNarrationNotes" : "",
+    "calloutStyle" : "Basic"
+  }
+}

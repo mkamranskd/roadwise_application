@@ -5,8 +5,8 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:roadwise_application/const/app_const.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
-import 'package:roadwise_application/global/Utils.dart';
-import 'package:roadwise_application/features/presentation/pages/user_profile.dart';
+import 'package:roadwise_application/features/presentation/pages/user/user_profile.dart';
+import 'package:roadwise_application/global/style.dart';
 import 'package:roadwise_application/screens/Test.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -114,7 +114,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                 : '- - - - - - - - - - - - - ',
                             style: const TextStyle(
                               fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w500,
                               fontFamily: 'Dubai',
                             ),
                           ),

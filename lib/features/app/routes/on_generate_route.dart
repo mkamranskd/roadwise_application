@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:roadwise_application/const/app_const.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/add_email_page.dart';
-import 'package:roadwise_application/features/presentation/pages/credentials/forgot_password_page.dart';
+
 import 'package:roadwise_application/features/presentation/pages/credentials/join_now_page.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/set_password_page.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
@@ -26,9 +26,6 @@ class OnGenerateRoute {
           return routeBuilder(const AddEmailPage());
         }
 
-      case PageConst.forgotPage:{
-          return routeBuilder(const ForgotPasswordPage());
-        }
       case PageConst.signUpPage:{
           return routeBuilder(const SignUpPage());
         }

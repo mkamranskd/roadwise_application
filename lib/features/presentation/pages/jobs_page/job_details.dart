@@ -2,82 +2,27 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:roadwise_application/global/style.dart';
 
-
 class JobDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        //title: const Text('Job Details'),
-        leading: Container(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
+        title: const Text('Job Details'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        actions: [Container(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark_border_rounded),
+            onPressed: () {},
           ),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: const Icon(Icons.bookmark_border_rounded, size: 20, color: Colors.black),
-              onPressed: () {
-
-              },
-            ),
-          ),
-        ),
-          Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: IconButton(
-                icon: const Icon(Icons.share_rounded, size: 20, color: Colors.black),
-                onPressed: () {
-
-                },
-              ),
-            ),
+          IconButton(
+            icon: const Icon(Icons.share_rounded),
+            onPressed: () {},
           ),
         ],
       ),
@@ -93,8 +38,8 @@ class JobDetailsScreen extends StatelessWidget {
                   children: [
                     const CircleAvatar(
                       radius: 80,
-                      backgroundImage:
-                      AssetImage('assets/profile_bg.png'), // Change with your image
+                      backgroundImage: AssetImage(
+                          'assets/profile_bg.png'), // Change with your image
                     ),
                     const SizedBox(height: 16),
                     Column(
@@ -103,7 +48,7 @@ class JobDetailsScreen extends StatelessWidget {
                           'Job Title',
                           style: TextStyle(
                             fontSize: 35,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         const Text(
@@ -151,7 +96,7 @@ class JobDetailsScreen extends StatelessWidget {
                                       '40k - 50k',
                                       style: TextStyle(
                                           color: primaryBlueColor,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 15),
                                     ),
                                   ),
@@ -176,7 +121,7 @@ class JobDetailsScreen extends StatelessWidget {
                                       'Full - Time',
                                       style: TextStyle(
                                           color: primaryBlueColor,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 15),
                                     ),
                                   ),
@@ -206,7 +151,7 @@ class JobDetailsScreen extends StatelessWidget {
                                       'Remote',
                                       style: TextStyle(
                                           color: primaryBlueColor,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 15),
                                     ),
                                   ),
@@ -231,7 +176,7 @@ class JobDetailsScreen extends StatelessWidget {
                                       'Internship',
                                       style: TextStyle(
                                           color: primaryBlueColor,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 15),
                                     ),
                                   ),
@@ -248,37 +193,61 @@ class JobDetailsScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('About This Job',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                          Text(
+                            'About This Job',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
                           ),
                           SizedBox(height: 8),
-                          Text('Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.',style: TextStyle(fontSize: 13,),),
+                          Text(
+                            'Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.',
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          ),
                           SizedBox(height: 12),
                           Divider(),
-                          Text('Job Description',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                          Text(
+                            'Job Description',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
                           ),
                           SizedBox(height: 8),
-                          Text('Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.',style: TextStyle(fontSize: 13,),),
+                          Text(
+                            'Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.',
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          ),
                           SizedBox(height: 12),
-
                           Divider(),
-                          Text('About Company',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                          Text(
+                            'About Company',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
                           ),
                           SizedBox(height: 8),
-                          Text('Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.',style: TextStyle(fontSize: 13,),),
+                          Text(
+                            'Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.',
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          ),
                           SizedBox(height: 12),
-
-
                           Divider(),
-                          Text('Reviews',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),
+                          Text(
+                            'Reviews',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
                           ),
                           SizedBox(height: 8),
-                          Text('Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.',style: TextStyle(fontSize: 13,),),
+                          Text(
+                            'Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.',
+                            style: TextStyle(
+                              fontSize: 13,
+                            ),
+                          ),
                           SizedBox(height: 12),
-
-
-
-
-
                         ],
                       ),
                     ),
@@ -287,51 +256,39 @@ class JobDetailsScreen extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: FadeInUp(
-              duration: const Duration(milliseconds: 1900),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Add your onPressed function here
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.zero, backgroundColor: primaryBlueColor, // Use the desired color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              padding: const EdgeInsets.all(16.0),
+              child: FadeInUp(
+                duration: const Duration(milliseconds: 1900),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add your onPressed function here
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    backgroundColor: primaryBlueColor,
+                    // Use the desired color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Apply Now",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Apply Now",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )
-
-          ),
-
-
+              )),
         ],
       ),
     );
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    home: JobDetailsScreen(),
-  ));
-}
-
-
-
-

@@ -23,11 +23,11 @@ PreferredSizeWidget appBarWidget({VoidCallback? onTap, String? title,bool? isJob
             color: Colors.white, // Background color
             borderRadius: BorderRadius.circular(10.0),
           ),
-          child: const TextField(
+          child:  TextField(
             decoration: InputDecoration(
               hintText: 'Find Here',
               border: InputBorder.none,
-              prefixIcon: Icon(Icons.search_sharp, color: Colors.blue),
+              prefixIcon: Icon(Icons.search_sharp, color:  primaryBlueColor),
               //suffixIcon: const Icon(Icons.filter_list),
               contentPadding: EdgeInsets.symmetric(vertical: 8.0), // Reduced vertical padding
             ),

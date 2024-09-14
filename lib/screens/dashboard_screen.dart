@@ -1,17 +1,24 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:roadwise_application/features/app/splash_screen/on_board_screen.dart';
+import 'package:roadwise_application/features/presentation/pages/user/user_complete_profile.dart';
 import 'package:roadwise_application/global/style.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
-import 'package:roadwise_application/features/presentation/pages/jobs_page/job_details.dart';
-import 'package:roadwise_application/global/Utils.dart';
-import '../features/presentation/pages/dashHome.dart';
-import '../features/presentation/pages/user_profile.dart';
+import 'package:roadwise_application/global/svg_illustrations.dart';
+import 'package:roadwise_application/screens/settings.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import '../features/presentation/pages/user_list_screen.dart';
+import '../features/presentation/pages/user/user_profile.dart';
+import '../hierarchical/UnderTestingActualLoadingEducationFromFirebase.dart';
 import 'chat_screen.dart';
 import 'chatbot.dart';
+import 'package:roadwise_application/hierarchical/loadeducationsystemscreen.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+
 final _auth = FirebaseAuth.instance;
 
 void main() {
@@ -60,7 +67,7 @@ class _FirstPageState extends State<FirstPage> {
     super.dispose();
   }
 
-  void _onItemTapped(int index) {
+  /*void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
       _pageController.animateToPage(
@@ -69,7 +76,7 @@ class _FirstPageState extends State<FirstPage> {
         curve: Curves.easeIn,
       );
     });
-  }
+  }*/
 
   void navigateToPage(int index) {
     setState(() {
@@ -82,6 +89,10 @@ class _FirstPageState extends State<FirstPage> {
     });
   }
 
+  int _selectedIndex = 0; // New selected index for navigation
+
+  // Page Controller to manage page navigation
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,89 +100,87 @@ class _FirstPageState extends State<FirstPage> {
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
-            _currentIndex = index;
+            _selectedIndex = index;
           });
         },
         children: [
           const HomeScreen(),
-          const Screen2(),
+          const ChatsScreen(),
           const NotificationScreen(),
           BookMarks_Page(),
           AccountSettingsScreen(),
         ],
       ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
+      bottomNavigationBar: SalomonBottomBar(
+        //backgroundColor: Colors.white,
         selectedItemColor: primaryBlueColor,
-        unselectedItemColor: Colors.white,
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        selectedIconTheme: IconThemeData(size: 32),
-        iconSize: 20,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: _currentIndex == 0
-                ? Icon(
-              Clarity.home_solid,
-              color: primaryBlueColor,
-            )
-                : const Icon(
-              Clarity.home_line,
-              color: Colors.grey,
+        unselectedItemColor: const Color(0xffADD8E6),
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          _pageController.jumpToPage(index); // Navigate to selected page
+        },
+        items: [
+          SalomonBottomBarItem(
+            icon: const Icon(Clarity.home_line),
+            title: const Text(
+              "Home",
+              style: TextStyle(
+                fontFamily: 'Dubai',
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            label: "",
+            selectedColor: primaryBlueColor,
+            activeIcon: const Icon(Clarity.home_solid),
           ),
-          BottomNavigationBarItem(
-            icon: _currentIndex == 1
-                ? Icon(
-              Clarity.email_solid,
-              color: primaryBlueColor,
-            )
-                : const Icon(
-              Clarity.email_line,
-              color: Colors.grey,
+          SalomonBottomBarItem(
+            icon: const Icon(Clarity.email_line),
+            title: const Text(
+              "Message",
+              style: TextStyle(
+                fontFamily: 'Dubai',
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            label: "",
+            selectedColor: Colors.pink,
+            activeIcon: const Icon(Clarity.email_solid),
           ),
-          BottomNavigationBarItem(
-            icon: _currentIndex == 2
-                ? Icon(
-              Icons.search_rounded,
-              color: primaryBlueColor,
-            )
-                : const Icon(
-              Clarity.search_line,
-              color: Colors.grey,
+          SalomonBottomBarItem(
+            icon: const Icon(Clarity.search_line),
+            title: const Text(
+              "Search",
+              style: TextStyle(
+                fontFamily: 'Dubai',
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            label: "",
+            selectedColor: Colors.orange,
           ),
-          BottomNavigationBarItem(
-            icon: _currentIndex == 3
-                ? Icon(
-              Clarity.book_solid,
-              color: primaryBlueColor,
-            )
-                : const Icon(
-              Clarity.book_line,
-              color: Colors.grey,
+          SalomonBottomBarItem(
+            icon: const Icon(Clarity.bookmark_line),
+            title: const Text(
+              "Bookmarks",
+              style: TextStyle(
+                fontFamily: 'Dubai',
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            label: "",
+            selectedColor: primaryBlueColor,
+            activeIcon: const Icon(Clarity.bookmark_solid),
           ),
-          BottomNavigationBarItem(
-            icon: _currentIndex == 4
-                ? Icon(
-              Clarity.user_solid,
-              color: primaryBlueColor,
-            )
-                : const Icon(
-              Clarity.user_line,
-              color: Colors.grey,
+          SalomonBottomBarItem(
+            icon: const Icon(Clarity.user_line),
+            title: const Text(
+              "Profile",
+              style: TextStyle(
+                fontFamily: 'Dubai',
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            label: "",
+            selectedColor: Colors.teal,
+            activeIcon: const Icon(Clarity.user_solid),
           ),
         ],
       ),
@@ -198,33 +207,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadProfilePicture() async {
     try {
-      final userDoc = FirebaseFirestore.instance.collection('Users').doc(_auth.currentUser!.uid);
+      final userDoc = FirebaseFirestore.instance
+          .collection('Users')
+          .doc(_auth.currentUser!.uid);
       final userData = await userDoc.get();
 
       if (userData.exists) {
         final profilePictureUrl = userData['profilePicture'];
         setState(() {
-          _profilePictureUrl = profilePictureUrl ?? ''; // Set the profile picture URL
+          _profilePictureUrl =
+              profilePictureUrl ?? ''; // Set the profile picture URL
         });
       }
     } catch (e) {
       print('Error loading profile picture: $e');
     }
   }
-  void _showCustomDialog(BuildContext context,String msg) {
+
+  void _showCustomDialog(BuildContext context, String msg) {
     showDialog(
       context: context,
-      builder: (BuildContext context,) {
+      builder: (
+        BuildContext context,
+      ) {
         return AlertDialog(
-
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-
           ),
-          icon: Image.asset('assets/roadwiselogo.png',height: 100,),
+          icon: Image.asset(
+            'assets/roadwiselogo.png',
+            height: 100,
+          ),
           content: Text(
             msg,
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(
+              fontSize: 16,
+              fontFamily: 'Dubai',
+              fontWeight: FontWeight.w500,
+            ),
           ),
           actions: [
             TextButton(
@@ -238,266 +258,327 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldState,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        toolbarHeight: 45,
-        title: Center(
-          child: Text(
-            "Home",
-            style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Logout'),
-                    content: const Text('Are you sure you want to logout?'),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Close the dialog
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          _auth.signOut().then((value) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const SignInScreen()),
-                            );
-                          }).onError((error, stackTrace) {
-                            Utils.toastMessage(context, error.toString(), Icons.warning_amber_rounded);
-                          });
-                        },
-                        child: const Text('Logout'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            icon: Icon(Clarity.logout_line, color: primaryBlueColor, size: 23),
-          ),
-        ],
-        leading: GestureDetector(
-          onTap: () {
-            setState(() {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        UserProfileScreen(user: _auth.currentUser!)),
-              );
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: CircleAvatar(
-              backgroundImage: _profilePictureUrl.isNotEmpty
-                  ? NetworkImage(_profilePictureUrl)
-                  : const AssetImage("assets/icons/user.png",) as ImageProvider<Object>,
-            ),
-          ),
-        ),
-      ),
-      body:  SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
-        
             children: [
-
-              /*Welcome to roadwise*/
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF1C7EF4), Color(0xFF1976D2)], // Adjust colors as needed
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              const SizedBox(
+                height: 45,
+              ),
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
                   ),
-                  image: DecorationImage(
-                    image: const AssetImage('assets/images/cardBackblue.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.5), // Adjust opacity as needed
-                      BlendMode.dstATop,
+                  ZoomTapAnimation(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserProfileScreen(
+                                    user: _auth.currentUser!)),
+                          );
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                        child: CircleAvatar(
+                          radius: 22,
+                          backgroundImage: _profilePictureUrl.isNotEmpty
+                              ? NetworkImage(_profilePictureUrl)
+                              : const AssetImage(
+                            "assets/icons/user1.png",
+                          ) as ImageProvider<Object>,
+                        )
+
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                      child: SizedBox(
+                    width: 10,
+                  )),
+                  const Center(
+                    child: Text(
+                      "HOME",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                      child: SizedBox(
+                    width: 10,
+                  )),
+                  ZoomTapAnimation(
+                    child: IconButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Colors.blue),
+                        iconColor: WidgetStateProperty.all(Colors.white),
+                        iconSize: WidgetStateProperty.all(25),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Logout'),
+                              content: const Text(
+                                  'Are you sure you want to logout?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _auth.signOut().then((value) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SignInScreen()),
+                                      );
+                                    }).onError((error, stackTrace) {
+                                      Utils.toastMessage(
+                                          context,
+                                          error.toString(),
+                                          Icons.warning_amber_rounded);
+                                    });
+                                  },
+                                  child: const Text('Logout'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(
+                        Clarity.logout_line,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              /*Welcome to roadwise*/
+              ZoomTapAnimation(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF1C7EF4), Color(0xFF1976D2)],
+                      // Adjust colors as needed
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    image: DecorationImage(
+                      image: const AssetImage('assets/images/cardBackblue.jpg'),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.5),
+                        // Adjust opacity as needed
+                        BlendMode.dstATop,
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        Image.asset(
+                          'assets/roadwiselogo.png',
+                          height: 110,
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Welcome to RightWay',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Find Your Right Way To Success.",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
+                            fontFamily: 'Dubai',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        ZoomTapAnimation(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const EducationDropdownScreen()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Start Now',
+                              style: TextStyle(
+                                fontFamily: 'Dubai',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-        
-                child:
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-                      Image.asset('assets/roadwiselogo.png',height: 110,),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'Welcome to ROADWISE',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Dubai',
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-        
-                      const Text(
-                        "Find Your Roadmap To Success.",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                          fontFamily: 'Dubai',
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:Colors.white , // Button background color
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Text(
-                          'Start Now',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: primaryBlueColor,
-                            fontFamily: 'Dubai',
-                          ),
-                        ),
-                      ),
-        
-                    ],
-                  ),
-                ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: (){
-                        FirstPage.of(context)?.navigateToPage(2);
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CustomPageRoute(child: Chatbot()),
+                        );
                       },
-                      child: Container(
-                        height: 200,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)], // Adjust colors as needed
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
+                      child: ZoomTapAnimation(
+                        child: Container(
+                          height: 230,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
+                              // Adjust colors as needed
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
                           ),
-
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(Clarity.search_line,size: 35,color:Colors.white),
-                              SizedBox(height: 10),
-                              Text(
-                                'Search',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Dubai',
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(Clarity.headphones_line,
+                                    size: 35, color: Colors.white),
+                                SizedBox(height: 10),
+                                Text(
+                                  'AI ChatBot',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                "Popular Institutes\nBright Students",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 16,
-                                  fontFamily: 'Dubai',
+                                SizedBox(height: 10),
+                                Text(
+                                  "Chat with our Chatbot to Generate Your Career Map with AI",
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 16,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 15),
-
-                            ],
+                                SizedBox(height: 15),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10,),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Expanded(
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => UserProfileScreen(user: _auth.currentUser!)),
+                              builder: (context) =>
+                                  const OnBoardingScreen()),
                         );
-                        },
-                      child: Container(
-                        height: 200,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF1C7EF4), Color(0xFF90EE90)], // Adjust colors as needed
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
+                      },
+                      child: ZoomTapAnimation(
+                        child: Container(
+                          height: 230,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF1C7EF4), Color(0xFF90EE90)],
+                              // Adjust colors as needed
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
                           ),
-
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(Clarity.user_line,size: 35,color:Colors.white),
-                              SizedBox(height: 10),
-                              Text(
-                                'My Profile',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Dubai',
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(Clarity.refresh_line,
+                                    size: 35, color: Colors.white),
+                                SizedBox(height: 10),
+                                Text(
+                                  'RESTART',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                "View Profile\nEdit Profile",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 16,
-                                  fontFamily: 'Dubai',
+                                SizedBox(height: 10),
+                                Text(
+                                  "Restart\n Application",
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 16,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 15),
-
-                            ],
+                                SizedBox(height: 15),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -505,72 +586,260 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10,),
-
-              GestureDetector(
-                onTap: (){
-                  _showCustomDialog(context,"Front-end\n          Neha Urooj\nBack-end\n          Muhammad Kamran");
-                },
-                child: Container(
-                  height: 150,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF000000), Color(0xFF1C7EF4)], // Adjust colors as needed
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+              const SizedBox(
+                height: 10,
+              ),
+              ZoomTapAnimation(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Example2()),
+                    );
+                  },
+                  child: Container(
+                    height: 180,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
+                        // Adjust colors as needed
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                     ),
-
-                  ),
-
-                  child:
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Bootstrap.code,size: 35,color:Colors.white),
-                        SizedBox(height: 10),
-                        Text(
-                          'About Developers',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Dubai',
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Clarity.flow_chart_line,
+                              size: 35, color: Colors.white),
+                          SizedBox(height: 10),
+                          Text(
+                            'Education System FLow',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontFamily: 'Dubai',
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-
-
-
-                      ],
+                          SizedBox(height: 10),
+                          Text(
+                            "View Education System By Level",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                              fontFamily: 'Dubai',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        FirstPage.of(context)?.navigateToPage(2);
+                      },
+                      child: ZoomTapAnimation(
+                        child: Container(
+                          height: 200,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
+                              // Adjust colors as needed
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(Clarity.search_line,
+                                    size: 35, color: Colors.white),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Search',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Popular Institutes\nBright Students",
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 16,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  UserProfileScreen(user: _auth.currentUser!)),
+                        );
+                      },
+                      child: ZoomTapAnimation(
+                        child: Container(
+                          height: 200,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF1C7EF4), Color(0xFF90EE90)],
+                              // Adjust colors as needed
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(Clarity.user_line,
+                                    size: 35, color: Colors.white),
+                                SizedBox(height: 10),
+                                Text(
+                                  'My Profile',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "View Profile\nEdit Profile",
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 16,
+                                    fontFamily: 'Dubai',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  _showCustomDialog(context,
+                      "Front-end\n          Neha Urooj\nBack-end\n          Muhammad Kamran");
+                },
+                child: ZoomTapAnimation(
+                  child: Container(
+                    height: 150,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF000000), Color(0xFF1C7EF4)],
+                        // Adjust colors as needed
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Bootstrap.code, size: 35, color: Colors.white),
+                          SizedBox(height: 10),
+                          Text(
+                            'About Developers',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontFamily: 'Dubai',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: primaryBlueColor,
-        tooltip: 'Connect To Assistant',
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Chatbot()),
-          );
-        },
-        child: const Icon(AntDesign.message_fill,color:Colors.white ,),
+      floatingActionButton: Container(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        child: FloatingActionButton(
+          backgroundColor: primaryBlueColor,
+          tooltip: 'Connect To Assistant',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Chatbot()),
+            );
+          },
+          child: const Icon(
+            AntDesign.message_fill,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
 }
-
 
 class NotificationCard extends StatelessWidget {
   final String instituteName;
@@ -597,7 +866,11 @@ class NotificationCard extends StatelessWidget {
           children: [
             Text(
               newsTitle1,
-              style: const TextStyle(color: Colors.red),
+              style: const TextStyle(
+                color: Colors.red,
+                fontFamily: 'Dubai',
+                fontWeight: FontWeight.w500,
+              ),
             ),
             Text(newsTitle2),
           ],
@@ -613,182 +886,262 @@ class NotificationCard extends StatelessWidget {
   }
 }
 
-class JobCard extends StatelessWidget {
-  final String jobTitle;
-  final String instituteName;
-  final String location;
-  final String salary;
-  final String description;
-  final Icon ico;
 
-  const JobCard({
-    Key? key,
-    required this.jobTitle,
-    required this.instituteName,
-    required this.location,
-    required this.salary,
-    required this.description,
-    required this.ico,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => JobDetailsScreen()),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          margin: const EdgeInsets.all(0),
-          width: 350,
-          child: Card(
-            color: Colors.white,
-            elevation: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: primaryBlueColor,
-                    child: const Icon(
-                      Icons.work,
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: Text(
-                    jobTitle,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(instituteName,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      )),
-                  trailing: ico,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const SizedBox(width: 8),
-                          // Adding space between badges
-                          _buildBadge("Full-Time"),
-                          const SizedBox(width: 8),
-                          // Adding space between badges
-                          _buildBadge("Remote"),
-                          const SizedBox(width: 8),
-                          // Adding space between badges
-                          _buildBadge("Internship"),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                size: 15,
-                                Clarity.map_marker_solid,
-                                color: primaryBlueColor,
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                location,
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Rs $salary/hr',
-                                style: TextStyle(
-                                    color: primaryBlueColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-Widget _buildBadge(String text) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: Colors.grey.withOpacity(0.1),
-      borderRadius: BorderRadius.circular(5),
-    ),
-    child: Text(
-      text,
-      style: const TextStyle(
-        color: Colors.black87,
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
-}
-
-class Screen2 extends StatelessWidget {
-  const Screen2({super.key});
+class ChatsScreen extends StatelessWidget {
+  const ChatsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        toolbarHeight: 45,
-        title: Center(
-          child: Text(
-            'Messages',
-            style: TextStyle(
-                color: primaryBlueColor,
-                fontFamily: 'Dubai',
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
+        centerTitle: false,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: const Text("Chats"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {},
           ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+            child: Row(
+              children: [
+                FillOutlineButton(press: () {}, text: "Recent Message"),
+                const SizedBox(width: 16.0),
+                FillOutlineButton(
+                  press: () {},
+                  text: "Active",
+                  isFilled: true,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: chatsData.length,
+              itemBuilder: (context, index) => ChatCard(
+                chat: chatsData[index],
+                press: () {},
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(
+          Icons.person_add_alt_1,
         ),
       ),
-      body:const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Open any Profile to Send Message"),
-          ],
-        ),
-      ],),
     );
   }
 }
+
+class ChatCard extends StatelessWidget {
+  const ChatCard({
+    super.key,
+    required this.chat,
+    required this.press,
+  });
+
+  final Chat chat;
+  final VoidCallback press;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: press,
+      child: Padding(
+        padding:
+        const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0 * 0.75),
+        child: Row(
+          children: [
+            CircleAvatarWithActiveIndicator(
+              image: chat.image,
+              isActive: chat.isActive,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      chat.name,
+                    ),
+                    const SizedBox(height: 8),
+                    Opacity(
+                      opacity: 0.64,
+                      child: Text(
+                        chat.lastMessage,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Opacity(
+              opacity: 0.64,
+              child: Text(chat.time),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FillOutlineButton extends StatelessWidget {
+  const FillOutlineButton({
+    super.key,
+    this.isFilled = true,
+    required this.press,
+    required this.text,
+  });
+
+  final bool isFilled;
+  final VoidCallback press;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+        side: const BorderSide(color: Colors.white),
+      ),
+      elevation: isFilled ? 2 : 0,
+      color: isFilled ? Colors.white : Colors.transparent,
+      onPressed: press,
+      child: Text(
+        text,
+        style: TextStyle(
+          color: isFilled ? const Color(0xFF1D1D35) : Colors.white,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+}
+
+class CircleAvatarWithActiveIndicator extends StatelessWidget {
+  const CircleAvatarWithActiveIndicator({
+    super.key,
+    this.image,
+    this.radius = 24,
+    this.isActive,
+  });
+
+  final String? image;
+  final double? radius;
+  final bool? isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        CircleAvatar(
+          radius: radius,
+          backgroundImage: NetworkImage(image!),
+        ),
+        if (isActive!)
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Container(
+              height: 16,
+              width: 16,
+              decoration: BoxDecoration(
+                color: const Color(0xFF00BF6D),
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color: Theme.of(context).scaffoldBackgroundColor, width: 3),
+              ),
+            ),
+          )
+      ],
+    );
+  }
+}
+
+class Chat {
+  final String name, lastMessage, image, time;
+  final bool isActive;
+
+  Chat({
+    this.name = '',
+    this.lastMessage = '',
+    this.image = '',
+    this.time = '',
+    this.isActive = false,
+  });
+}
+
+List chatsData = [
+  Chat(
+    name: "Jenny Wilson",
+    lastMessage: "Hope you are doing well...",
+    image: "https://i.postimg.cc/g25VYN7X/user-1.png",
+    time: "3m ago",
+    isActive: false,
+  ),
+  Chat(
+    name: "Esther Howard",
+    lastMessage: "Hello Abdullah! I am...",
+    image: "https://i.postimg.cc/cCsYDjvj/user-2.png",
+    time: "8m ago",
+    isActive: true,
+  ),
+  Chat(
+    name: "Ralph Edwards",
+    lastMessage: "Do you have update...",
+    image: "https://i.postimg.cc/sXC5W1s3/user-3.png",
+    time: "5d ago",
+    isActive: false,
+  ),
+  Chat(
+    name: "Jacob Jones",
+    lastMessage: "You’re welcome :)",
+    image: "https://i.postimg.cc/4dvVQZxV/user-4.png",
+    time: "5d ago",
+    isActive: true,
+  ),
+  Chat(
+    name: "Albert Flores",
+    lastMessage: "Thanks",
+    image: "https://i.postimg.cc/FzDSwZcK/user-5.png",
+    time: "6d ago",
+    isActive: false,
+  ),
+  Chat(
+    name: "Jenny Wilson",
+    lastMessage: "Hope you are doing well...",
+    image: "https://i.postimg.cc/g25VYN7X/user-1.png",
+    time: "3m ago",
+    isActive: false,
+  ),
+  Chat(
+    name: "Esther Howard",
+    lastMessage: "Hello Abdullah! I am...",
+    image: "https://i.postimg.cc/cCsYDjvj/user-2.png",
+    time: "8m ago",
+    isActive: true,
+  ),
+  Chat(
+    name: "Ralph Edwards",
+    lastMessage: "Do you have update...",
+    image: "https://i.postimg.cc/sXC5W1s3/user-3.png",
+    time: "5d ago",
+    isActive: false,
+  ),
+];
 
 
 class MessageCard extends StatelessWidget {
@@ -839,265 +1192,7 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: UsersListScreen(),
-    );
-  }
-}
-
-class NotificationList extends StatefulWidget {
-  const NotificationList({super.key});
-
-  @override
-  _NotificationListState createState() => _NotificationListState();
-}
-
-class _NotificationListState extends State<NotificationList> {
-  List<NotificationItem> notifications = [
-    NotificationItem(
-      heading: 'Meeting Reminder',
-      description: 'Don\'t forget the team meeting at 9:00 AM',
-      time: '9:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Assignment Deadline',
-      description: 'Submit your assignment before 10:00 AM',
-      time: '10:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Event Invitation',
-      description: 'You\'re invited to the party tonight at 7:00 PM',
-      time: '11:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Doctor Appointment',
-      description: 'Your appointment with Dr. Smith is at 2:30 PM',
-      time: '1:30 PM',
-    ),
-    NotificationItem(
-      heading: 'Grocery Shopping',
-      description: 'Remember to buy milk and eggs',
-      time: '3:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Birthday Reminder',
-      description: 'Wish Sarah a happy birthday today',
-      time: '4:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Project Deadline',
-      description: 'Project proposal submission due tomorrow',
-      time: '5:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Movie Night',
-      description: 'Join us for a movie night at 7:00 PM',
-      time: '6:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Dentist Appointment',
-      description: 'Dental checkup scheduled for next week',
-      time: '8:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Family Dinner',
-      description: 'Family dinner at your favorite restaurant',
-      time: '9:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Meeting Reminder',
-      description: 'Don\'t forget the team meeting at 9:00 AM',
-      time: '9:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Assignment Deadline',
-      description: 'Submit your assignment before 10:00 AM',
-      time: '10:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Event Invitation',
-      description: 'You\'re invited to the party tonight at 7:00 PM',
-      time: '11:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Doctor Appointment',
-      description: 'Your appointment with Dr. Smith is at 2:30 PM',
-      time: '1:30 PM',
-    ),
-    NotificationItem(
-      heading: 'Grocery Shopping',
-      description: 'Remember to buy milk and eggs',
-      time: '3:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Birthday Reminder',
-      description: 'Wish Sarah a happy birthday today',
-      time: '4:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Project Deadline',
-      description: 'Project proposal submission due tomorrow',
-      time: '5:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Movie Night',
-      description: 'Join us for a movie night at 7:00 PM',
-      time: '6:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Dentist Appointment',
-      description: 'Dental checkup scheduled for next week',
-      time: '8:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Family Dinner',
-      description: 'Family dinner at your favorite restaurant',
-      time: '9:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Meeting Reminder',
-      description: 'Don\'t forget the team meeting at 9:00 AM',
-      time: '9:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Assignment Deadline',
-      description: 'Submit your assignment before 10:00 AM',
-      time: '10:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Event Invitation',
-      description: 'You\'re invited to the party tonight at 7:00 PM',
-      time: '11:00 AM',
-    ),
-    NotificationItem(
-      heading: 'Doctor Appointment',
-      description: 'Your appointment with Dr. Smith is at 2:30 PM',
-      time: '1:30 PM',
-    ),
-    NotificationItem(
-      heading: 'Grocery Shopping',
-      description: 'Remember to buy milk and eggs',
-      time: '3:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Birthday Reminder',
-      description: 'Wish Sarah a happy birthday today',
-      time: '4:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Project Deadline',
-      description: 'Project proposal submission due tomorrow',
-      time: '5:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Movie Night',
-      description: 'Join us for a movie night at 7:00 PM',
-      time: '6:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Dentist Appointment',
-      description: 'Dental checkup scheduled for next week',
-      time: '8:00 PM',
-    ),
-    NotificationItem(
-      heading: 'Family Dinner',
-      description: 'Family dinner at your favorite restaurant',
-      time: '9:00 PM',
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: notifications.length,
-      itemBuilder: (context, index) {
-        final notification = notifications[index];
-        return Card(
-          margin: const EdgeInsets.all(8.0),
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: primaryBlueColor,
-              child: Text(
-                '${index + 1}',
-                // Display the index of the notification (starting from 1)
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-            title: Text(notification.heading),
-            subtitle: Text(notification.description),
-            trailing: IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                setState(() {
-                  notifications.removeAt(index);
-                });
-              },
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      NotificationDetails(notification: notification),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-class NotificationItem {
-  final String heading;
-  final String description;
-  final String time;
-
-  NotificationItem({
-    required this.heading,
-    required this.description,
-    required this.time,
-  });
-}
-
-class NotificationDetails extends StatelessWidget {
-  final NotificationItem notification;
-
-  const NotificationDetails({super.key, required this.notification});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 45,
-        title: Center(
-          child: Text(
-            'Notification Details',
-            style: TextStyle(
-                color: primaryBlueColor,
-                fontFamily: 'Dubai',
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              notification.heading,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8.0),
-            Text(notification.description),
-            const SizedBox(height: 8.0),
-            Text('Time: ${notification.time}'),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -1109,18 +1204,10 @@ class BookMarks_Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        // You can customize the color as needed
-
-        toolbarHeight: 45,
-        title: Center(
+        automaticallyImplyLeading: false,
+        title: const Center(
           child: Text(
             'Bookmarks',
-            style: TextStyle(
-                color: primaryBlueColor,
-                fontFamily: 'Dubai',
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -1182,11 +1269,11 @@ class BookMarks_Page extends StatelessWidget {
 
 class AccountSettingsScreen extends StatefulWidget {
   final User user = FirebaseAuth.instance.currentUser!;
+
   AccountSettingsScreen({super.key});
 
   @override
   State<AccountSettingsScreen> createState() => _AccountSettingsScreenState();
-
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
@@ -1198,26 +1285,15 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body:
-      Scaffold(
+      body: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          toolbarHeight: 45,
-          title: Center(
+          automaticallyImplyLeading: false,
+          title: const Center(
             child: Text(
               'Profile',
-              style: TextStyle(
-                color: primaryBlueColor,
-                fontFamily: 'Dubai',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
             ),
           ),
-
         ),
-        backgroundColor: Colors.white,
         body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
           future: FirebaseFirestore.instance
               .collection('Users')
@@ -1227,8 +1303,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(
-                  color: primaryBlueColor,
+                child: LoadingAnimationWidget.inkDrop(
+                  color: Colors.blue,
+                  size: 25,
                 ),
               );
             } else if (snapshot.hasError) {
@@ -1238,156 +1315,154 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             } else {
               final userData = snapshot.data!.data();
               if (userData == null) {
-                return const Center(child: Text('User data is null'));
+                return InformationScreen(
+                  svgString: voidd, // Provide your SVG string here
+                  title: 'Incomplete Profile',
+                  subtitle: 'Tell Us Something About Yourself, Complete your Profile!',
+                  buttonText: 'Complete your Profile',
+                  onButtonPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserCompleteProfile()),
+                    );
+                  },
+                );
               }
               final fullName = userData['fullName'] ?? '';
 
               return SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Card(
-
                       elevation: 4, // Adjust elevation as needed
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5), // Adjust border radius as needed
+                        borderRadius: BorderRadius.circular(
+                            5), // Adjust border radius as needed
                       ),
                       child: ListTile(
-
-                        contentPadding: const EdgeInsets.all(16), // Adjust padding as needed
+                        contentPadding: const EdgeInsets.all(16),
+                        // Adjust padding as needed
                         leading: CircleAvatar(
                           backgroundImage: _image != null
                               ? FileImage(_image!) as ImageProvider<Object>
                               : userData['profilePicture'] != null
-                              ? NetworkImage(userData['profilePicture'])
-                              : const AssetImage('assets/icons/person_icon.png') as ImageProvider<Object>,
+                                  ? NetworkImage(userData['profilePicture'])
+                                  : const AssetImage(
+                            "assets/icons/user1.png",)
+                                      as ImageProvider<Object>,
                           radius: 32,
-
                         ),
                         title: Text(
                           fullName.isNotEmpty ? fullName : 'Name Not Provided',
                           style: const TextStyle(
                             fontSize: 22,
-                            fontWeight: FontWeight.bold,
                             fontFamily: 'Dubai',
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         // Add subtitle if needed
-                         subtitle: Row(
-                           children: [
-                             CircleAvatar(
-                               backgroundColor: Colors.blue,
-                               radius: 12,
-                               child: Icon(
-                                 userData['businessAccount'] == "true"
-                                     ? Icons.business
-                                     : Icons.person,
-                                 size: 15,
-                                 color: Colors.white,
-                               ),
-                             ),
-                             const SizedBox(width: 10,),
-                             Text(userData["businessAccount"]=="true"? 'Business Account': 'Student Account'),
-                           ],
-                         ),
-
+                        subtitle: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 12,
+                              child: Icon(
+                                userData['businessAccount'] == "true"
+                                    ? Icons.business
+                                    : Clarity.user_solid,
+                                size: 15,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(userData["businessAccount"] == "true"
+                                ? 'Business Account'
+                                : 'Student Account'),
+                          ],
+                        ),
                       ),
                     ),
-                    if(userData["businessAccount"]=="true") ...[
-                      ListTile(
-                        leading: const Icon(Icons.business),
-                        title: const Text(
-                          'Business Profile' ,
-                        ),
-                        onTap: () {
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    if (userData["businessAccount"] == "true") ...[
+                      ProfileListItem(
+                        icon: Clarity.user_line,
+                        title: "Business Profile",
+                        ontap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    UserProfileScreen(user: _auth.currentUser!)),
+                            CustomPageRoute(
+                                child: UserProfileScreen(
+                                    user: _auth.currentUser!)),
                           );
                         },
                       ),
-
-
-
                     ] else ...[
-                      ListTile(
-                        leading: const Icon(Clarity.user_line),
-                        title: const Text(
-                          'Profile' ,
-                        ),
-                        onTap: () {
+                      ProfileListItem(
+                        icon: Clarity.user_line,
+                        title: "Profile",
+                        ontap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    UserProfileScreen(user: _auth.currentUser!)),
+                            CustomPageRoute(
+                                child: UserProfileScreen(
+                                    user: _auth.currentUser!)),
                           );
                         },
                       ),
-
                     ],
-
-                    const Divider(
-                      color: Colors.grey,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 30, left: 0),
-                      child: Column(
-                        children: [
-                          //sizeVer(20),
-
-                          ListTile(
-                            leading: const Icon(Clarity.settings_line),
-                            title: const Text('Settings'),
-                            onTap: () {
-                              // Handle Notification settings
-                            },
-                          ),
-
-                          ListTile(
-                            leading: const Icon(Clarity.logout_line),
-                            title: const Text('Logout'),
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Logout'),
-                                    content:
-                                    const Text('Are you sure you want to logout?'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(); // Close the dialog
-                                        },
-                                        child: const Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          _auth.signOut().then((value) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                    const SignInScreen()));
-                                          }).onError((error, stackTrace) {
-                                            Utils.toastMessage(context, error.toString(),
-                                                Icons.warning_amber_rounded);
-                                          });
-                                        },
-                                        child: const Text('Logout'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+                    ProfileListItem(
+                        icon: Clarity.settings_line,
+                        title: "Settings",
+                        ontap: () {
+                          Navigator.push(
+                            context,
+                            CustomPageRoute(child: SettingsScreen()),
+                          );
+                        }),
+                    ProfileListItem(
+                      icon: Clarity.logout_line,
+                      title: "Logout",
+                      ontap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Logout'),
+                              content: const Text(
+                                  'Are you sure you want to logout?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _auth.signOut().then((value) {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const SignInScreen()));
+                                    }).onError((error, stackTrace) {
+                                      Utils.toastMessage(
+                                          context,
+                                          error.toString(),
+                                          Icons.warning_amber_rounded);
+                                    });
+                                  },
+                                  child: const Text('Logout'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                     )
                   ],
                 ),
@@ -1399,4 +1474,3 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     );
   }
 }
-

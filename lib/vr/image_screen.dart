@@ -17,11 +17,16 @@ class ImageScreen extends StatelessWidget {
               color: primaryBlueColor,
               fontFamily: 'Dubai',
               fontSize: 15,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.w500),
         ),
         backgroundColor: Colors.white,
-        //backgroundColor: Colors.transparent,
-        leading: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor,size: 15,)),
+        leading: IconButton( onPressed: () {
+          Navigator.pop(context);
+          },
+          style:const ButtonStyle(backgroundColor: WidgetStatePropertyAll<Color>(Colors.white),
+          ),
+          icon: const Icon(Icons.arrow_back_ios_new),color: primaryBlueColor,
+        ),
       ),
       body: PanoramaViewer(
         animSpeed: 1,

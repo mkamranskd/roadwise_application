@@ -13,14 +13,14 @@ class ExampleApp extends StatelessWidget {
           const Text(
             '🍒 🍒',
             style: TextStyle(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               fontSize: 20,
             ),
           ),
           const Text(
             'Cherry Toasts',
             style: TextStyle(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
               fontSize: 20,
             ),
           ),
@@ -37,7 +37,7 @@ class ExampleApp extends StatelessWidget {
                   title: const Text(
                     'Cherry toast title',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   action: const Text('Toast content description'),
@@ -64,7 +64,7 @@ class ExampleApp extends StatelessWidget {
                   title: const Text(
                     'Cherry toast title',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   action: const Text('Toast content description'),
@@ -202,7 +202,7 @@ class ExampleApp extends StatelessWidget {
                   title: const Text(
                     'هذا مثال للإنذار',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   action: const Text('هذا النص كتب بالعربية'),
@@ -225,7 +225,7 @@ class ExampleApp extends StatelessWidget {
                   title: const Text(
                     '이건 제목이야',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   action: const Text('내용 설명입니다'),

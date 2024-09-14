@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:roadwise_application/global/style.dart';
 import 'package:roadwise_application/vr/thumbnail.dart';
-import '../global/Utils.dart';
-import '../global/style.dart';
 import 'cameraScreen.dart';
 
 class GalleryVr extends StatefulWidget {
@@ -35,7 +35,8 @@ class _GalleryVrState extends State<GalleryVr> {
       final currentUser = _auth.currentUser;
       if (currentUser != null) {
         print('Current User ID: ${currentUser.uid}');
-        final userRef = FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
+        final userRef =
+            FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
         final docSnapshot = await userRef.get();
         final userIdFromFirestore = docSnapshot.data()?['userId'] as String?;
 
@@ -61,11 +62,15 @@ class _GalleryVrState extends State<GalleryVr> {
 
         // Cast businessData to a Map<String, dynamic> before accessing its keys
         final data = widget.businessData.data() as Map<String, dynamic>;
-        final List<dynamic>? images = data['businessVrImages'] as List<dynamic>?;
+        final List<dynamic>? images =
+            data['businessVrImages'] as List<dynamic>?;
 
         if (images != null && images.isNotEmpty) {
           setState(() {
-            thumbList = images.map((imageUrl) => Thumbnail(imagePath: imageUrl, thumbPath: imageUrl)).toList();
+            thumbList = images
+                .map((imageUrl) =>
+                    Thumbnail(imagePath: imageUrl, thumbPath: imageUrl))
+                .toList();
           });
         } else {
           setState(() {
@@ -88,6 +93,14 @@ class _GalleryVrState extends State<GalleryVr> {
     }
   }
 
+  Future<void> _refreshGallery() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    await _loadBusinessImages();
+  }
+
   Future<void> _removeImage(String imageUrl) async {
     setState(() {
       _isRemoving = true;
@@ -96,17 +109,20 @@ class _GalleryVrState extends State<GalleryVr> {
     try {
       final currentUser = _auth.currentUser;
       if (currentUser != null) {
-        final userRef = FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
+        final userRef =
+            FirebaseFirestore.instance.collection('Users').doc(currentUser.uid);
 
         final data = widget.businessData.data() as Map<String, dynamic>;
-        final List<dynamic>? images = data['businessVrImages'] as List<dynamic>?;
+        final List<dynamic>? images =
+            data['businessVrImages'] as List<dynamic>?;
 
         if (images != null && images.isNotEmpty) {
           images.remove(imageUrl);
           await userRef.update({'businessVrImages': images});
           setState(() {
             thumbList.removeWhere((thumb) => thumb.imagePath == imageUrl);
-            Utils.toastMessage(context, "Image Deleted Successfully", Icons.check);
+            Utils.toastMessage(
+                context, "Image Deleted Successfully", Icons.check);
           });
         }
       }
@@ -146,20 +162,17 @@ class _GalleryVrState extends State<GalleryVr> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> data = widget.businessData.data() as Map<String, dynamic>;
+    Map<String, dynamic> data =
+        widget.businessData.data() as Map<String, dynamic>;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'VR Gallery',
-          style: TextStyle(
-              color: primaryBlueColor,
-              fontFamily: 'Dubai',
-              fontSize: 15,
-              fontWeight: FontWeight.bold),
         ),
         actions: [
-          if (_showCameraIcon && _auth.currentUser?.uid.toString() == data["userId"]) ...[
+          if (_showCameraIcon &&
+              _auth.currentUser?.uid.toString() == data["userId"]) ...[
             IconButton(
               onPressed: () {
                 Navigator.push(
@@ -169,13 +182,19 @@ class _GalleryVrState extends State<GalleryVr> {
                   ),
                 );
               },
-              icon: Icon(Clarity.camera_solid, color: primaryBlueColor, size: 15,),
+              icon: const Icon(
+                Clarity.camera_solid,
+              ),
             ),
           ],
         ],
         leading: IconButton(
-          onPressed: () { Navigator.pop(context); },
-          icon: Icon(Icons.arrow_back_ios_new, color: primaryBlueColor, size: 15,),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+          ),
         ),
       ),
       body: Stack(
@@ -184,32 +203,42 @@ class _GalleryVrState extends State<GalleryVr> {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ?  Center(child: LoadingAnimationWidget.inkDrop(
+                                color: Colors.blue,
+                                size: 25,
+                              ))
                   : _errorMessage != null
-                  ? Center(child: Text(_errorMessage!))
-                  : GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 50,
-                  childAspectRatio: 1.0,
-                ),
-                itemCount: thumbList.length,
-                itemBuilder: (context, index) {
-                  final imageUrl = thumbList[index].imagePath;
-                  return GestureDetector(
-                    onLongPress: () => _showDeleteDialog(imageUrl),
-                    child: thumbList[index],
-                  );
-                },
-              ),
+                      ? Center(child: Text(_errorMessage!))
+                      : RefreshIndicator(
+                          onRefresh: _refreshGallery,
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 50,
+                              childAspectRatio: 1.0,
+                            ),
+                            itemCount: thumbList.length,
+                            itemBuilder: (context, index) {
+                              final imageUrl = thumbList[index].imagePath;
+                              return GestureDetector(
+                                onLongPress: () => _showDeleteDialog(imageUrl),
+                                child: thumbList[index],
+                              );
+                            },
+                          ),
+                        ),
             ),
           ),
           if (_isRemoving)
             Center(
               child: Container(
                 color: Colors.black54,
-                child: const CircularProgressIndicator(),
+                child:  LoadingAnimationWidget.inkDrop(
+                                color: Colors.blue,
+                                size: 25,
+                              ),
               ),
             ),
           const Positioned(
@@ -221,13 +250,11 @@ class _GalleryVrState extends State<GalleryVr> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.red,
-                fontSize: 12,
               ),
             ),
           ),
         ],
       ),
-
     );
   }
 }
