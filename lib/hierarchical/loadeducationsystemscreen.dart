@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:org_chart/org_chart.dart';
 import 'package:roadwise_application/global/style.dart';
 
-class Example2 extends StatefulWidget {
-  const Example2({super.key});
+class EducationalChart extends StatefulWidget {
+  const EducationalChart({super.key});
 
   @override
-  State<Example2> createState() => _Example2State();
+  State<EducationalChart> createState() => _EducationalChartState();
 }
 
-class _Example2State extends State<Example2> {
+class _EducationalChartState extends State<EducationalChart> {
   final OrgChartController<Map> orgChartController = OrgChartController<Map>(
     boxSize: const Size(300, 80),
     items: [
@@ -202,6 +202,7 @@ class _Example2State extends State<Example2> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
+                Colors.deepPurple,
                 primaryBlueColor
               ],
               begin: Alignment.bottomLeft,

@@ -135,14 +135,11 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const SizedBox(height: 60,),
-                            FadeInRightBig(
-                              duration: const Duration(milliseconds: 1500),
-                              child: GifView.asset(
-                                'assets/logo.gif',
-                                width: screenWidth,
-                                frameRate: 30,
-                                repeat: ImageRepeat.noRepeat,
-                              ),
+                            GifView.asset(
+                              'assets/logo.gif',
+                              width: screenWidth,
+                              frameRate: 30,
+                              repeat: ImageRepeat.noRepeat,
                             ),
                           ],
                         );

@@ -7,7 +7,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  GoogleMapController? _controller;
+  // GoogleMapController? _controller;
   Set<Marker> _markers = {};
   List<Marker> _allMarkers = [];
 
@@ -63,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
-      _controller = controller;
+     // _controller = controller;
     });
   }
 

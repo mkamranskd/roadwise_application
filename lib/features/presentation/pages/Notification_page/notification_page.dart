@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:roadwise_application/const/app_const.dart';
+
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -61,7 +61,7 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
           ),
         ),
-        sizeHor(5),
+
         GestureDetector(
           onTap: () {
             updateIndex(1);
@@ -82,7 +82,7 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
           ),
         ),
-        sizeHor(5),
+
         GestureDetector(
           onTap: () {
             updateIndex(2);

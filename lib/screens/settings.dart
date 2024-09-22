@@ -5,11 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:roadwise_application/main.dart';
 
 import '../global/style.dart';
 
 class SettingsScreen extends StatefulWidget {
-
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
@@ -49,9 +49,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const Text('Please enter the following number to confirm:'),
               Text(
                 '$randomNumber',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: inputController,
                 keyboardType: TextInputType.number,
@@ -86,7 +89,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       User? user = _auth.currentUser;
 
       if (user != null) {
-        await FirebaseFirestore.instance.collection('Users').doc(user.uid).delete();
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .delete();
         await user.delete();
         await user.delete();
         _showErrorDialog('Your account has been successfully deleted.');
@@ -138,7 +144,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: ListView(
         children: [
-          ProfileListItem(
+          CustomListItem(
             icon: Clarity.moon_line,
             title: 'Dark Mode',
             ontap: () {
@@ -148,7 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
-          ProfileListItem(
+          CustomListItem(
             icon: Clarity.notification_line,
             title: 'Notifications',
             ontap: () {
@@ -158,7 +164,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
-          ProfileListItem(
+          CustomListItem(
             icon: Clarity.language_line,
             title: 'Language',
             ontap: () {
@@ -168,7 +174,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
-          ProfileListItem(
+          CustomListItem(
             icon: Clarity.user_line,
             title: 'Account',
             ontap: () {
@@ -178,23 +184,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
-          ProfileListItem(
+          CustomListItem(
             icon: Clarity.shield_check_line,
             title: 'Privacy',
             ontap: () {
               Navigator.push(
                 context,
-                CustomPageRoute(child: PrivacyScreen()),
+                CustomPageRoute(child: AboutScreen()),
               );
             },
           ),
-          ProfileListItem(
+          CustomListItem(
             icon: Clarity.trash_line,
             title: 'Delete your Account Data Permanently',
             ontap: () {
               _confirmDeleteAccount();
             },
           ),
+          CustomListItem(
+              icon: Clarity.info_line,
+              title: "About",
+              ontap: () {
+                Navigator.push(
+                  context,
+                  CustomPageRoute(child: AboutScreen()),
+                );
+              }),
+          CustomListItem(
+              icon: Clarity.refresh_line,
+              title: "Restart App",
+              ontap: () {
+                Navigator.push(
+                  context,
+                  CustomPageRoute(child: const RestartWidget(child: MyApp())),
+                );
+              }),
         ],
       ),
     );
@@ -429,15 +453,127 @@ class AccountScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          ProfileListItem(
+          CustomListItem(
             icon: Clarity.lock_line,
             title: 'Change Password',
             ontap: () {},
           ),
-          ProfileListItem(
+          CustomListItem(
             icon: Clarity.email_line,
             title: 'Change Email',
             ontap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AboutScreen extends StatelessWidget {
+  void _showCustomDialog(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          icon: RightWay(height: 110),
+          content: Text(
+            msg,
+            style: const TextStyle(
+              fontSize: 16,
+              fontFamily: 'Dubai',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'About',
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+          ),
+        ),
+      ),
+      body: ListView(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              RightWay(height: 200),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "RightWay",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontFamily: 'Dubai',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 28,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      constraints: const BoxConstraints(),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0, vertical: 8.0),
+                      child: const Text(
+                        "Find Your Right Way To Success.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomListItem(
+                icon: Bootstrap.code,
+                title: 'Developers',
+                ontap: () {
+                  _showCustomDialog(context,
+                      "Front-end\n          Neha Urooj\nBack-end\n          Muhammad Kamran");
+                },
+              ),
+              const ListTile(
+                title: Center(
+                    child: Text(
+                  "Version: 1.0 | 17-09-2024",
+                )),
+              ),
+            ],
           ),
         ],
       ),

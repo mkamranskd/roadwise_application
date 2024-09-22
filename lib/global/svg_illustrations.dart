@@ -1,3 +1,10 @@
+
+const downArrow="""
+
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" id="down-arrow" data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color"><line id="primary" x1="12" y1="3" x2="12" y2="21" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></line><polyline id="secondary" points="9 18 12 21 15 18" style="fill: none; stroke: rgb(44, 169, 188); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></polyline></svg>
+""";
+
 const noResultsIllistration = '''
 <svg width="1080" height="1080" viewBox="0 0 1080 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M235.81 752.37H546.81V829.6C546.807 833.153 545.395 836.56 542.882 839.072C540.37 841.585 536.963 842.997 533.41 843H235.81V752.37Z" fill="#BCBCBC"/>

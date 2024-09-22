@@ -33,9 +33,11 @@ class _EditProfileState extends State<EditProfile> {
   List<String> states = [];
   List<String> cities = [];
   bool isLoading = true;
+  bool loading = false;
 
   Map<String, dynamic>? currentUser;
   final UserService _userService = UserService();
+
   Future<void> _fetchUserDetails() async {
     print("loading asdfasdfsadfasd");
     final userDetails = await _userService.getCurrentUserDetails();
@@ -43,8 +45,6 @@ class _EditProfileState extends State<EditProfile> {
       currentUser = userDetails;
     });
   }
-
-
 
   @override
   void initState() {
@@ -112,8 +112,6 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-
-
   Future<void> _checkUserFields() async {
     print("loading user");
     final userData = await FirebaseFirestore.instance
@@ -124,16 +122,17 @@ class _EditProfileState extends State<EditProfile> {
     if (userData.exists) {
       print("loading 1");
       setState(() {
-        fullNameController.text = userData.data()!['fullName'].toString();
-        ageController.text = userData.data()!['age'].toString();
-        bioController.text = userData.data()!['bio'].toString();
-        phoneController.text = userData.data()!['phoneNumber'].toString();
-        addressController.text = userData.data()!['Address'].toString();
-        selectedCountry = userData.data()!['country'];
-        selectedState = userData.data()!['states'];
-        selectedCity = userData.data()!['city'];
-        sinceController.text = userData.data()!['since'];
-
+        fullNameController.text =
+            (userData.data()?['fullName'] ?? '').toString();
+        bioController.text = (userData.data()?['bio'] ?? '').toString();
+        ageController.text = (userData.data()?['age'] ?? '').toString();
+        sinceController.text = (userData.data()?['since'] ?? '').toString();
+        phoneController.text =
+            (userData.data()?['phoneNumber'] ?? '').toString();
+        addressController.text = (userData.data()?['Address'] ?? '').toString();
+        selectedCountry = userData.data()!['country'] ?? "";
+        selectedState = userData.data()!['states'] ?? "";
+        selectedCity = userData.data()!['city'] ?? "";
       });
       if (selectedCountry != null) {
         await loadStates(selectedCountry!);
@@ -148,8 +147,6 @@ class _EditProfileState extends State<EditProfile> {
       print("loading 3");
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -170,22 +167,21 @@ class _EditProfileState extends State<EditProfile> {
         body: Scaffold(
           body: isLoading
               ? Center(
-                child: LoadingAnimationWidget.inkDrop(
+                  child: LoadingAnimationWidget.inkDrop(
                     color: primaryBlueColor,
                     size: 25,
                   ),
-              )
+                )
               : SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        if(currentUser!['businessAccount'] == "true")...[
+                        if (currentUser!['businessAccount'] == "true") ...[
                           _businessProfileEdit()
-                        ]else...[
+                        ] else ...[
                           _userProfileEdit()
                         ]
-
                       ],
                     ),
                   ),
@@ -294,6 +290,7 @@ class _EditProfileState extends State<EditProfile> {
               child: ZoomTapAnimation(
                 child: ElevatedButton(
                   onPressed: () async {
+                    loading = true;
                     await FirebaseFirestore.instance
                         .collection("Users")
                         .doc(_auth.currentUser?.uid)
@@ -309,10 +306,20 @@ class _EditProfileState extends State<EditProfile> {
                       "states": selectedState,
                       "city": selectedCity
                     }, SetOptions(merge: true));
+                    setState(() {
+                      loading = false;
+                    });
                     Navigator.pop(context);
                   },
-                  child: const Text(
-                    'Save',
+                  child: Center(
+                    child: loading
+                        ? LoadingAnimationWidget.inkDrop(
+                            color: Colors.white,
+                            size: 25,
+                          )
+                        : const Text(
+                            'Save',
+                          ),
                   ),
                 ),
               ),
@@ -424,6 +431,7 @@ class _EditProfileState extends State<EditProfile> {
               child: ZoomTapAnimation(
                 child: ElevatedButton(
                   onPressed: () async {
+                    loading = true;
                     await FirebaseFirestore.instance
                         .collection("Users")
                         .doc(_auth.currentUser?.uid)
@@ -439,10 +447,20 @@ class _EditProfileState extends State<EditProfile> {
                       "state": selectedState,
                       "city": selectedCity
                     }, SetOptions(merge: true));
+                    setState(() {
+                      loading = false;
+                    });
                     Navigator.pop(context);
                   },
-                  child: const Text(
-                    'Save',
+                  child: Center(
+                    child: loading
+                        ? LoadingAnimationWidget.inkDrop(
+                            color: Colors.white,
+                            size: 25,
+                          )
+                        : const Text(
+                            'Save',
+                          ),
                   ),
                 ),
               ),

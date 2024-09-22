@@ -1,161 +1,142 @@
+
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class EducationDetailsScreen extends StatefulWidget {
-  const EducationDetailsScreen({Key? key}) : super(key: key);
 
+class StepperScreen extends StatefulWidget {
   @override
-  State<EducationDetailsScreen> createState() => _EducationDetailsScreenState();
+  _StepperScreenState createState() => _StepperScreenState();
 }
 
-class _EducationDetailsScreenState extends State<EducationDetailsScreen> {
-  String? selectedEducationLevel;
-  final TextEditingController _instituteController = TextEditingController();
-  final TextEditingController _yearController = TextEditingController();
+class _StepperScreenState extends State<StepperScreen> {
+  int _currentStep = 0;
 
-  final List<String> educationLevels = [
-    'Matric',
-    'Intermediate',
-    'Bachelors',
-    'Masters',
-    'PhD'
+  // This method handles when the user taps the continue button
+  void _onStepContinue() {
+    if (_currentStep < 2) {
+      setState(() {
+        _currentStep += 1;
+      });
+    }
+  }
+
+  // This method handles when the user taps the cancel/back button
+  void _onStepCancel() {
+    if (_currentStep > 0) {
+      setState(() {
+        _currentStep -= 1;
+      });
+    }
+  }
+  String? selectedInterest;
+  String? selectedSubfield;
+  final List<String> interests = [
+    "Computer Science",
+    "Business Administration",
+    "Mechanical Engineering",
+    "Medical Science",
+    "Law",
+    "Arts and Humanities"
   ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Enter Education Details'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+  // This method defines the actual content of each step
+  List<Step> _getSteps() {
+    return [
+      Step(
+        title: const Text('What is your field of interest?'),
+        content:  Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dropdown for education level
-            DropdownButtonFormField<String>(
-              value: selectedEducationLevel,
-              hint: const Text("Select Passed Education Level"),
-              items: educationLevels.map((String value) {
+            const Text("What is your field of interest?",
+                style: TextStyle(fontSize: 18)),
+            const SizedBox(height: 20),
+            DropdownButton<String>(
+              value: selectedInterest,
+              hint: const Text("Select your interest"),
+              items: interests.map((String interest) {
                 return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+                  value: interest,
+                  child: Text(interest),
                 );
               }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
-                  selectedEducationLevel = newValue;
+                  selectedInterest = newValue;
+                  _onStepContinue();
+                  // updateDetails(newValue!);
+                  // updateSubfields(newValue);
                 });
               },
-              decoration: const InputDecoration(
-                labelText: 'Education Level',
-                border: OutlineInputBorder(),
-              ),
             ),
-            const SizedBox(height: 16.0),
 
-            // Institute name input
-            TextFormField(
-              controller: _instituteController,
-              decoration: const InputDecoration(
-                labelText: 'Institute Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-
-            // Year input
-            TextFormField(
-              controller: _yearController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Year of Completion',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 24.0),
-
-            // Save button
-            ElevatedButton(
-              onPressed: () async {
-                if (selectedEducationLevel != null &&
-                    _instituteController.text.isNotEmpty &&
-                    _yearController.text.isNotEmpty) {
-                  await _saveEducationDetails();
-                  // Navigate to the next suggestion screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const NextSuggestionScreen()),
-                  );
-                } else {
-                  // Show an error message if fields are not filled
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Please fill all fields'),
-                    ),
-                  );
-                }
-              },
-              child: const Text('Submit'),
-            )
           ],
         ),
+        isActive: _currentStep >= 0,
+        state: _currentStep == 0 ? StepState.editing : StepState.complete,
       ),
-    );
+      Step(
+        title: const Text('Step 2'),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Enter your email'),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        isActive: _currentStep >= 1,
+        state: _currentStep == 1 ? StepState.editing : StepState.complete,
+      ),
+      Step(
+        title: const Text('Step 3'),
+        content: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Confirm your information'),
+            SizedBox(height: 10),
+            Text('Name: John Doe'),
+            Text('Email: john.doe@example.com'),
+          ],
+        ),
+        isActive: _currentStep >= 2,
+        state: _currentStep == 2 ? StepState.editing : StepState.complete,
+      ),
+    ];
   }
-
-  Future<void> _saveEducationDetails() async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    final userDocRef = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(userId)
-        .collection('Educations')
-        .doc(); // Creating a new document for each education
-
-    await userDocRef.set({
-      'educationLevel': selectedEducationLevel,
-      'institute': _instituteController.text,
-      'year': _yearController.text,
-      'createdAt': Timestamp.now(),
-    });
-
-    // Save to preferences that the education details were entered
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('educationDetailsEntered', true);
-  }
-}
-
-class NextSuggestionScreen extends StatelessWidget {
-  const NextSuggestionScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Next Move'),
+        title: const Text('Flutter Stepper Example'),
       ),
-      body: const Center(
-        child: Text(
-          'Based on your details, here are some suggestions...',
-          style: TextStyle(fontSize: 18.0),
-        ),
+      body: Stepper(
+        type: StepperType.vertical,
+        currentStep: _currentStep,
+        onStepContinue: _onStepContinue,
+        onStepCancel: _onStepCancel,
+        steps: _getSteps(),
+        controlsBuilder: (BuildContext context, ControlsDetails details) {
+          return Row(
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: details.onStepContinue,
+                  child: const Text('CONTINUE'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              if (_currentStep != 0)
+                ElevatedButton(
+                  onPressed: details.onStepCancel,
+                  child: const Text('BACK'),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

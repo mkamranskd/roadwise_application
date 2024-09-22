@@ -4,12 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:roadwise_application/features/app/splash_screen/on_board_screen.dart';
 import 'package:roadwise_application/features/presentation/pages/user/user_complete_profile.dart';
 import 'package:roadwise_application/global/style.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
 import 'package:roadwise_application/global/svg_illustrations.dart';
+import 'package:roadwise_application/main.dart';
 import 'package:roadwise_application/screens/settings.dart';
+import 'package:roadwise_application/screens/HomePageWithRefreshAnimation.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import '../features/presentation/pages/user_list_screen.dart';
 import '../features/presentation/pages/user/user_profile.dart';
@@ -104,7 +105,9 @@ class _FirstPageState extends State<FirstPage> {
           });
         },
         children: [
-          const HomeScreen(),
+          const MyHomePage(
+            title: '',
+          ),
           const ChatsScreen(),
           const NotificationScreen(),
           BookMarks_Page(),
@@ -138,7 +141,7 @@ class _FirstPageState extends State<FirstPage> {
           SalomonBottomBarItem(
             icon: const Icon(Clarity.email_line),
             title: const Text(
-              "Message",
+              "Chats",
               style: TextStyle(
                 fontFamily: 'Dubai',
                 fontWeight: FontWeight.w500,
@@ -259,6 +262,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  final double _profileCompletion = 110;
+  final double progress = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -288,17 +294,68 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         });
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                        child: CircleAvatar(
-                          radius: 22,
-                          backgroundImage: _profilePictureUrl.isNotEmpty
-                              ? NetworkImage(_profilePictureUrl)
-                              : const AssetImage(
-                            "assets/icons/user1.png",
-                          ) as ImageProvider<Object>,
-                        )
-
+                      child: Column(
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundImage: _profilePictureUrl.isNotEmpty
+                                    ? NetworkImage(_profilePictureUrl)
+                                    : const AssetImage(
+                                        "assets/icons/user1.png",
+                                      ) as ImageProvider<Object>,
+                              ),
+                              // Circular progress bar around the avatar
+                              SizedBox(
+                                width: 45,
+                                height: 45,
+                                child: CircularProgressIndicator(
+                                  value: progress,
+                                  // Value between 0.0 and 1.0
+                                  strokeWidth: 3,
+                                  backgroundColor: Colors.grey[300],
+                                  // Background color of the progress bar
+                                  valueColor:
+                                      const AlwaysStoppedAnimation<Color>(
+                                          Colors.blue), // Progress color
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          if (_profileCompletion < 100.0) ...[
+                            Container(
+                              width: 50,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "$_profileCompletion%",
+                                    style: const TextStyle(fontSize: 10),
+                                  ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    // Rounded corners for progress bar
+                                    child: LinearProgressIndicator(
+                                      value: _profileCompletion / 100,
+                                      // Value between 0.0 and 1.0
+                                      backgroundColor: Colors.grey[300],
+                                      // Background color of the progress bar
+                                      color: Colors.blue,
+                                      // Color of the progress indicator
+                                      minHeight:
+                                          2, // Height of the progress bar
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ]
+                        ],
                       ),
                     ),
                   ),
@@ -379,6 +436,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 20,
               ),
+
               /*Welcome to roadwise*/
               ZoomTapAnimation(
                 child: Container(
@@ -462,363 +520,494 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 30,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          CustomPageRoute(child: Chatbot()),
-                        );
-                      },
-                      child: ZoomTapAnimation(
-                        child: Container(
-                          height: 230,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            gradient: LinearGradient(
-                              colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
-                              // Adjust colors as needed
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(Clarity.headphones_line,
-                                    size: 35, color: Colors.white),
-                                SizedBox(height: 10),
-                                Text(
-                                  'AI ChatBot',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontFamily: 'Dubai',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "Chat with our Chatbot to Generate Your Career Map with AI",
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 16,
-                                    fontFamily: 'Dubai',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 15),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+
+              ListTile(
+                title: const Text("AI ChatBot"),
+                leading: const Icon(Clarity.chat_bubble_line),
+                subtitle: const Text(
+                    "Chat with our Chatbot to Generate Your Career Map with AI"),
+                trailing: ZoomTapAnimation(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(child: Chatbot()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(5),
+                      // Reducing padding for smaller button
+                      minimumSize:
+                          const Size(35, 35), // Setting the minimum size
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const OnBoardingScreen()),
-                        );
-                      },
-                      child: ZoomTapAnimation(
-                        child: Container(
-                          height: 230,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            gradient: LinearGradient(
-                              colors: [Color(0xFF1C7EF4), Color(0xFF90EE90)],
-                              // Adjust colors as needed
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(Clarity.refresh_line,
-                                    size: 35, color: Colors.white),
-                                SizedBox(height: 10),
-                                Text(
-                                  'RESTART',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontFamily: 'Dubai',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "Restart\n Application",
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 16,
-                                    fontFamily: 'Dubai',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 15),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ZoomTapAnimation(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Example2()),
-                    );
-                  },
-                  child: Container(
-                    height: 180,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
-                        // Adjust colors as needed
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(Clarity.flow_chart_line,
-                              size: 35, color: Colors.white),
-                          SizedBox(height: 10),
-                          Text(
-                            'Education System FLow',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontFamily: 'Dubai',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "View Education System By Level",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                              fontFamily: 'Dubai',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                        ],
-                      ),
+                    child: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16, // Adjust the icon size if needed
                     ),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        FirstPage.of(context)?.navigateToPage(2);
-                      },
-                      child: ZoomTapAnimation(
-                        child: Container(
-                          height: 200,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            gradient: LinearGradient(
-                              colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
-                              // Adjust colors as needed
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(Clarity.search_line,
-                                    size: 35, color: Colors.white),
-                                SizedBox(height: 10),
-                                Text(
-                                  'Search',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontFamily: 'Dubai',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "Popular Institutes\nBright Students",
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 16,
-                                    fontFamily: 'Dubai',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 15),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+              ListTile(
+                title: const Text("Search"),
+                leading: const Icon(
+                  Clarity.search_line,
+                ),
+                subtitle: const Text("Popular Institutes\nBright Students"),
+                trailing: ZoomTapAnimation(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      FirstPage.of(context)?.navigateToPage(2);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(5),
+                      // Reducing padding for smaller button
+                      minimumSize:
+                          const Size(35, 35), // Setting the minimum size
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  UserProfileScreen(user: _auth.currentUser!)),
-                        );
-                      },
-                      child: ZoomTapAnimation(
-                        child: Container(
-                          height: 200,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            gradient: LinearGradient(
-                              colors: [Color(0xFF1C7EF4), Color(0xFF90EE90)],
-                              // Adjust colors as needed
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(Clarity.user_line,
-                                    size: 35, color: Colors.white),
-                                SizedBox(height: 10),
-                                Text(
-                                  'My Profile',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontFamily: 'Dubai',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "View Profile\nEdit Profile",
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 16,
-                                    fontFamily: 'Dubai',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                SizedBox(height: 15),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  _showCustomDialog(context,
-                      "Front-end\n          Neha Urooj\nBack-end\n          Muhammad Kamran");
-                },
-                child: ZoomTapAnimation(
-                  child: Container(
-                    height: 150,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF000000), Color(0xFF1C7EF4)],
-                        // Adjust colors as needed
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(Bootstrap.code, size: 35, color: Colors.white),
-                          SizedBox(height: 10),
-                          Text(
-                            'About Developers',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontFamily: 'Dubai',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      ),
+                    child: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16, // Adjust the icon size if needed
                     ),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
+              ListTile(
+                title: const Text("Restart App"),
+                leading: const Icon(Clarity.refresh_line),
+                trailing: ZoomTapAnimation(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(
+                            child: const RestartWidget(child: MyApp())),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(5),
+                      // Reducing padding for smaller button
+                      minimumSize:
+                          const Size(35, 35), // Setting the minimum size
+                    ),
+                    child: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16, // Adjust the icon size if needed
+                    ),
+                  ),
+                ),
               ),
+              ListTile(
+                title: const Text("Education System FLow"),
+                subtitle: const Text(
+                  "View Education System By Level",
+                ),
+                leading: const Icon(
+                  Clarity.flow_chart_line,
+                ),
+                trailing: ZoomTapAnimation(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EducationalChart()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(5),
+                      // Reducing padding for smaller button
+                      minimumSize:
+                          const Size(35, 35), // Setting the minimum size
+                    ),
+                    child: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16, // Adjust the icon size if needed
+                    ),
+                  ),
+                ),
+              ),
+              ListTile(
+                title: const Text("Developers"),
+                leading: const Icon(
+                  Bootstrap.code,
+                ),
+                trailing: ZoomTapAnimation(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _showCustomDialog(context,
+                          "Front-end\n          Neha Urooj\nBack-end\n          Muhammad Kamran");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(5),
+                      // Reducing padding for smaller button
+                      minimumSize:
+                          const Size(35, 35), // Setting the minimum size
+                    ),
+                    child: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 16, // Adjust the icon size if needed
+                    ),
+                  ),
+                ),
+              ),
+              //
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Expanded(
+              //       child: GestureDetector(
+              //         onTap: () {
+              //           Navigator.push(
+              //             context,
+              //             CustomPageRoute(child: Chatbot()),
+              //           );
+              //         },
+              //         child: ZoomTapAnimation(
+              //           child: Container(
+              //             height: 230,
+              //             decoration: const BoxDecoration(
+              //               borderRadius: BorderRadius.all(Radius.circular(10)),
+              //               gradient: LinearGradient(
+              //                 colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
+              //                 // Adjust colors as needed
+              //                 begin: Alignment.topLeft,
+              //                 end: Alignment.bottomRight,
+              //               ),
+              //             ),
+              //             child: const Padding(
+              //               padding: EdgeInsets.all(16.0),
+              //               child: Column(
+              //                 mainAxisAlignment: MainAxisAlignment.end,
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   Icon(Clarity.headphones_line,
+              //                       size: 35, color: Colors.white),
+              //                   SizedBox(height: 10),
+              //                   Text(
+              //                     'AI ChatBot',
+              //                     style: TextStyle(
+              //                       color: Colors.white,
+              //                       fontSize: 25,
+              //                       fontFamily: 'Dubai',
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 10),
+              //                   Text(
+              //                     "Chat with our Chatbot to Generate Your Career Map with AI",
+              //                     style: TextStyle(
+              //                       color: Colors.white70,
+              //                       fontSize: 16,
+              //                       fontFamily: 'Dubai',
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 15),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //     const SizedBox(
+              //       width: 10,
+              //     ),
+              //     Expanded(
+              //       child: GestureDetector(
+              //         onTap: () {
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) =>
+              //                     const OnBoardingScreen()),
+              //           );
+              //         },
+              //         child: ZoomTapAnimation(
+              //           child: Container(
+              //             height: 230,
+              //             decoration: const BoxDecoration(
+              //               borderRadius: BorderRadius.all(Radius.circular(10)),
+              //               gradient: LinearGradient(
+              //                 colors: [Color(0xFF1C7EF4), Color(0xFF90EE90)],
+              //                 // Adjust colors as needed
+              //                 begin: Alignment.topLeft,
+              //                 end: Alignment.bottomRight,
+              //               ),
+              //             ),
+              //             child: const Padding(
+              //               padding: EdgeInsets.all(16.0),
+              //               child: Column(
+              //                 mainAxisAlignment: MainAxisAlignment.end,
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   Icon(Clarity.refresh_line,
+              //                       size: 35, color: Colors.white),
+              //                   SizedBox(height: 10),
+              //                   Text(
+              //                     'RESTART',
+              //                     style: TextStyle(
+              //                       color: Colors.white,
+              //                       fontSize: 25,
+              //                       fontFamily: 'Dubai',
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 10),
+              //                   Text(
+              //                     "Restart\n Application",
+              //                     style: TextStyle(
+              //                       color: Colors.white70,
+              //                       fontSize: 16,
+              //                       fontFamily: 'Dubai',
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 15),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // ZoomTapAnimation(
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(builder: (context) => const Example2()),
+              //       );
+              //     },
+              //     child: Container(
+              //       height: 180,
+              //       width: double.infinity,
+              //       decoration: const BoxDecoration(
+              //         borderRadius: BorderRadius.all(Radius.circular(10)),
+              //         gradient: LinearGradient(
+              //           colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
+              //           // Adjust colors as needed
+              //           begin: Alignment.topLeft,
+              //           end: Alignment.bottomRight,
+              //         ),
+              //       ),
+              //       child: const Padding(
+              //         padding: EdgeInsets.all(16.0),
+              //         child: Column(
+              //           mainAxisAlignment: MainAxisAlignment.end,
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Icon(Clarity.flow_chart_line,
+              //                 size: 35, color: Colors.white),
+              //             SizedBox(height: 10),
+              //             Text(
+              //               'Education System FLow',
+              //               style: TextStyle(
+              //                 color: Colors.white,
+              //                 fontSize: 25,
+              //                 fontFamily: 'Dubai',
+              //                 fontWeight: FontWeight.w500,
+              //               ),
+              //             ),
+              //             SizedBox(height: 10),
+              //             Text(
+              //               "View Education System By Level",
+              //               style: TextStyle(
+              //                 color: Colors.white70,
+              //                 fontSize: 16,
+              //                 fontFamily: 'Dubai',
+              //                 fontWeight: FontWeight.w500,
+              //               ),
+              //             ),
+              //             SizedBox(height: 15),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Expanded(
+              //       child: GestureDetector(
+              //         onTap: () {
+              //           FirstPage.of(context)?.navigateToPage(2);
+              //         },
+              //         child: ZoomTapAnimation(
+              //           child: Container(
+              //             height: 200,
+              //             decoration: const BoxDecoration(
+              //               borderRadius: BorderRadius.all(Radius.circular(10)),
+              //               gradient: LinearGradient(
+              //                 colors: [Color(0xFF1C7EF4), Color(0xFFFFD580)],
+              //                 // Adjust colors as needed
+              //                 begin: Alignment.topLeft,
+              //                 end: Alignment.bottomRight,
+              //               ),
+              //             ),
+              //             child: const Padding(
+              //               padding: EdgeInsets.all(16.0),
+              //               child: Column(
+              //                 mainAxisAlignment: MainAxisAlignment.end,
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   Icon(Clarity.search_line,
+              //                       size: 35, color: Colors.white),
+              //                   SizedBox(height: 10),
+              //                   Text(
+              //                     'Search',
+              //                     style: TextStyle(
+              //                       color: Colors.white,
+              //                       fontSize: 25,
+              //                       fontFamily: 'Dubai',
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 10),
+              //                   Text(
+              //                     "Popular Institutes\nBright Students",
+              //                     style: TextStyle(
+              //                       color: Colors.white70,
+              //                       fontSize: 16,
+              //                       fontFamily: 'Dubai',
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 15),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //     const SizedBox(
+              //       width: 10,
+              //     ),
+              //     Expanded(
+              //       child: GestureDetector(
+              //         onTap: () {
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) =>
+              //                     UserProfileScreen(user: _auth.currentUser!)),
+              //           );
+              //         },
+              //         child: ZoomTapAnimation(
+              //           child: Container(
+              //             height: 200,
+              //             decoration: const BoxDecoration(
+              //               borderRadius: BorderRadius.all(Radius.circular(10)),
+              //               gradient: LinearGradient(
+              //                 colors: [Color(0xFF1C7EF4), Color(0xFF90EE90)],
+              //                 // Adjust colors as needed
+              //                 begin: Alignment.topLeft,
+              //                 end: Alignment.bottomRight,
+              //               ),
+              //             ),
+              //             child: const Padding(
+              //               padding: EdgeInsets.all(16.0),
+              //               child: Column(
+              //                 mainAxisAlignment: MainAxisAlignment.end,
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   Icon(Clarity.user_line,
+              //                       size: 35, color: Colors.white),
+              //                   SizedBox(height: 10),
+              //                   Text(
+              //                     'My Profile',
+              //                     style: TextStyle(
+              //                       color: Colors.white,
+              //                       fontSize: 25,
+              //                       fontFamily: 'Dubai',
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 10),
+              //                   Text(
+              //                     "View Profile\nEdit Profile",
+              //                     style: TextStyle(
+              //                       color: Colors.white70,
+              //                       fontSize: 16,
+              //                       fontFamily: 'Dubai',
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                   SizedBox(height: 15),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // GestureDetector(
+              //   onTap: () {
+              //     _showCustomDialog(context,
+              //         "Front-end\n          Neha Urooj\nBack-end\n          Muhammad Kamran");
+              //   },
+              //   child: ZoomTapAnimation(
+              //     child: Container(
+              //       height: 150,
+              //       width: double.infinity,
+              //       decoration: const BoxDecoration(
+              //         borderRadius: BorderRadius.all(Radius.circular(10)),
+              //         gradient: LinearGradient(
+              //           colors: [Color(0xFF000000), Color(0xFF1C7EF4)],
+              //           // Adjust colors as needed
+              //           begin: Alignment.topLeft,
+              //           end: Alignment.bottomRight,
+              //         ),
+              //       ),
+              //       child: const Padding(
+              //         padding: EdgeInsets.all(16.0),
+              //         child: Column(
+              //           mainAxisAlignment: MainAxisAlignment.end,
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Icon(Bootstrap.code, size: 35, color: Colors.white),
+              //             SizedBox(height: 10),
+              //             Text(
+              //               'About Developers',
+              //               style: TextStyle(
+              //                 color: Colors.white,
+              //                 fontSize: 25,
+              //                 fontFamily: 'Dubai',
+              //                 fontWeight: FontWeight.w500,
+              //               ),
+              //             ),
+              //             SizedBox(height: 10),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
             ],
           ),
         ),
       ),
-      floatingActionButton: Container(
+      /* floatingActionButton: Container(
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
         ),
@@ -836,7 +1025,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
         ),
-      ),
+      ),*/
     );
   }
 }
@@ -886,7 +1075,6 @@ class NotificationCard extends StatelessWidget {
   }
 }
 
-
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({super.key});
 
@@ -900,26 +1088,38 @@ class ChatsScreen extends StatelessWidget {
         title: const Text("Chats"),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.more_vert),
             onPressed: () {},
           ),
         ],
       ),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
-            child: Row(
-              children: [
-                FillOutlineButton(press: () {}, text: "Recent Message"),
-                const SizedBox(width: 16.0),
-                FillOutlineButton(
-                  press: () {},
-                  text: "Active",
-                  isFilled: true,
-                ),
-              ],
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.next,
+              decoration: InputDecoration(
+                hintText: "Search",
+                //icon: const Icon(Clarity.search_line),
+                labelText: null,
+              ),
             ),
+          ),
+          Row(
+            children: [
+              FillOutlineButton(
+                press: () {},
+                text: "Recent Message",
+              ),
+
+              FillOutlineButton(
+                press: () {},
+                text: "Active",
+                isFilled: false,
+              ),
+            ],
           ),
           Expanded(
             child: ListView.builder(
@@ -958,7 +1158,7 @@ class ChatCard extends StatelessWidget {
       onTap: press,
       child: Padding(
         padding:
-        const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0 * 0.75),
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0 * 0.75),
         child: Row(
           children: [
             CircleAvatarWithActiveIndicator(
@@ -992,39 +1192,6 @@ class ChatCard extends StatelessWidget {
               child: Text(chat.time),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class FillOutlineButton extends StatelessWidget {
-  const FillOutlineButton({
-    super.key,
-    this.isFilled = true,
-    required this.press,
-    required this.text,
-  });
-
-  final bool isFilled;
-  final VoidCallback press;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-        side: const BorderSide(color: Colors.white),
-      ),
-      elevation: isFilled ? 2 : 0,
-      color: isFilled ? Colors.white : Colors.transparent,
-      onPressed: press,
-      child: Text(
-        text,
-        style: TextStyle(
-          color: isFilled ? const Color(0xFF1D1D35) : Colors.white,
-          fontSize: 12,
         ),
       ),
     );
@@ -1141,8 +1308,63 @@ List chatsData = [
     time: "5d ago",
     isActive: false,
   ),
+  Chat(
+    name: "Jenny Wilson",
+    lastMessage: "Hope you are doing well...",
+    image: "https://i.postimg.cc/g25VYN7X/user-1.png",
+    time: "3m ago",
+    isActive: false,
+  ),
+  Chat(
+    name: "Esther Howard",
+    lastMessage: "Hello Abdullah! I am...",
+    image: "https://i.postimg.cc/cCsYDjvj/user-2.png",
+    time: "8m ago",
+    isActive: true,
+  ),
+  Chat(
+    name: "Ralph Edwards",
+    lastMessage: "Do you have update...",
+    image: "https://i.postimg.cc/sXC5W1s3/user-3.png",
+    time: "5d ago",
+    isActive: false,
+  ),
+  Chat(
+    name: "Jacob Jones",
+    lastMessage: "You’re welcome :)",
+    image: "https://i.postimg.cc/4dvVQZxV/user-4.png",
+    time: "5d ago",
+    isActive: true,
+  ),
+  Chat(
+    name: "Albert Flores",
+    lastMessage: "Thanks",
+    image: "https://i.postimg.cc/FzDSwZcK/user-5.png",
+    time: "6d ago",
+    isActive: false,
+  ),
+  Chat(
+    name: "Jenny Wilson",
+    lastMessage: "Hope you are doing well...",
+    image: "https://i.postimg.cc/g25VYN7X/user-1.png",
+    time: "3m ago",
+    isActive: false,
+  ),
+  Chat(
+    name: "Esther Howard",
+    lastMessage: "Hello Abdullah! I am...",
+    image: "https://i.postimg.cc/cCsYDjvj/user-2.png",
+    time: "8m ago",
+    isActive: true,
+  ),
+  Chat(
+    name: "Ralph Edwards",
+    lastMessage: "Do you have update...",
+    image: "https://i.postimg.cc/sXC5W1s3/user-3.png",
+    time: "5d ago",
+    isActive: false,
+  ),
 ];
-
 
 class MessageCard extends StatelessWidget {
   final Message message;
@@ -1316,14 +1538,17 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               final userData = snapshot.data!.data();
               if (userData == null) {
                 return InformationScreen(
-                  svgString: voidd, // Provide your SVG string here
+                  svgString: voidd,
+                  // Provide your SVG string here
                   title: 'Incomplete Profile',
-                  subtitle: 'Tell Us Something About Yourself, Complete your Profile!',
+                  subtitle:
+                      'Tell Us Something About Yourself, Complete your Profile!',
                   buttonText: 'Complete your Profile',
                   onButtonPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => UserCompleteProfile()),
+                      MaterialPageRoute(
+                          builder: (context) => UserCompleteProfile()),
                     );
                   },
                 );
@@ -1349,8 +1574,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                               : userData['profilePicture'] != null
                                   ? NetworkImage(userData['profilePicture'])
                                   : const AssetImage(
-                            "assets/icons/user1.png",)
-                                      as ImageProvider<Object>,
+                                      "assets/icons/user1.png",
+                                    ) as ImageProvider<Object>,
                           radius: 32,
                         ),
                         title: Text(
@@ -1387,7 +1612,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                       height: 20,
                     ),
                     if (userData["businessAccount"] == "true") ...[
-                      ProfileListItem(
+                      CustomListItem(
                         icon: Clarity.user_line,
                         title: "Business Profile",
                         ontap: () {
@@ -1400,7 +1625,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                         },
                       ),
                     ] else ...[
-                      ProfileListItem(
+                      CustomListItem(
                         icon: Clarity.user_line,
                         title: "Profile",
                         ontap: () {
@@ -1413,7 +1638,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                         },
                       ),
                     ],
-                    ProfileListItem(
+                    CustomListItem(
                         icon: Clarity.settings_line,
                         title: "Settings",
                         ontap: () {
@@ -1422,7 +1647,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                             CustomPageRoute(child: SettingsScreen()),
                           );
                         }),
-                    ProfileListItem(
+
+                    CustomListItem(
                       icon: Clarity.logout_line,
                       title: "Logout",
                       ontap: () {
@@ -1448,7 +1674,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const SignInScreen()));
+                                              const SignInScreen()));
                                     }).onError((error, stackTrace) {
                                       Utils.toastMessage(
                                           context,
@@ -1463,7 +1689,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                           },
                         );
                       },
-                    )
+                    ),
                   ],
                 ),
               );

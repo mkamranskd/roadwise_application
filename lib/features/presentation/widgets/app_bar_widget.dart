@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:roadwise_application/const/app_const.dart';
 import 'package:roadwise_application/global/style.dart';
 
 PreferredSizeWidget appBarWidget({VoidCallback? onTap, String? title,bool? isJobTab}){
@@ -29,7 +28,7 @@ PreferredSizeWidget appBarWidget({VoidCallback? onTap, String? title,bool? isJob
               border: InputBorder.none,
               prefixIcon: Icon(Icons.search_sharp, color:  primaryBlueColor),
               //suffixIcon: const Icon(Icons.filter_list),
-              contentPadding: EdgeInsets.symmetric(vertical: 8.0), // Reduced vertical padding
+              contentPadding: const EdgeInsets.symmetric(vertical: 8.0), // Reduced vertical padding
             ),
           ),
         ),
@@ -46,7 +45,6 @@ PreferredSizeWidget appBarWidget({VoidCallback? onTap, String? title,bool? isJob
           Icon(Icons.more_vert,size: 15,color: Colors.white),
         ],
       ),*/
-      sizeHor(10),
     ],
   );
 }

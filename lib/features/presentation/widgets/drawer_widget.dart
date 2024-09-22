@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:roadwise_application/const/app_const.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
 import 'package:roadwise_application/features/presentation/pages/user/user_profile.dart';
@@ -84,97 +83,94 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Container(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          sizeVer(40),
-                          SizedBox(
-                            width: 90,
-                            height: 90,
-                            child: CircleAvatar(
-                              radius: 70,
-                              backgroundImage: _image != null
-                                  ? FileImage(_image!)
-                                  : const AssetImage('assets/default_avatar.jpg')
-                                      as ImageProvider,
-                            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 90,
+                          height: 90,
+                          child: CircleAvatar(
+                            radius: 70,
+                            backgroundImage: _image != null
+                                ? FileImage(_image!)
+                                : const AssetImage('assets/default_avatar.jpg')
+                                    as ImageProvider,
                           ),
-                          sizeVer(10),
-                          Text(
-                            firstName != ''
-                                ? firstName.toUpperCase()
-                                : '- - - - - - - - - - - - - ',
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Dubai',
-                            ),
+                        ),
+
+                        Text(
+                          firstName != ''
+                              ? firstName.toUpperCase()
+                              : '- - - - - - - - - - - - - ',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Dubai',
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    ListTile(
-                      leading: const Icon(Clarity.user_line),
-                      title: const Text(
-                        'My Profile' ,
-                      ),
-                      onTap: () {
-                        Navigator.push(
+                  ),
+                  ListTile(
+                    leading: const Icon(Clarity.user_line),
+                    title: const Text(
+                      'My Profile' ,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                UserProfileScreen(user: _auth.currentUser!)),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Clarity.home_line),
+                    title: const Text('Profile'),
+                    onTap: () {
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  UserProfileScreen(user: _auth.currentUser!)),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Clarity.home_line),
-                      title: const Text('Profile'),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MainScreen()));
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Clarity.email_line),
-                      title: const Text('Email'),
-                      onTap: () {
-                        // Handle Email settings
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Clarity.lock_line),
-                      title: const Text('Password'),
-                      onTap: () {
-                        // Handle Password settings
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.privacy_tip_outlined),
-                      title: const Text('Privacy'),
-                      onTap: () {
-                        // Handle Privacy settings
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Clarity.notification_line),
-                      title: const Text('Notifications'),
-                      onTap: () {
-                        // Handle Notification settings
-                      },
-                    ),
-                  ],
-                ),
+                              builder: (context) => MainScreen()));
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Clarity.email_line),
+                    title: const Text('Email'),
+                    onTap: () {
+                      // Handle Email settings
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Clarity.lock_line),
+                    title: const Text('Password'),
+                    onTap: () {
+                      // Handle Password settings
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.privacy_tip_outlined),
+                    title: const Text('Privacy'),
+                    onTap: () {
+                      // Handle Privacy settings
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Clarity.notification_line),
+                    title: const Text('Notifications'),
+                    onTap: () {
+                      // Handle Notification settings
+                    },
+                  ),
+                ],
               ),
             ),
           ),
