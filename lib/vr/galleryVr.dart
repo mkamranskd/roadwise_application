@@ -188,14 +188,7 @@ class _GalleryVrState extends State<GalleryVr> {
             ),
           ],
         ],
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: Stack(
         children: [
@@ -203,7 +196,7 @@ class _GalleryVrState extends State<GalleryVr> {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: _isLoading
-                  ?  Center(child: LoadingAnimationWidget.inkDrop(
+                  ?  Center(child: LoadingAnimationWidget.discreteCircle(
                                 color: Colors.blue,
                                 size: 25,
                               ))
@@ -235,7 +228,7 @@ class _GalleryVrState extends State<GalleryVr> {
             Center(
               child: Container(
                 color: Colors.black54,
-                child:  LoadingAnimationWidget.inkDrop(
+                child:  LoadingAnimationWidget.discreteCircle(
                                 color: Colors.blue,
                                 size: 25,
                               ),

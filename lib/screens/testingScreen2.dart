@@ -63,7 +63,7 @@ class _SelectingCountryStateCityState extends State<SelectingCountryStateCity> {
           padding: const EdgeInsets.all(16.0),
           child: _isLoading
               ? Center(
-              child: LoadingAnimationWidget.inkDrop(
+              child: LoadingAnimationWidget.discreteCircle(
                 color: primaryBlueColor,
                 size: 25,
               ))
@@ -363,7 +363,7 @@ class _SearchLocationState extends State<SearchLocation> {
           duration: const Duration(milliseconds: 1),
           child: isLoading
               ? Center(
-            child: LoadingAnimationWidget.inkDrop(
+            child: LoadingAnimationWidget.discreteCircle(
               color: primaryBlueColor,
               size: 25,
             ),

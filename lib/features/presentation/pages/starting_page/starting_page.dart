@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:roadwise_application/const/app_const.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/sign_in_page.dart';
 import 'package:roadwise_application/features/presentation/pages/credentials/widgets/coloured_button_widget.dart';
 import 'package:roadwise_application/global/style.dart';
@@ -31,7 +30,7 @@ class StartingPage extends StatelessWidget {
               ColouredButtonWidget(
                 text: "Join Now",
                 press: (){
-                  Navigator.pushNamed(context, PageConst.joinPage);
+                  //Navigator.pushNamed(context, PageConst.joinPage);
                 },),
               const SizedBox(height: 15),
               /*ButtonContainerWidget(

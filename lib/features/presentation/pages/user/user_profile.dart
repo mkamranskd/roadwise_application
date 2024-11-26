@@ -445,14 +445,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         title: const Text(
           'Profile',
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -467,7 +460,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: LoadingAnimationWidget.inkDrop(
+                child: LoadingAnimationWidget.discreteCircle(
                   color: primaryBlueColor,
                   size: 25,
                 ),
@@ -604,7 +597,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Center(
-                                child: LoadingAnimationWidget.inkDrop(
+                                child: LoadingAnimationWidget.discreteCircle(
                                   color: primaryBlueColor,
                                   size: 25,
                                 ));
@@ -735,7 +728,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return Center(
-                                child: LoadingAnimationWidget.inkDrop(
+                                child: LoadingAnimationWidget.discreteCircle(
                                   color: primaryBlueColor,
                                   size: 25,
                                 ));
@@ -965,7 +958,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return Center(
-                                  child: LoadingAnimationWidget.inkDrop(
+                                  child: LoadingAnimationWidget.discreteCircle(
                                     color: primaryBlueColor,
                                     size: 25,
                                   ));
@@ -1096,7 +1089,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return Center(
-                                  child: LoadingAnimationWidget.inkDrop(
+                                  child: LoadingAnimationWidget.discreteCircle(
                                     color: primaryBlueColor,
                                     size: 25,
                                   ));

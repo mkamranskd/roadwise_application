@@ -6,8 +6,8 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:rive/rive.dart' as rive;
 import 'package:roadwise_application/hierarchical/loadeducationsystemscreen.dart';
+import 'package:roadwise_application/screens/universities.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-
 import '../features/presentation/pages/credentials/sign_in_page.dart';
 import '../features/presentation/pages/user/user_profile.dart';
 import '../global/style.dart';
@@ -153,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
               border: Border.all(
                 color: isSelected ? Colors.transparent : Colors.transparent,
               ),
-      
+
             ),
             child: Text(
               text,
@@ -173,36 +173,37 @@ class _MyHomePageState extends State<MyHomePage> {
       body: CustomRefreshIndicator(
         onRefresh: () => Future.delayed(const Duration(seconds: 2)),
         offsetToArmed: _offsetToArm,
-        builder: (context, child, controller) => AnimatedBuilder(
-          animation: controller,
-          child: child,
-          builder: (context, child) {
-            return Stack(
-              children: [
-                // Rive Animation showing during refresh
-                SizedBox(
-                  width: double.infinity,
-                  height: _offsetToArm * controller.value,
-                  child: const rive.RiveAnimation.asset(
-                    "assets/raster-graphics-example.riv",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                // The child content (Scaffold’s body)
-                Transform.translate(
-                  offset: Offset(0.0, _offsetToArm * controller.value),
-                  child: controller.isLoading
-                      ? Center(
-                          child: LoadingAnimationWidget.inkDrop(
-                          color: Colors.blue,
-                          size: 25,
-                        ))
-                      : child,
-                ),
-              ],
-            );
-          },
-        ),
+        builder: (context, child, controller) =>
+            AnimatedBuilder(
+              animation: controller,
+              child: child,
+              builder: (context, child) {
+                return Stack(
+                  children: [
+                    // Rive Animation showing during refresh
+                    SizedBox(
+                      width: double.infinity,
+                      height: _offsetToArm * controller.value,
+                      child: const rive.RiveAnimation.asset(
+                        "assets/raster-graphics-example.riv",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    // The child content (Scaffold’s body)
+                    Transform.translate(
+                      offset: Offset(0.0, _offsetToArm * controller.value),
+                      child: controller.isLoading
+                          ? Center(
+                          child: LoadingAnimationWidget.discreteCircle(
+                            color: Colors.blue,
+                            size: 25,
+                          ))
+                          : child,
+                    ),
+                  ],
+                );
+              },
+            ),
         // Child is now a ListView to support scrolling and refresh
         child: ListView(
           children: [
@@ -220,8 +221,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => UserProfileScreen(
-                                    user: _auth.currentUser!)),
+                                builder: (context) =>
+                                    UserProfileScreen(
+                                        user: _auth.currentUser!)),
                           );
                         });
                       },
@@ -235,8 +237,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 backgroundImage: _profilePictureUrl.isNotEmpty
                                     ? NetworkImage(_profilePictureUrl)
                                     : const AssetImage(
-                                        "assets/icons/user1.png",
-                                      ) as ImageProvider<Object>,
+                                  "assets/icons/user1.png",
+                                ) as ImageProvider<Object>,
                               ),
                               // Circular progress bar around the avatar
                               SizedBox(
@@ -249,8 +251,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   backgroundColor: Colors.grey[300],
                                   // Background color of the progress bar
                                   valueColor:
-                                      const AlwaysStoppedAnimation<Color>(
-                                          Colors.blue), // Progress color
+                                  const AlwaysStoppedAnimation<Color>(
+                                      Colors.blue), // Progress color
                                 ),
                               ),
                             ],
@@ -279,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       color: Colors.blue,
                                       // Color of the progress indicator
                                       minHeight:
-                                          2, // Height of the progress bar
+                                      2, // Height of the progress bar
                                     ),
                                   ),
                                 ],
@@ -292,8 +294,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   const Expanded(
                       child: SizedBox(
-                    width: 10,
-                  )),
+                        width: 10,
+                      )),
                   const Center(
                     child: Text(
                       "HOME",
@@ -306,8 +308,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   const Expanded(
                       child: SizedBox(
-                    width: 10,
-                  )),
+                        width: 10,
+                      )),
                   ZoomTapAnimation(
                     child: IconButton(
                       style: ButtonStyle(
@@ -339,7 +341,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const SignInScreen()),
+                                            const SignInScreen()),
                                       );
                                     }).onError((error, stackTrace) {
                                       Utils.toastMessage(
@@ -415,7 +417,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const EducationDropdownScreen()),
+                                  const EducationDropdownScreen()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -442,6 +444,34 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: Column(
                 children: [
+                  // ZoomTapAnimation(
+                  //   child: GestureDetector(
+                  //     onTap: () {
+                  //       // Navigator.push(
+                  //       //   context,
+                  //       //   CustomPageRoute(child: ChatScreen()),
+                  //       // );
+                  //     },
+                  //     child: const Card(
+                  //       child: Padding(
+                  //         padding: EdgeInsets.all(20.0),
+                  //         child: Row(
+                  //           children: [
+                  //             Icon(Clarity.code_line),
+                  //             SizedBox(
+                  //               width: 20,
+                  //             ),
+                  //             Text("Testing Screen")
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+
                   ZoomTapAnimation(
                     child: GestureDetector(
                       onTap: () {
@@ -488,6 +518,33 @@ class _MyHomePageState extends State<MyHomePage> {
                                 width: 20,
                               ),
                               Text("Education System FLow")
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ), const SizedBox(
+                    height: 10,
+                  ),
+                  ZoomTapAnimation(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>  Universities()),
+                        );
+                      },
+                      child: const Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.business),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text("Explore Universities")
                             ],
                           ),
                         ),

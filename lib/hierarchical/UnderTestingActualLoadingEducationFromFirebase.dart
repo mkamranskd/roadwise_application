@@ -1,14 +1,25 @@
 import 'dart:async';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:roadwise_application/global/style.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../screens/chatbot.dart';
+import '../screens/showingUniversititesToUser.dart';
 
 final _auth = FirebaseAuth.instance;
+
+Future<void> _launchURL(String url) async {
+  final Uri uri = Uri.parse(url); // Convert the String to Uri
+  if (!await launchUrl(
+    uri,
+    mode: LaunchMode.externalApplication,
+  )) {
+    throw Exception('Could not launch $url');
+  }
+}
 
 class EducationDropdownScreen extends StatefulWidget {
   const EducationDropdownScreen({Key? key}) : super(key: key);
@@ -91,9 +102,7 @@ class _EducationDropdownScreenState extends State<EducationDropdownScreen> {
     });
     if (selectedCountry != null &&
         selectedEducationSystem != null &&
-        selectedLevel != null &&
-        instituteController.text.isNotEmpty &&
-        yearController.text.isNotEmpty) {
+        selectedLevel != null) {
       String nextEducationLevel = getNextEducationLevel(
           int.parse(selectedEducationSystem.toString().split('.').first));
       Navigator.push(
@@ -229,23 +238,6 @@ class _EducationDropdownScreenState extends State<EducationDropdownScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: instituteController,
-                decoration: const InputDecoration(
-                  labelText: "From Institute Name",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: yearController,
-                decoration: const InputDecoration(
-                  labelText: "In Year",
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 24),
               Row(
                 children: [
                   Expanded(
@@ -254,11 +246,11 @@ class _EducationDropdownScreenState extends State<EducationDropdownScreen> {
                         saveEducationDetails();
                       },
                       child: loading
-                          ? LoadingAnimationWidget.inkDrop(
-                        color: Colors.white,
-                        size: 25,
-                      )
-                          :const Text('Select'),
+                          ? LoadingAnimationWidget.discreteCircle(
+                              color: Colors.white,
+                              size: 25,
+                            )
+                          : const Text('Select'),
                     ),
                   ),
                 ],
@@ -273,60 +265,14 @@ class _EducationDropdownScreenState extends State<EducationDropdownScreen> {
   Widget getNextScreen(int level) {
     switch (level) {
       case 1:
-        return PrePrimaryScreen();
-      case 2:
-        return PrimaryScreen();
-      case 3:
-        return MiddleScreen();
-      case 4:
         return SecondaryScreen();
-      case 5:
+      case 2:
         return HigherSecondaryScreen();
-      case 6:
+      case 3:
         return UndergraduateScreen();
-      case 7:
-        return PostgraduateScreen();
-      case 8:
-        return TechnicalVocationalScreen();
       default:
         return Container();
     }
-  }
-}
-
-class PrePrimaryScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("PrePrimaryScreen Education")),
-      body: const Center(
-        child: Text("Details for PrePrimaryScreen Education."),
-      ),
-    );
-  }
-}
-
-class PrimaryScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("PrimaryScreen Education")),
-      body: const Center(
-        child: Text("Details for PrimaryScreen Education."),
-      ),
-    );
-  }
-}
-
-class MiddleScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("MiddleScreen Education")),
-      body: const Center(
-        child: Text("Details for MiddleScreen Education."),
-      ),
-    );
   }
 }
 
@@ -334,9 +280,9 @@ class SecondaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("SecondaryScreen Education")),
+      appBar: AppBar(title: const Text("SSC")),
       body: const Center(
-        child: Text("Details for SecondaryScreen Education."),
+        child: Text("This Screen will be updated soon."),
       ),
     );
   }
@@ -346,17 +292,13 @@ class HigherSecondaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("HigherSecondaryScreen Education")),
+      appBar: AppBar(title: const Text("HSC")),
       body: const Center(
-        child: Text("Details for HigherSecondaryScreen Education."),
+        child: Text("This Screen will be updated soon."),
       ),
     );
   }
 }
-
-
-
-
 
 class UndergraduateScreen extends StatefulWidget {
   @override
@@ -389,43 +331,55 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
   String? subfieldSalaries;
 
   List<String> currentSubfields = [];
-
   final List<String> interests = [
     "Computer Science",
     "Business Administration",
-    "Mechanical Engineering",
-    "Medical Science",
-    "Law",
-    "Arts and Humanities"
+    "Engineering",
+    "Veterinary Medicine",
+    "Fisheries and Aquaculture",
+    "Poultry Science",
+    "Wildlife Management",
+    "Forestry",
+    "Bio-Chemistry",
+    "Bio-Technology",
+    "Food Science and Technology",
+    "Law"
   ];
 
   final Map<String, List<String>> subfields = {
     "Computer Science": [
-      "Artificial Intelligence",
-      "Machine Learning",
+      "Information Technology",
       "Cyber Security",
-      "Data Science"
+      "Data Science",
+      "Software Engineering",
+      "Computer Systems Engineering",
+      "Artificial Intelligence"
     ],
-    "Business Administration": [
-      "Marketing",
-      "Finance",
-      "Human Resources",
-      "Operations Management"
+    "Business Administration": ["Business Administration"],
+    "Engineering": [
+      "Chemical Engineering",
+      "Civil Engineering",
+      "Electrical Engineering",
+      "Electronic Engineering",
+      "Environmental Engineering",
+      "Industrial and Manufacturing Engineering",
+      "Mechanical Engineering",
+      "Energy Systems Engineering",
+      "Telecommunication Engineering",
+      "Building and Architectural Engineering",
+      "Biomedical Engineering",
+      "Food Engineering Technology",
+      "Automation and Control Engineering"
     ],
-    "Mechanical Engineering": [
-      "Robotics",
-      "Automobile",
-      "Aerospace",
-      "Energy Systems"
-    ],
-    "Medical Science": ["Physical Therapy", "Nursing", "Pharmacy"],
-    "Law": [
-      "Criminal Law",
-      "Corporate Law",
-      "Constitutional Law",
-      "Family Law"
-    ],
-    "Arts and Humanities": ["Literature", "History", "Philosophy"]
+    "Veterinary Medicine": ["Doctor of Veterinary Medicine (DVM)"],
+    "Fisheries and Aquaculture": ["Fisheries & Aquaculture"],
+    "Poultry Science": ["Poultry Science"],
+    "Wildlife Management": ["Wildlife Management"],
+    "Forestry": ["Forestry"],
+    "Bio-Chemistry": ["Bio-Chemistry"],
+    "Bio-Technology": ["Bio-Technology"],
+    "Food Science and Technology": ["Food Science & Technology"],
+    "Law": ["Law"]
   };
 
   void updateDetails(String interest) {
@@ -433,40 +387,86 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
       case "Computer Science":
         fieldDescription =
             "Think about getting a Postgraduate degree in Artificial Intelligence or Machine Learning. These fields are growing fast and offer exciting job opportunities. You could also focus on Software Development to build apps and systems.";
-        fieldImagePath = "assets/profiles/cs.jpg";
+        fieldImagePath = "https://i.ytimg.com/vi/CxGSnA-RTsA/maxresdefault.jpg";
         fieldVideoLink =
             "https://www.youtube.com/watch?v=BILFn9eQOr0&pp=ygUZd2hhdCBpcyBjb21wdXRlciBzY2llbmNlIA%3D%3D";
         break;
       case "Business Administration":
         fieldDescription =
             "You might want to pursue an MBA, which will help you specialize in areas like Marketing, Finance, or Human Resources. This can open doors to leadership positions in many companies.";
-        fieldImagePath = "assets/profiles/ba.jpg";
+        fieldImagePath =
+            "https://img.freepik.com/premium-vector/illustration-creative-business-management-background_7505-297.jpg";
         fieldVideoLink = "https://www.youtube.com/";
         break;
-      case "Mechanical Engineering":
+      case "Engineering":
         fieldDescription =
-            "Consider exploring advanced fields like Robotics or Energy Systems. These areas are important for developing new technologies and improving how we use energy in our world.";
-        fieldImagePath = "assets/profiles/me.jpg";
+            "Explore fields such as Civil, Mechanical, or Electrical Engineering. Specializing in these areas allows you to work on innovative technologies and infrastructure.";
+        fieldImagePath =
+            "https://img.freepik.com/free-photo/two-colleagues-factory_1303-14331.jpg?t=st=1732018022~exp=1732021622~hmac=1103c3443e6547b25a8e5418d040714b7fd641d0ed26239ef4e003ba0de3efb9&w=740";
         fieldVideoLink = "https://www.youtube.com/";
         break;
-      case "Medical Science":
+      case "Veterinary Medicine":
         fieldDescription =
-            "Look into specializations like Public Health, Nursing, or advanced Pharmacy degrees. These fields are crucial for helping people and improving healthcare systems.";
-        fieldImagePath = "assets/profiles/ms.jpg";
+            "Consider specializing in animal health, treatment, and care. This field allows you to work with pets, livestock, or wildlife, ensuring their well-being.";
+        fieldImagePath =
+            "https://img.freepik.com/free-photo/cute-cat-medical-examination-veterinary-clinic-measuring-blood-pressure_613910-21569.jpg?t=st=1732018054~exp=1732021654~hmac=7bea719ef4c8f209a0b091b76d563849e234840963f888fe52d9e972df76d4e4&w=740";
+        fieldVideoLink = "https://www.youtube.com/";
+        break;
+      case "Fisheries and Aquaculture":
+        fieldDescription =
+            "Focus on sustainable fishing practices and aquaculture technology. This field supports food security and the environment.";
+        fieldImagePath =
+            "https://img.freepik.com/free-vector/fishing-with-net-concept-illustration_114360-15410.jpg?t=st=1732018083~exp=1732021683~hmac=12b4b6b48c1518ada18d8c50c58c420a927939a77933f22467df998f1ce33507&w=740";
+        fieldVideoLink = "https://www.youtube.com/";
+        break;
+      case "Poultry Science":
+        fieldDescription =
+            "Explore specialized studies in poultry farming, nutrition, and genetics. This field is essential for advancing food production and animal health.";
+        fieldImagePath =
+            "https://img.freepik.com/free-vector/chicken-farm-concept-illustration_114360-10259.jpg?t=st=1732018121~exp=1732021721~hmac=f428766935b735ec139addf6853ebe2276a9efeb0db556a2f8d1d9dc98408082&w=740";
+        fieldVideoLink = "https://www.youtube.com/";
+        break;
+      case "Wildlife Management":
+        fieldDescription =
+            "Look into conservation, habitat management, and research. This field is crucial for protecting wildlife and biodiversity.";
+        fieldImagePath =
+            "https://img.freepik.com/free-photo/reforestation-done-by-voluntary-group_23-2149500828.jpg?t=st=1732018199~exp=1732021799~hmac=20ece03a6ff9cca15c39d5c3426830683f3f7248e68aa8f883dbe2b709cfc8ce&w=740";
+        fieldVideoLink = "https://www.youtube.com/";
+        break;
+      case "Forestry":
+        fieldDescription =
+            "Specialize in forest conservation, management, and sustainable practices. This helps maintain ecological balance and supports industries reliant on forest resources.";
+        fieldImagePath =
+            "https://img.freepik.com/premium-photo/beautiful-waterfall-green-forest-oregon-usa_328046-758.jpg?w=740";
+        fieldVideoLink = "https://www.youtube.com/";
+        break;
+      case "Bio-Chemistry":
+        fieldDescription =
+            "Delve into molecular biology, chemical processes in living organisms, and research that contributes to medical and environmental advances.";
+        fieldImagePath =
+            "https://img.freepik.com/free-vector/chemistry-science-concept_1284-11674.jpg?t=st=1732018237~exp=1732021837~hmac=a6a319bdd76e928d5e1483a38e05b404914e96de33a124c8e15c7ccd5cf8fefb&w=740";
+        fieldVideoLink = "https://www.youtube.com/";
+        break;
+      case "Bio-Technology":
+        fieldDescription =
+            "Focus on genetic engineering, pharmaceuticals, and innovative technologies that impact health and agriculture.";
+        fieldImagePath =
+            "https://img.freepik.com/free-vector/technological-ecology-concept-wallpaper_23-2148432195.jpg?t=st=1732018259~exp=1732021859~hmac=5d0d66e1136f6ccce7fb975e1aca3b5ce2be18036d1eda7d49c8b10af1f81ecc&w=740";
+        fieldVideoLink = "https://www.youtube.com/";
+        break;
+      case "Food Science and Technology":
+        fieldDescription =
+            "Study food processing, quality control, and product development to improve nutrition and safety.";
+        fieldImagePath =
+            "https://uhe.edu.pk/wp-content/uploads/2022/10/mc-foodstv3-banner.jpg";
         fieldVideoLink = "https://www.youtube.com/";
         break;
       case "Law":
         fieldDescription =
             "Think about specializing in areas like Corporate Law or Criminal Law. This will help you understand how businesses operate and how to protect people's rights.";
-        fieldImagePath = "assets/profiles/l.jpg";
+        fieldImagePath =
+            "https://img.freepik.com/free-photo/still-life-with-scales-justice_23-2149776027.jpg?t=st=1732018336~exp=1732021936~hmac=0b3fbba30bc5fb7cc596aa6f35f88a6e7cd94422be64bfb54bae73bdbdfd28d1&w=740";
         fieldVideoLink = "https://www.youtube.com/";
-        break;
-      case "Arts and Humanities":
-        fieldDescription =
-            "Consider pursuing a master's degree in subjects like Literature, Graphic Design, or History. These areas allow you to express your creativity and understand cultures better.";
-        fieldImagePath = "assets/profiles/aah.jpg";
-        fieldVideoLink = "https://www.youtube.com/";
-        subfieldVideoLink = "https://www.youtube.com/";
         break;
       default:
         fieldDescription = null;
@@ -474,404 +474,597 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
     }
   }
 
-  void updateSubfields(String interest) {
-    setState(() {
-      currentSubfields = subfields[interest] ?? [];
-      selectedSubfield = null;
-      subfieldDefinition = null;
-      subfieldImagePath = null;
-    });
-  }
-
   void updateSubfieldDetails(String subfield) {
     switch (subfield) {
       // Computer Science Subfields
-      case "Artificial Intelligence":
+      case "Information Technology":
         subfieldDefinition =
-            "Artificial Intelligence (AI) is the simulation of human intelligence in machines that are programmed to think and learn.";
+            "Information Technology (IT) is the use of computers and software to manage information.";
         subfieldImportance =
-            "AI is crucial as it enhances productivity and efficiency across various industries, from healthcare to finance.";
+            "IT is essential for businesses to function efficiently and securely in the digital age.";
         subfieldWhatYouLearn =
-            "In AI, you learn about algorithms, data analysis, and machine learning techniques.";
+            "Learn about networks, database management, and IT infrastructure.";
         subfieldCareerOpportunities =
-            "Graduates can work as AI engineers, data scientists, or machine learning specialists.";
+            "Careers include IT manager, network administrator, and systems analyst.";
         subfieldSkillsNeeded =
-            "Essential skills include programming, mathematical reasoning, and problem-solving.";
+            "Skills include problem-solving, technical support, and cybersecurity basics.";
         subfieldHowToGetStarted =
-            "Begin with online courses or degrees in computer science and AI specialization.";
+            "Start by obtaining a degree in IT or certifications in network management.";
         subfieldSalaries =
-            "AI specialists can earn an average salary of \$100,000 to \$150,000 per year.";
-        subfieldImagePath = "assets/subfields/ai.jpg";
-        subfieldVideoLink = "https://www.youtube.com/watch?v=Yq0QkCxoTHM";
-        break;
-
-      case "Machine Learning":
-        subfieldDefinition =
-            "Machine Learning (ML) is a subset of AI that enables systems to learn and improve from experience without being explicitly programmed.";
-        subfieldImportance =
-            "ML is vital for automating decision-making processes and analyzing large datasets, leading to informed insights.";
-        subfieldWhatYouLearn =
-            "Students learn about statistical methods, algorithms, and data modeling.";
-        subfieldCareerOpportunities =
-            "Potential careers include machine learning engineer, data analyst, and research scientist.";
-        subfieldSkillsNeeded =
-            "Skills include programming, statistical analysis, and strong analytical abilities.";
-        subfieldHowToGetStarted =
-            "Start with introductory courses in statistics and programming languages like Python.";
-        subfieldSalaries =
-            "Machine learning engineers typically earn between \$110,000 and \$160,000 annually.";
-        subfieldImagePath = "assets/subfields/ml.jpg";
-        subfieldVideoLink = "https://www.youtube.com/watch?v=bk12t0Xz5FM";
+            "IT professionals earn between \$70,000 and \$120,000 per year.";
+        subfieldImagePath =
+            "https://www.mtu.edu/cs/what/images/what-is-computer-science-banner1600.jpg";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=OxFgTLsv9gA";
         break;
 
       case "Cyber Security":
         subfieldDefinition =
-            "Cybersecurity is the practice of protecting computers and networks from threats and attacks.";
+            "Cyber Security involves protecting computer systems from digital attacks.";
         subfieldImportance =
-            "With the increasing reliance on technology, cybersecurity helps keep our personal information safe and secure from hackers.";
+            "It's crucial for safeguarding sensitive data and ensuring the integrity of digital systems.";
         subfieldWhatYouLearn =
-            "In cybersecurity, you learn about protecting systems, recognizing threats, and responding to security breaches.";
+            "Courses cover network security, ethical hacking, and risk management.";
         subfieldCareerOpportunities =
-            "Graduates can become security analysts, ethical hackers, or IT security managers.";
+            "Career options include cybersecurity analyst, penetration tester, and security architect.";
         subfieldSkillsNeeded =
-            "You need analytical thinking, attention to detail, and a strong understanding of computer systems.";
+            "Skills include strong analytical thinking, programming, and cryptography.";
         subfieldHowToGetStarted =
-            "You can start with online courses, certifications, or a degree in computer science or information technology.";
+            "Begin with cybersecurity courses and certifications like CompTIA Security+.";
         subfieldSalaries =
-            "Cybersecurity professionals can earn between \$80,000 and \$200,000 annually.";
-        subfieldImagePath = "assets/subfields/cs.jpg";
-        subfieldVideoLink = "https://www.youtube.com/watch?v=ULGILG-ZhO0";
+            "Cybersecurity experts can earn between \$90,000 and \$150,000 annually.";
+        subfieldImagePath =
+            "https://www.pexels.com/photo/close-up-view-of-system-hacking-5380642/";
         break;
 
       case "Data Science":
         subfieldDefinition =
-            "Data Science combines statistics, computer science, and domain expertise to extract meaningful insights from data.";
+            "Data Science is the study of data to extract meaningful insights using various techniques.";
         subfieldImportance =
-            "It helps organizations make data-driven decisions that improve operations and enhance customer experiences.";
+            "Data science helps drive informed business decisions and predict future trends.";
         subfieldWhatYouLearn =
-            "Students learn about data analysis, visualization techniques, and machine learning.";
+            "Learn data analysis, machine learning, and big data technologies.";
         subfieldCareerOpportunities =
-            "Possible careers include data analyst, data engineer, and data scientist.";
+            "Become a data scientist, data analyst, or business intelligence specialist.";
         subfieldSkillsNeeded =
-            "Key skills include programming, statistical analysis, and data manipulation.";
+            "Skills include statistical analysis, programming (Python/R), and data visualization.";
         subfieldHowToGetStarted =
-            "Begin with courses in statistics, programming, and data analysis tools.";
+            "Start with a background in statistics and programming, then specialize in data science.";
         subfieldSalaries =
-            "Data scientists can earn an average salary of \$100,000 to \$140,000 per year.";
-        subfieldImagePath = "assets/subfields/ds.jpg";
-        subfieldVideoLink = "https://www.youtube.com/watch?v=FsSrzmRawUg";
+            "Data scientists typically earn \$100,000 to \$140,000 per year.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.linkedin.com%2Fpulse%2Fwho-can-become-data-scientist-akash-jha-n3ahf&psig=AOvVaw03bK4DoVKaFHVETQrWE9tC&ust=1732082559815000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwii3u6-3OeJAxWuf6QEHTWJAqoQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=ua-CiDNNj30";
         break;
 
-      // Business Administration Subfields
-      case "Marketing":
+      case "Software Engineering":
         subfieldDefinition =
-            "Marketing is the process of promoting and selling products or services, including market research and advertising.";
+            "Software Engineering is the practice of designing, developing, and maintaining software.";
         subfieldImportance =
-            "It helps businesses understand consumer needs and create effective strategies to reach their target audience.";
+            "It is crucial for creating reliable and scalable software systems.";
         subfieldWhatYouLearn =
-            "Students learn about consumer behavior, digital marketing, and brand management.";
+            "Learn about software design patterns, project management, and coding practices.";
         subfieldCareerOpportunities =
-            "Careers include marketing manager, brand strategist, and digital marketer.";
+            "Potential jobs include software engineer, developer, or technical lead.";
         subfieldSkillsNeeded =
-            "Skills required are creativity, communication, and analytical thinking.";
+            "Skills include proficiency in programming languages and problem-solving.";
         subfieldHowToGetStarted =
-            "Start with a degree in marketing or business, and consider internships for practical experience.";
+            "Pursue a degree in computer science or a software engineering bootcamp.";
         subfieldSalaries =
-            "Marketing professionals typically earn between \$60,000 and \$100,000 annually.";
-        subfieldImagePath = "assets/subfields/marketing.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "Software engineers can earn between \$80,000 and \$130,000 annually.";
+        subfieldImagePath =
+            "https://images.pexels.com/photos/4050291/pexels-photo-4050291.jpeg";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=ZcQyJ-gxke0";
         break;
 
-      case "Finance":
+      case "Computer Systems Engineering":
         subfieldDefinition =
-            "Finance is the management of money, including investments, banking, and budgeting.";
+            "Computer Systems Engineering focuses on designing and managing complex computer systems.";
         subfieldImportance =
-            "It is essential for individuals and organizations to make informed financial decisions and manage resources effectively.";
+            "This field integrates hardware and software to optimize system performance.";
         subfieldWhatYouLearn =
-            "Students learn about financial analysis, investment strategies, and risk management.";
+            "Learn about hardware architecture, embedded systems, and real-time computing.";
         subfieldCareerOpportunities =
-            "Careers include financial analyst, investment banker, and financial planner.";
+            "Work as a systems engineer, embedded systems developer, or network engineer.";
         subfieldSkillsNeeded =
-            "Analytical skills, attention to detail, and proficiency in financial software are crucial.";
+            "Skills include hardware knowledge, coding, and systems troubleshooting.";
         subfieldHowToGetStarted =
-            "Pursue a degree in finance or accounting, and gain experience through internships.";
+            "Start with an engineering degree focusing on computer systems.";
         subfieldSalaries =
-            "Finance professionals can earn between \$70,000 and \$120,000 annually.";
-        subfieldImagePath = "assets/subfields/finance.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "Average salaries range from \$90,000 to \$120,000 per year.";
+        subfieldImagePath =
+            "https://images.pexels.com/photos/4339335/pexels-photo-4339335.jpeg?auto=compress&cs=tinysrgb&w=600";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=FZrZ96IAlT4";
         break;
 
-      case "Human Resources":
+      case "Artificial Intelligence":
         subfieldDefinition =
-            "Human Resources (HR) involves managing an organization's workforce, including recruitment, training, and employee relations.";
+            "AI is the simulation of human intelligence by machines to perform tasks autonomously.";
         subfieldImportance =
-            "HR is vital for creating a positive work environment and ensuring organizational efficiency.";
+            "AI is reshaping industries by improving efficiency and enabling advanced analytics.";
         subfieldWhatYouLearn =
-            "Students learn about labor laws, organizational behavior, and performance management.";
+            "Study neural networks, natural language processing, and deep learning.";
         subfieldCareerOpportunities =
-            "Careers include HR manager, talent acquisition specialist, and training coordinator.";
+            "Work as an AI researcher, developer, or data scientist.";
         subfieldSkillsNeeded =
-            "Skills in communication, negotiation, and conflict resolution are essential.";
+            "Skills include programming (Python), data analysis, and knowledge of algorithms.";
         subfieldHowToGetStarted =
-            "Start with a degree in human resources or business administration, and seek internships.";
+            "Start with a degree in computer science and specialize with AI courses.";
         subfieldSalaries =
-            "HR professionals typically earn between \$60,000 and \$100,000 per year.";
-        subfieldImagePath = "assets/subfields/human_resources.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
-        break;
-
-      case "Operations Management":
-        subfieldDefinition =
-            "Operations Management focuses on overseeing production and business operations to ensure efficiency.";
-        subfieldImportance =
-            "It is essential for organizations to streamline processes, reduce costs, and improve quality.";
-        subfieldWhatYouLearn =
-            "Students learn about supply chain management, process optimization, and project management.";
-        subfieldCareerOpportunities =
-            "Careers include operations manager, supply chain analyst, and quality assurance manager.";
-        subfieldSkillsNeeded =
-            "Analytical skills, leadership, and problem-solving abilities are key.";
-        subfieldHowToGetStarted =
-            "Pursue a degree in operations management or business administration, and gain relevant experience.";
-        subfieldSalaries =
-            "Operations managers typically earn between \$70,000 and \$120,000 annually.";
-        subfieldImagePath = "assets/subfields/operations_management.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
-        break;
-
-      // Mechanical Engineering Subfields
-      case "Robotics":
-        subfieldDefinition =
-            "Robotics involves designing, building, and operating robots for various applications.";
-        subfieldImportance =
-            "It plays a crucial role in automation and improving efficiency in industries like manufacturing and healthcare.";
-        subfieldWhatYouLearn =
-            "Students learn about mechanics, electronics, and computer programming.";
-        subfieldCareerOpportunities =
-            "Careers include robotics engineer, automation specialist, and research scientist.";
-        subfieldSkillsNeeded =
-            "Creativity, problem-solving, and technical skills are essential.";
-        subfieldHowToGetStarted =
-            "Start with a degree in mechanical engineering or robotics, and gain hands-on experience.";
-        subfieldSalaries =
-            "Robotics engineers typically earn between \$80,000 and \$130,000 per year.";
-        subfieldImagePath = "assets/subfields/robotics.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
-        break;
-
-      case "Automobile":
-        subfieldDefinition =
-            "Automobile engineering focuses on designing and manufacturing vehicles and their systems.";
-        subfieldImportance =
-            "It is critical for advancing transportation technologies and ensuring safety standards.";
-        subfieldWhatYouLearn =
-            "Students learn about vehicle dynamics, engine design, and automotive electronics.";
-        subfieldCareerOpportunities =
-            "Careers include automotive engineer, design engineer, and production manager.";
-        subfieldSkillsNeeded =
-            "Strong analytical skills, creativity, and an understanding of mechanics are key.";
-        subfieldHowToGetStarted =
-            "Pursue a degree in mechanical or automotive engineering.";
-        subfieldSalaries =
-            "Automobile engineers earn between \$70,000 and \$120,000 annually.";
-        subfieldImagePath = "assets/subfields/automobile.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
-        break;
-
-      case "Aerospace":
-        subfieldDefinition =
-            "Aerospace engineering involves the design and development of aircraft and spacecraft.";
-        subfieldImportance =
-            "It is essential for advancing aviation technology and space exploration.";
-        subfieldWhatYouLearn =
-            "Students learn about aerodynamics, propulsion, and materials science.";
-        subfieldCareerOpportunities =
-            "Careers include aerospace engineer, systems engineer, and project manager.";
-        subfieldSkillsNeeded =
-            "Analytical thinking, technical skills, and teamwork are crucial.";
-        subfieldHowToGetStarted =
-            "Start with a degree in aerospace engineering or a related field.";
-        subfieldSalaries =
-            "Aerospace engineers typically earn between \$80,000 and \$130,000 annually.";
-        subfieldImagePath = "assets/subfields/aerospace.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
-        break;
-
-      // Medical Science Subfields
-      case "Nursing":
-        subfieldDefinition =
-            "Nursing is a healthcare profession focused on the care of individuals, families, and communities.";
-        subfieldImportance =
-            "Nurses play a vital role in patient care and healthcare delivery.";
-        subfieldWhatYouLearn =
-            "Students learn about anatomy, pharmacology, and patient care techniques.";
-        subfieldCareerOpportunities =
-            "Careers include registered nurse, nurse practitioner, and clinical nurse specialist.";
-        subfieldSkillsNeeded =
-            "Empathy, communication, and critical thinking skills are essential.";
-        subfieldHowToGetStarted =
-            "Pursue a nursing degree or diploma, and gain clinical experience.";
-        subfieldSalaries =
-            "Registered nurses can earn between \$60,000 and \$90,000 annually.";
-        subfieldImagePath = "assets/subfields/nursing.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
-        break;
-
-      case "Pharmacy":
-        subfieldDefinition =
-            "Pharmacy is the science and practice of preparing, dispensing, and reviewing drugs.";
-        subfieldImportance =
-            "Pharmacists play a crucial role in patient care and medication management.";
-        subfieldWhatYouLearn =
-            "Students learn about pharmacology, medicinal chemistry, and patient counseling.";
-        subfieldCareerOpportunities =
-            "Careers include community pharmacist, clinical pharmacist, and pharmaceutical scientist.";
-        subfieldSkillsNeeded =
-            "Strong attention to detail, communication, and analytical skills are key.";
-        subfieldHowToGetStarted =
-            "Pursue a pharmacy degree and complete required clinical training.";
-        subfieldSalaries =
-            "Pharmacists typically earn between \$80,000 and \$120,000 per year.";
-        subfieldImagePath = "assets/subfields/pharmacy.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
-        break;
-
-      case "Physical Therapy":
-        subfieldDefinition =
-            "Physical Therapy focuses on the treatment of patients to improve mobility and quality of life.";
-        subfieldImportance =
-            "Physical therapists help patients recover from injuries and manage chronic conditions.";
-        subfieldWhatYouLearn =
-            "Students learn about human anatomy, rehabilitation techniques, and patient assessment.";
-        subfieldCareerOpportunities =
-            "Careers include physical therapist, rehabilitation specialist, and sports therapist.";
-        subfieldSkillsNeeded =
-            "Empathy, patience, and strong interpersonal skills are essential.";
-        subfieldHowToGetStarted =
-            "Complete a degree in physical therapy and gain hands-on experience.";
-        subfieldSalaries =
-            "Physical therapists typically earn between \$70,000 and \$100,000 annually.";
-        subfieldImagePath = "assets/subfields/physical_therapy.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "AI professionals can make between \$110,000 and \$150,000 per year.";
+        subfieldImagePath =
+            "https://images.pexels.com/photos/6153354/pexels-photo-6153354.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=2ePf9rue1Ao";
         break;
 
       // Law Subfields
-      case "Criminal Law":
+      case "Law":
         subfieldDefinition =
-            "Criminal Law deals with offenses against the state and the punishment of those offenses.";
+            "This program trains students in various areas of law and legal practice.";
         subfieldImportance =
-            "It is essential for maintaining public order and protecting individual rights.";
+            "Law is critical for maintaining justice and upholding societal regulations.";
         subfieldWhatYouLearn =
-            "Students learn about criminal justice, legal procedures, and case law.";
+            "Study criminal law, civil law, and legal ethics.";
         subfieldCareerOpportunities =
-            "Careers include criminal defense attorney, prosecutor, and judge.";
+            "Careers include lawyer, legal advisor, and judge.";
         subfieldSkillsNeeded =
-            "Analytical thinking, communication, and negotiation skills are key.";
+            "Skills include critical thinking, strong communication, and argumentation.";
         subfieldHowToGetStarted =
-            "Complete a law degree and pass the bar exam.";
+            "Pursue a degree in law followed by passing the bar examination.";
         subfieldSalaries =
-            "Criminal lawyers can earn between \$70,000 and \$150,000 annually.";
-        subfieldImagePath = "assets/subfields/criminal_law.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "Lawyers can earn between \$60,000 and \$150,000 or more annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.gaffneyzoppi.com%2Fblog%2Fdifferences-between-corporate-law-and-commercial-law-commercial-law-vs-corporate-law&psig=AOvVaw2egR5lhlyhmLDGYLVhQTw-&ust=1732084879248000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwjB1-2Q5eeJAxVVmicCHXIRLa0QjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=anFApfp_KJA";
         break;
 
-      case "Corporate Law":
+      case "Business Administration":
         subfieldDefinition =
-            "Corporate Law focuses on the legal aspects of business and commerce.";
+            "Business Administration covers the management and operation of business practices.";
         subfieldImportance =
-            "It is crucial for ensuring compliance with regulations and protecting business interests.";
+            "This subfield is vital for managing organizations efficiently and promoting business growth.";
         subfieldWhatYouLearn =
-            "Students learn about contract law, mergers and acquisitions, and corporate governance.";
+            "Learn about marketing, finance, strategic planning, and human resources management.";
         subfieldCareerOpportunities =
-            "Careers include corporate lawyer, legal consultant, and compliance officer.";
+            "Careers include business manager, financial analyst, and operations manager.";
         subfieldSkillsNeeded =
-            "Strong analytical, negotiation, and communication skills are essential.";
+            "Skills include leadership, strategic thinking, and financial literacy.";
         subfieldHowToGetStarted =
-            "Obtain a law degree and gain experience in corporate law settings.";
+            "Start by pursuing a bachelor's or MBA in Business Administration.";
         subfieldSalaries =
-            "Corporate lawyers typically earn between \$90,000 and \$180,000 per year.";
-        subfieldImagePath = "assets/subfields/corporate_law.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "Business administrators can earn between \$60,000 and \$120,000 per year.";
+        subfieldImagePath =
+            "https://images.pexels.com/photos/7654126/pexels-photo-7654126.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
         break;
 
-      case "Family Law":
+      // Engineering Subfields
+      case "Chemical Engineering":
         subfieldDefinition =
-            "Family Law deals with legal issues related to family relationships, such as marriage and child custody.";
+            "Chemical Engineering focuses on transforming raw materials into valuable products through chemical processes.";
         subfieldImportance =
-            "It is essential for protecting the rights and well-being of families.";
+            "It is critical for industries like pharmaceuticals, energy, and food production.";
         subfieldWhatYouLearn =
-            "Students learn about divorce, child custody, and adoption law.";
+            "Learn about thermodynamics, reaction engineering, and process design.";
         subfieldCareerOpportunities =
-            "Careers include family lawyer, mediator, and legal advocate.";
+            "Careers include chemical engineer, process engineer, and plant operations manager.";
         subfieldSkillsNeeded =
-            "Empathy, negotiation, and strong communication skills are key.";
+            "Skills include chemical process modeling, thermodynamics, and problem-solving.";
         subfieldHowToGetStarted =
-            "Complete a law degree with a focus on family law and gain relevant experience.";
+            "Start with a degree in chemical engineering.";
         subfieldSalaries =
-            "Family lawyers typically earn between \$60,000 and \$120,000 annually.";
-        subfieldImagePath = "assets/subfields/family_law.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "Chemical engineers typically earn \$70,000 to \$120,000 per year.";
+        subfieldImagePath =
+            "https://images.pexels.com/photos/8533061/pexels-photo-8533061.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=0w5OBk5w8wI";
         break;
 
-      // Arts and Humanities Subfields
-      case "History":
+      case "Civil Engineering":
         subfieldDefinition =
-            "History is the study of past events, particularly in human affairs.";
+            "Civil Engineering involves designing and constructing infrastructure such as roads, bridges, and buildings.";
         subfieldImportance =
-            "Understanding history helps us learn from past experiences and shape the future.";
+            "It plays a crucial role in the development of society and the built environment.";
         subfieldWhatYouLearn =
-            "Students learn about historical events, research methods, and critical analysis.";
+            "Learn about structural analysis, construction materials, and geotechnical engineering.";
         subfieldCareerOpportunities =
-            "Careers include historian, archivist, and museum curator.";
+            "Careers include civil engineer, structural engineer, and project manager.";
         subfieldSkillsNeeded =
-            "Analytical thinking, research, and strong writing skills are essential.";
-        subfieldHowToGetStarted =
-            "Pursue a degree in history or a related field.";
+            "Skills include project management, design software, and material science.";
+        subfieldHowToGetStarted = "Start with a degree in civil engineering.";
         subfieldSalaries =
-            "Historians can earn between \$50,000 and \$80,000 annually.";
-        subfieldImagePath = "assets/subfields/history.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "Civil engineers typically earn \$60,000 to \$100,000 annually.";
+        subfieldImagePath =
+            "https://images.pexels.com/photos/585418/pexels-photo-585418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=J1TxaQ6mDtM";
         break;
 
-      case "Literature":
+      case "Electrical Engineering":
         subfieldDefinition =
-            "Literature is the study of written works, including fiction, poetry, and drama.";
+            "Electrical Engineering focuses on the study of electrical systems, including power generation and electronics.";
         subfieldImportance =
-            "It fosters critical thinking and enhances cultural understanding.";
+            "Essential for developing electrical technologies used in everything from power plants to household gadgets.";
         subfieldWhatYouLearn =
-            "Students learn about literary analysis, writing techniques, and historical context.";
+            "Learn about circuits, electromagnetism, and power systems.";
         subfieldCareerOpportunities =
-            "Careers include writer, editor, and literary critic.";
+            "Careers include electrical engineer, power systems engineer, and circuit designer.";
         subfieldSkillsNeeded =
-            "Creativity, strong communication, and analytical skills are key.";
+            "Skills include circuit design, programming, and problem-solving.";
         subfieldHowToGetStarted =
-            "Pursue a degree in literature or creative writing.";
+            "Start with a degree in electrical engineering.";
         subfieldSalaries =
-            "Writers can earn between \$40,000 and \$80,000 annually.";
-        subfieldImagePath = "assets/subfields/literature.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "Electrical engineers earn \$65,000 to \$110,000 annually.";
+        subfieldImagePath =
+            "https://images.pexels.com/photos/19895867/pexels-photo-19895867/free-photo-of-engineer-standing-among-solar-panels.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=1eHdm72Fs9E";
         break;
 
-      case "Philosophy":
+      case "Electronic Engineering":
         subfieldDefinition =
-            "Philosophy is the study of fundamental questions regarding existence, knowledge, and ethics.";
+            "Electronic Engineering focuses on designing and developing electronic systems and devices, such as circuits and microprocessors.";
         subfieldImportance =
-            "It encourages critical thinking and helps individuals understand complex ideas.";
+            "Crucial for developing technologies like smartphones, computers, and telecommunications systems.";
         subfieldWhatYouLearn =
-            "Students learn about various philosophical theories and ethical reasoning.";
+            "Learn about circuit theory, microelectronics, and signal processing.";
         subfieldCareerOpportunities =
-            "Careers include philosopher, ethics consultant, and academic researcher.";
+            "Careers include electronics engineer, telecom engineer, and circuit designer.";
         subfieldSkillsNeeded =
-            "Analytical thinking, argumentation, and strong writing skills are essential.";
+            "Skills in circuit design, microelectronics, and digital systems.";
         subfieldHowToGetStarted =
-            "Pursue a degree in philosophy or related fields.";
+            "Start with a degree in electronic engineering.";
         subfieldSalaries =
-            "Philosophers typically earn between \$50,000 and \$90,000 annually.";
-        subfieldImagePath = "assets/subfields/philosophy.jpg";
-        subfieldVideoLink = "https://www.youtube.com/";
+            "Electronic engineers earn \$70,000 to \$110,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.uagrantham.edu%2Fblog%2Fwhat-are-the-differences-between-electric-and-electronics-engineering%2F&psig=AOvVaw1NHp_kx4z3U4Eish5EyGgj&ust=1732083556797000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwiL2qGa4OeJAxW7pCcCHWM2JQYQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=zGTVggcl8HI";
         break;
 
-      // Additional fields can be added in the same structure
+      case "Environmental Engineering":
+        subfieldDefinition =
+            "Environmental Engineering develops technologies to improve and maintain the health of the environment.";
+        subfieldImportance =
+            "Vital for reducing pollution, managing waste, and improving water and air quality.";
+        subfieldWhatYouLearn =
+            "Study waste management, water treatment, and environmental laws.";
+        subfieldCareerOpportunities =
+            "Careers include environmental consultant, water treatment engineer, and sustainability expert.";
+        subfieldSkillsNeeded =
+            "Skills include environmental science, problem-solving, and project management.";
+        subfieldHowToGetStarted =
+            "Start with a degree in environmental engineering.";
+        subfieldSalaries =
+            "Environmental engineers earn \$60,000 to \$100,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbeccinc.com%2F2024%2F04%2F24%2Fthe-future-of-environmental-engineering%2F&psig=AOvVaw0vqzNk0W1IIVnpUA83Y5Rx&ust=1732083622957000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOjtsb_g54kDFQAAAAAdAAAAABAD";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=RJv9e4Xf1mA";
+        break;
+
+      case "Industrial and Manufacturing Engineering":
+        subfieldDefinition =
+            "This field focuses on optimizing complex processes, systems, and organizations in manufacturing industries.";
+        subfieldImportance =
+            "Critical for improving production efficiency, reducing waste, and ensuring quality control.";
+        subfieldWhatYouLearn =
+            "Learn about supply chain management, process optimization, and industrial automation.";
+        subfieldCareerOpportunities =
+            "Careers include industrial engineer, manufacturing manager, and supply chain consultant.";
+        subfieldSkillsNeeded =
+            "Skills include process optimization, logistics, and systems analysis.";
+        subfieldHowToGetStarted =
+            "Start with a degree in industrial engineering.";
+        subfieldSalaries =
+            "Industrial engineers earn \$60,000 to \$90,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.workbc.ca%2Fcareer-profiles%2Findustrial-and-manufacturing-engineers&psig=AOvVaw38GezLBqj3pnkUnEVVGPBL&ust=1732083679936000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwjUwf3U4OeJAxWGnCcCHZjzNvQQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=0uXlVg3e70A";
+        break;
+
+      case "Mechanical Engineering":
+        subfieldDefinition =
+            "Mechanical Engineering is the design and manufacturing of mechanical systems, from engines to machines.";
+        subfieldImportance =
+            "Key to a wide range of industries, from automotive to robotics.";
+        subfieldWhatYouLearn =
+            "Study thermodynamics, machine design, and materials science.";
+        subfieldCareerOpportunities =
+            "Careers include mechanical engineer, product designer, and manufacturing manager.";
+        subfieldSkillsNeeded =
+            "Skills in CAD, materials science, and thermodynamics.";
+        subfieldHowToGetStarted =
+            "Start with a degree in mechanical engineering.";
+        subfieldSalaries =
+            "Mechanical engineers earn \$65,000 to \$95,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.expatrio.com%2Fabout-germany%2Fstudy-mechanical-engineering-in-germany&psig=AOvVaw0kYi8ydbrj99OclQBIaV4u&ust=1732083726779000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwijyajr4OeJAxVqnycCHdzXJ9UQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=G2u3eZfNkYQ";
+        break;
+
+      case "Energy Systems Engineering":
+        subfieldDefinition =
+            "Energy Systems Engineering focuses on the efficient production, distribution, and use of energy resources.";
+        subfieldImportance =
+            "Critical for sustainability and addressing energy challenges worldwide.";
+        subfieldWhatYouLearn =
+            "Learn about energy production, renewable energy systems, and energy efficiency techniques.";
+        subfieldCareerOpportunities =
+            "Careers include energy systems engineer, renewable energy consultant, and energy analyst.";
+        subfieldSkillsNeeded =
+            "Skills include thermodynamics, energy modeling, and knowledge of renewable technologies.";
+        subfieldHowToGetStarted =
+            "Start with a degree in energy systems engineering or mechanical engineering with a focus on energy.";
+        subfieldSalaries =
+            "Energy engineers earn \$70,000 to \$100,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbmcchemeng.biomedcentral.com%2Farticles%2F10.1186%2Fs42480-019-0009-5&psig=AOvVaw2GskeXBTXdGKNbp3m08ce6&ust=1732083789656000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwj-pKaJ4eeJAxVrsScCHbuPB10QjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=7hbzzwpNjJ8";
+        break;
+
+      case "Telecommunication Engineering":
+        subfieldDefinition =
+            "Telecommunication Engineering deals with the transmission of information across channels like fiber optics and wireless networks.";
+        subfieldImportance =
+            "Important for communication technologies like mobile networks and satellite systems.";
+        subfieldWhatYouLearn =
+            "Study network design, wireless communication, and signal processing.";
+        subfieldCareerOpportunities =
+            "Careers include telecom engineer, network designer, and communications systems manager.";
+        subfieldSkillsNeeded =
+            "Skills include networking, digital communications, and signal analysis.";
+        subfieldHowToGetStarted =
+            "Start with a degree in telecommunications engineering.";
+        subfieldSalaries =
+            "Telecommunication engineers earn \$60,000 to \$100,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.fieldengineer.com%2Fskills%2Fwhat-is-a-telecom-engineer&psig=AOvVaw13mLLFMr8ioYDMm6E8N_yX&ust=1732083825712000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwij_L6a4eeJAxWkBPsDHbg4Ge8QjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=0clMih4XnH4";
+        break;
+
+      case "Building and Architectural Engineering":
+        subfieldDefinition =
+            "This subfield involves designing and constructing buildings and structures with an emphasis on architectural functionality.";
+        subfieldImportance =
+            "Essential for creating safe, functional, and sustainable buildings.";
+        subfieldWhatYouLearn =
+            "Learn about structural design, construction materials, and environmental impact.";
+        subfieldCareerOpportunities =
+            "Careers include building engineer, architect, and construction manager.";
+        subfieldSkillsNeeded =
+            "Skills include architecture, engineering design, and project management.";
+        subfieldHowToGetStarted =
+            "Start with a degree in architectural or civil engineering.";
+        subfieldSalaries =
+            "Building engineers earn \$50,000 to \$85,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fstudyline.net%2Fen%2Fprojects%2Fspecialists%2Farchitectural-engineering%2F&psig=AOvVaw0Q17IvIult1vGLa-AJ-kY1&ust=1732083864639000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwiG7Yat4eeJAxWMnycCHTmnCi8QjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=OQh02sblQd8";
+        break;
+
+      case "Biomedical Engineering":
+        subfieldDefinition =
+            "Biomedical Engineering combines principles of engineering with biological sciences to develop technologies for healthcare.";
+        subfieldImportance =
+            "Critical for advancing medical devices, diagnostic tools, and healthcare technologies.";
+        subfieldWhatYouLearn =
+            "Study medical devices, biomaterials, and biomechanics.";
+        subfieldCareerOpportunities =
+            "Careers include biomedical engineer, medical device designer, and clinical engineer.";
+        subfieldSkillsNeeded =
+            "Skills include biomechanics, medical technologies, and systems design.";
+        subfieldHowToGetStarted =
+            "Start with a degree in biomedical engineering.";
+        subfieldSalaries =
+            "Biomedical engineers earn \$65,000 to \$100,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Feambes.org%2Fbiomedical-engineering%2F&psig=AOvVaw1U_rmXwifLATVClqyCo8Q0&ust=1732083914675000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwj66fTE4eeJAxWLgCcCHdFJIXYQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=lL-x5rNKY2g";
+        break;
+
+      case "Food Engineering Technology":
+        subfieldDefinition =
+            "Food Engineering Technology applies engineering principles to food production, preservation, and packaging.";
+        subfieldImportance =
+            "Crucial for enhancing food safety, efficiency, and quality in food industries.";
+        subfieldWhatYouLearn =
+            "Learn about food process engineering, packaging, and quality control.";
+        subfieldCareerOpportunities =
+            "Careers include food engineer, quality control specialist, and packaging engineer.";
+        subfieldSkillsNeeded =
+            "Skills in food safety, materials science, and process design.";
+        subfieldHowToGetStarted =
+            "Start with a degree in food engineering or food science.";
+        subfieldSalaries = "Food engineers earn \$55,000 to \$85,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fkahedu.edu.in%2Ffood-science-and-nutrition-vs-food-technology%2F&psig=AOvVaw3o-sTVp8hl2B_Kcn3u9roZ&ust=1732083985135000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwj8scHm4eeJAxVapicCHfXfDMIQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=fdoZVrL8-Ow";
+        break;
+
+      case "Automation and Control Engineering":
+        subfieldDefinition =
+            "Automation and Control Engineering focuses on the design and operation of systems that control industrial processes.";
+        subfieldImportance =
+            "Crucial for increasing productivity, efficiency, and safety in manufacturing and industry.";
+        subfieldWhatYouLearn =
+            "Study control systems, robotics, and process automation.";
+        subfieldCareerOpportunities =
+            "Careers include automation engineer, control systems engineer, and robotics expert.";
+        subfieldSkillsNeeded =
+            "Skills in control systems, programming, and mechanical design.";
+        subfieldHowToGetStarted =
+            "Start with a degree in automation or electrical engineering.";
+        subfieldSalaries =
+            "Automation engineers earn \$70,000 to \$110,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.linkedin.com%2Fpulse%2Fwhat-control-automation-engineering-timerni&psig=AOvVaw3IS_ZMN8CJEFeyhPpvVrVB&ust=1732084024370000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwiFi5z54eeJAxV8fqQEHQqjD38QjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=Yhs3rJfUoOk";
+        break;
+
+      // Add more cases for other engineering subfields following the same structure.
+
+      // Veterinary Medicine Subfields
+      case "Doctor of Veterinary Medicine (DVM)":
+        subfieldDefinition =
+            "This program trains professionals to diagnose and treat animal health issues.";
+        subfieldImportance =
+            "Veterinary medicine is crucial for animal welfare and zoonotic disease control.";
+        subfieldWhatYouLearn =
+            "Learn about animal anatomy, pathology, and clinical practices.";
+        subfieldCareerOpportunities =
+            "Careers include veterinarian, animal researcher, and veterinary technician.";
+        subfieldSkillsNeeded =
+            "Skills include animal care, medical knowledge, and strong communication.";
+        subfieldHowToGetStarted =
+            "Pursue a Doctor of Veterinary Medicine (DVM) degree.";
+        subfieldSalaries =
+            "Veterinarians typically earn \$80,000 to \$120,000 per year.";
+        subfieldImagePath =
+            "https://www.millenniumpost.in/h-upload/2023/09/06/728639-veterinarymarketingstrategies823.webp";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=x8iVE-4XQIw";
+        break;
+
+      // Fisheries and Aquaculture Subfields
+      case "Fisheries & Aquaculture":
+        subfieldDefinition =
+            "This subfield focuses on fish farming, breeding, and sustainable practices.";
+        subfieldImportance =
+            "It's essential for maintaining global food security and sustainable fishery management.";
+        subfieldWhatYouLearn =
+            "Study aquaculture techniques, marine biology, and environmental management.";
+        subfieldCareerOpportunities =
+            "Careers include aquaculture manager, marine biologist, and fisheries officer.";
+        subfieldSkillsNeeded =
+            "Skills include biology, environmental science, and management.";
+        subfieldHowToGetStarted =
+            "Start with a degree in fisheries science or aquaculture.";
+        subfieldSalaries =
+            "Professionals in this field can earn between \$50,000 and \$90,000 per year.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.fao.org%2Fclimate-change%2Fprojects-and-programmes%2Fproject-detail%2Ffisheries-and-aquaculture-and-climate-change%2Fen&psig=AOvVaw3VfPQTmGLJKxZyVim_21nh&ust=1732084225452000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwjNko3Z4ueJAxXCpicCHWDQD6oQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=L0QACbYnZT4";
+        break;
+
+      // Poultry Science Subfields
+      case "Poultry Science":
+        subfieldDefinition =
+            "Poultry Science involves studying the production and health of poultry.";
+        subfieldImportance =
+            "It supports efficient poultry farming, crucial for meeting protein demands.";
+        subfieldWhatYouLearn =
+            "Courses cover nutrition, genetics, and disease prevention in poultry.";
+        subfieldCareerOpportunities =
+            "Work as a poultry scientist, farm manager, or animal health consultant.";
+        subfieldSkillsNeeded =
+            "Skills include animal husbandry, biology, and data analysis.";
+        subfieldHowToGetStarted =
+            "Begin with a degree in animal or poultry science.";
+        subfieldSalaries =
+            "Salaries typically range from \$50,000 to \$80,000 annually.";
+        subfieldImagePath =
+            "https://research.uga.edu/news/wp-content/uploads/sites/19/2024/09/lilong-chai.jpg";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=QaYTs8eEprQ";
+        break;
+
+      // Wildlife Management Subfields
+      case "Wildlife Management":
+        subfieldDefinition =
+            "Wildlife Management focuses on the conservation and management of wild species.";
+        subfieldImportance =
+            "This field is vital for biodiversity and ecosystem balance.";
+        subfieldWhatYouLearn =
+            "Learn habitat management, conservation strategies, and ecological studies.";
+        subfieldCareerOpportunities =
+            "Careers include wildlife biologist, conservation officer, and park ranger.";
+        subfieldSkillsNeeded =
+            "Skills include ecological knowledge, fieldwork, and data analysis.";
+        subfieldHowToGetStarted =
+            "Pursue a degree in wildlife management or environmental science.";
+        subfieldSalaries =
+            "Professionals typically earn between \$45,000 and \$85,000 per year.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fresponsivemanagement.com%2Fresearch-topics%2Fwildlife-management-habitat-and-conservation%2F&psig=AOvVaw1TLvGUOGSFfbgavcnnF281&ust=1732084391742000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwjr1rKo4-eJAxXSgycCHWV-OoQQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=JlcxH64ijmw";
+        break;
+
+      // Forestry Subfields
+      case "Forestry":
+        subfieldDefinition =
+            "Forestry involves managing and conserving forests and forest ecosystems.";
+        subfieldImportance =
+            "It's crucial for sustainable resource management and combating deforestation.";
+        subfieldWhatYouLearn =
+            "Study tree biology, forest ecology, and resource management techniques.";
+        subfieldCareerOpportunities =
+            "Careers include forest manager, conservation scientist, and forester.";
+        subfieldSkillsNeeded =
+            "Skills include biology, environmental awareness, and management.";
+        subfieldHowToGetStarted =
+            "Start with a degree in forestry or environmental science.";
+        subfieldSalaries =
+            "Forestry professionals can earn \$50,000 to \$90,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FForestry&psig=AOvVaw2NELAbm9g7ZIwX-ydVyj_k&ust=1732084437337000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwj0zJG-4-eJAxUhgScCHRGoPQYQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=JZZjlQAKbU4";
+        break;
+
+      // Bio-Chemistry Subfields
+      case "Bio-Chemistry":
+        subfieldDefinition =
+            "Bio-Chemistry explores the chemical processes within and related to living organisms.";
+        subfieldImportance =
+            "It's essential for advances in medical research, agriculture, and environmental science.";
+        subfieldWhatYouLearn =
+            "Study molecular biology, chemical reactions, and enzyme functions.";
+        subfieldCareerOpportunities =
+            "Careers include biochemist, research scientist, and pharmaceutical specialist.";
+        subfieldSkillsNeeded =
+            "Skills include laboratory techniques, critical thinking, and data analysis.";
+        subfieldHowToGetStarted =
+            "Pursue a degree in biochemistry or related biological sciences.";
+        subfieldSalaries =
+            "Biochemists typically earn between \$60,000 and \$110,000 annually.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.ox.ac.uk%2Fadmissions%2Fundergraduate%2Fcourses%2Fcourse-listing%2Fbiochemistry-molecular-and-cellular&psig=AOvVaw3IxWOYs_4TzZtDs3z-nde8&ust=1732084720372000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwjM1ozF5OeJAxVapicCHfXfDMIQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=8e0z3-iZ_TY";
+        break;
+
+      // Bio-Technology Subfields
+      case "Bio-Technology":
+        subfieldDefinition =
+            "Bio-Technology applies biological systems and organisms to develop new technologies and products.";
+        subfieldImportance =
+            "It plays a critical role in health, agriculture, and industrial processes.";
+        subfieldWhatYouLearn =
+            "Learn about genetic engineering, bioprocessing, and bioinformatics.";
+        subfieldCareerOpportunities =
+            "Careers include biotechnologist, research scientist, and bio-manufacturing specialist.";
+        subfieldSkillsNeeded =
+            "Skills include biology, technology integration, and research skills.";
+        subfieldHowToGetStarted =
+            "Start with a degree in biotechnology or a related field.";
+        subfieldSalaries =
+            "Biotechnologists typically earn between \$60,000 and \$120,000 per year.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fgenflowbio.com%2Fwhat-is-biotechnology%2F&psig=AOvVaw2Ykgso3DJD6l_eru8F47ab&ust=1732084776670000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwi17Pjf5OeJAxV8fqQEHQqjD38QjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=L_ZftNXFl-M";
+        break;
+
+      // Food Science and Technology Subfields
+      case "Food Science & Technology":
+        subfieldDefinition =
+            "This field studies the physical, biological, and chemical makeup of food.";
+        subfieldImportance =
+            "Essential for ensuring food safety, quality, and innovation in food production.";
+        subfieldWhatYouLearn =
+            "Courses include food chemistry, microbiology, and food processing techniques.";
+        subfieldCareerOpportunities =
+            "Work as a food scientist, quality assurance specialist, or product developer.";
+        subfieldSkillsNeeded =
+            "Skills include lab work, chemistry, and problem-solving.";
+        subfieldHowToGetStarted =
+            "Begin with a degree in food science or related disciplines.";
+        subfieldSalaries =
+            "Food scientists typically earn between \$50,000 and \$100,000 per year.";
+        subfieldImagePath =
+            "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.linkedin.com%2Fpulse%2Fhow-career-food-science-technology-can-change-your-life-&psig=AOvVaw0toINYJ1ungfcdT1Ym8R8u&ust=1732084837186000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwits-b85OeJAxXBmycCHRMrBUIQjRx6BAgAEBk";
+        subfieldVideoLink = "https://www.youtube.com/watch?v=7kZuElnUAGY";
+        break;
 
       default:
         subfieldDefinition = null;
@@ -885,6 +1078,15 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
         subfieldVideoLink = null;
         fieldVideoLink = null;
     }
+  }
+
+  void updateSubfields(String interest) {
+    setState(() {
+      currentSubfields = subfields[interest] ?? [];
+      selectedSubfield = null;
+      subfieldDefinition = null;
+      subfieldImagePath = null;
+    });
   }
 
   final ScrollController _scrollController = ScrollController();
@@ -972,15 +1174,24 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Row(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        CustomPageRoute(child: Chatbot()),
+                      );
+                    },
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Find your Interest"),
-                        SizedBox(
+                        const Text("Find your Interest with our ChatBot"),
+                        const SizedBox(
                           width: 20,
                         ),
-                        Icon(Clarity.star_line),
+                        Image.network(
+                          'https://cdn-icons-png.flaticon.com/512/8943/8943377.png',
+                          height: 30,
+                          width: 30,
+                        ),
                       ],
                     )),
               ),
@@ -1068,11 +1279,15 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
                                   ClipRRect(
                                     borderRadius: const BorderRadius.vertical(
                                         top: Radius.circular(8)),
-                                    child: Image.asset(
+                                    child: Image.network(
                                       fieldImagePath ?? "",
                                       height: 200,
                                       width: double.infinity,
                                       fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const SizedBox.shrink();
+                                      },
                                     ),
                                   ),
                                   Positioned(
@@ -1085,17 +1300,7 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
                                                   Colors.red.withOpacity(0.7)),
                                         ),
                                         onPressed: () async {
-                                          if (fieldVideoLink != null) {
-                                            if (await canLaunch(
-                                                fieldVideoLink.toString())) {
-                                              await launch(
-                                                  fieldVideoLink.toString());
-                                            } else {
-                                              throw 'Could not launch $fieldVideoLink';
-                                            }
-                                          } else {
-                                            throw 'The video link is null';
-                                          }
+                                          _launchURL(fieldVideoLink!);
                                         },
                                         child: const Icon(Icons.play_circle),
                                       ))
@@ -1154,8 +1359,8 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
                                 selectedSubfield = newValue;
                                 updateSubfieldDetails(newValue!);
                               });
-                              Future.delayed(
-                                  const Duration(milliseconds: 100), () {
+                              Future.delayed(const Duration(milliseconds: 100),
+                                  () {
                                 scrollToBottom();
                               });
                             },
@@ -1183,12 +1388,16 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
                             children: [
                               ClipRRect(
                                 borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(8)),
-                                child: Image.asset(
+                                  top: Radius.circular(8),
+                                ),
+                                child: Image.network(
                                   subfieldImagePath ?? "",
                                   height: 200,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const SizedBox.shrink();
+                                  },
                                 ),
                               ),
                               Positioned(
@@ -1200,17 +1409,7 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
                                         Colors.red.withOpacity(0.7)),
                                   ),
                                   onPressed: () async {
-                                    if (subfieldVideoLink != null) {
-                                      if (await canLaunch(
-                                          subfieldVideoLink.toString())) {
-                                        await launch(
-                                            subfieldVideoLink.toString());
-                                      } else {
-                                        throw 'Could not launch $subfieldVideoLink';
-                                      }
-                                    } else {
-                                      throw 'The video link is null';
-                                    }
+                                    _launchURL(subfieldVideoLink!);
                                   },
                                   child: const Icon(Icons.play_circle),
                                 ),
@@ -1337,7 +1536,15 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
                                 ),
                                 const SizedBox(height: 20),
                                 ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        CustomPageRoute(
+                                            child: UniversitiesScreen(
+                                                heading: selectedSubfield
+                                                    .toString())),
+                                      );
+                                    },
                                     child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
@@ -1366,33 +1573,69 @@ class _UndergraduateScreenState extends State<UndergraduateScreen> {
   }
 }
 
+/*
+class WebViewPage extends StatefulWidget {
+  final String url;
+
+  const WebViewPage({Key? key, required this.url}) : super(key: key);
+
+  @override
+  _WebViewPageState createState() => _WebViewPageState();
+}
 
 
+class _WebViewPageState extends State<WebViewPage> {
+  WebViewController? _webViewController;
+  bool _isLoading = true;
 
 
+  @override
+  void initState() {
+    super.initState();
+  }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
-
-class PostgraduateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Postgraduate Education")),
-      body: const Center(
-        child: Text("Details for Postgraduate Education."),
+      appBar: AppBar(
+        title: Text("WebView"),
+      ),
+      body: Stack(
+        children: [
+          WebView(
+            initialUrl:  widget.url,
+            onWebViewCreated: (WebViewController webViewController) {
+              _webViewController = webViewController;
+            },
+            onPageStarted: (WebViewController webViewController, String? url) {
+              setState(() {
+                _isLoading = true;
+              });
+            },
+            onPageFinished: (WebViewController webViewController, String? url) {
+              setState(() {
+                _isLoading = false;
+              });
+
+            },
+          ),
+          if (_isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.5), // Black background with opacity
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
 }
-
-class TechnicalVocationalScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Technical and Vocational Education")),
-      body: const Center(
-        child: Text("Details for Technical and Vocational Education."),
-      ),
-    );
-  }
-}
+*/

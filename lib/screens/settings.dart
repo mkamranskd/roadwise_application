@@ -133,14 +133,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: const Text(
           'Settings',
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: ListView(
         children: [
@@ -271,18 +264,11 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
         title: const Text(
           'Dark Mode Settings',
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: isLoading
           ? Center(
-              child: LoadingAnimationWidget.inkDrop(
+              child: LoadingAnimationWidget.discreteCircle(
                 color: Colors.blue,
                 size: 25,
               ),
@@ -335,14 +321,7 @@ class NotificationsScreen extends StatelessWidget {
         title: const Text(
           'Notifications',
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: ListView(
         children: [
@@ -381,14 +360,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
         title: const Text(
           'Language',
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: ListView(
         children: [
@@ -442,14 +414,7 @@ class AccountScreen extends StatelessWidget {
         title: const Text(
           'Account',
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: Column(
         children: [
@@ -509,14 +474,7 @@ class AboutScreen extends StatelessWidget {
         title: const Text(
           'About',
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: ListView(
         children: [
@@ -589,14 +547,7 @@ class PrivacyScreen extends StatelessWidget {
         title: const Text(
           'Privacy',
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
-        ),
+          
       ),
       body: ListView(
         children: [

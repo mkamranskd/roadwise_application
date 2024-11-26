@@ -9,14 +9,12 @@ import 'features/app/splash_screen/splash_screen.dart';
 import 'global/style.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   runApp(const RestartWidget(child: MyApp()));
-
 }
 
 class MyApp extends StatefulWidget {
@@ -305,6 +303,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
+
         dialogTheme: DialogTheme(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),

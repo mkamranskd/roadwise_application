@@ -418,7 +418,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       child: Center(
                         child: loading
-                            ? LoadingAnimationWidget.inkDrop(
+                            ? LoadingAnimationWidget.discreteCircle(
                                 color: Colors.white,
                                 size: 25,
                               )
@@ -433,6 +433,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -492,7 +493,7 @@ class _SignUpPageState extends State<SignUpPage> {
         }, SetOptions(merge: true));
       } if (!isBusinessAccount) {
         FirebaseFirestore.instance
-            .collection('businessAccounts')
+            .collection('Users')
             .doc(_auth.currentUser!.uid)
             .set({
           "businessAccount": 'false',
@@ -500,7 +501,7 @@ class _SignUpPageState extends State<SignUpPage> {
         });
       }
       FirebaseFirestore.instance
-          .collection('businessAccounts')
+          .collection('Users')
           .doc(_auth.currentUser!.uid)
           .set({
         "isThemeMode": false,

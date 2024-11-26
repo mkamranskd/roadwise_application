@@ -167,7 +167,7 @@ class _EditProfileState extends State<EditProfile> {
         body: Scaffold(
           body: isLoading
               ? Center(
-                  child: LoadingAnimationWidget.inkDrop(
+                  child: LoadingAnimationWidget.discreteCircle(
                     color: primaryBlueColor,
                     size: 25,
                   ),
@@ -313,7 +313,7 @@ class _EditProfileState extends State<EditProfile> {
                   },
                   child: Center(
                     child: loading
-                        ? LoadingAnimationWidget.inkDrop(
+                        ? LoadingAnimationWidget.discreteCircle(
                             color: Colors.white,
                             size: 25,
                           )
@@ -454,7 +454,7 @@ class _EditProfileState extends State<EditProfile> {
                   },
                   child: Center(
                     child: loading
-                        ? LoadingAnimationWidget.inkDrop(
+                        ? LoadingAnimationWidget.discreteCircle(
                             color: Colors.white,
                             size: 25,
                           )

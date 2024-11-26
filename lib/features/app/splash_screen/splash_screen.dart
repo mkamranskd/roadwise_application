@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkOnboardingAndLogin() async {
-    await Future.delayed(const Duration(seconds: 8));
+    await Future.delayed(const Duration(seconds: 5 ));
     final auth = FirebaseAuth.instance;
     final user = auth.currentUser;
     if (user != null) {

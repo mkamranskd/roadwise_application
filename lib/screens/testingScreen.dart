@@ -1,68 +1,102 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:camera_360/camera_360.dart';
 import 'package:flutter/material.dart';
-final _auth = FirebaseAuth.instance;
 
-class EducationQuestionScreen extends StatefulWidget {
+class CameraPage extends StatefulWidget {
+  const CameraPage({super.key});
+
   @override
-  _EducationQuestionScreenState createState() => _EducationQuestionScreenState();
+  State<CameraPage> createState() => _CameraPageState();
 }
 
-class _EducationQuestionScreenState extends State<EducationQuestionScreen> {
-  String? educationLevel;
-  int? graduationYear;
-
-  final TextEditingController _graduationYearController = TextEditingController();
-
-  // Function to store data in Firestore
-  Future<void> _saveDataToFirestore() async {
-    final userId = _auth.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('Users').doc(userId).set({
-      'educationLevel': educationLevel,
-      'graduationYear': int.tryParse(_graduationYearController.text),
-    }, SetOptions(merge: true));
-  }
+class _CameraPageState extends State<CameraPage> {
+  int progressPecentage = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Education Information'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+    void displayPanoramaMessage(context, String message) {
+      final snackBar = SnackBar(
+        content: Text(message),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    return Stack(
+      children: [
+        Camera360(
+          // Text shown while panorama image is being prepared
+          userLoadingText: "Preparing panorama...",
+          // Text shown on while taking the first image
+          userHelperText: "Point the camera at the dot",
+          // Text shown when user should tilt the device to the left
+          userHelperTiltLeftText: "Tilt left",
+          // Text shown when user should tilt the device to the right
+          userHelperTiltRightText: "Tilt Right",
+          // Suggested key for iPhone >= 11 is 2 to select the wide-angle camera
+          // On android devices 0 is suggested as at the moment Camera switching is not possible on android
+          userSelectedCameraKey: 2,
+          // Camera selector Visibilitiy
+          cameraSelectorShow: true,
+          // Camera selector Info Visibilitiy
+          cameraSelectorInfoPopUpShow: true,
+          // Camera selector Info Widget
+          cameraSelectorInfoPopUpContent: const Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Text(
+                  "Notice: This feature only works if your phone has a wide angle camera.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xffDB4A3C),
+                  ),
+                ),
+              ),
+              Text(
+                "Select the camera with the widest viewing angle below.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xffEFEFEF),
+                ),
+              ),
+            ],
+          ),
+          // Callback function called when 360 capture ended
+          onCaptureEnded: (data) {
+            if (data['success'] == true) {
+              // Save image to the gallery
+              //XFile panorama = data['panorama'];
+              //GallerySaver.saveImage(panorama.path);
+              displayPanoramaMessage(context, 'Panorama saved!');
+            } else {
+              displayPanoramaMessage(context, 'Panorama failed!');
+            }
+            print(data);
+          },
+          // Callback function called when the camera lens is changed
+          onCameraChanged: (cameraKey) {
+            displayPanoramaMessage(
+                context, "Camera changed ${cameraKey.toString()}");
+          },
+          // Callback function called when capture progress is changed
+          onProgressChanged: (newProgressPercentage) {
+            debugPrint(
+                "'Panorama360': Progress changed: $newProgressPercentage");
+            setState(() {
+              progressPecentage = newProgressPercentage;
+            });
+          },
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            DropdownButtonFormField<String>(
-              value: educationLevel,
-              decoration: const InputDecoration(labelText: 'Select Education Level'),
-              items: ['Matric', 'Intermediate', 'Bachelors']
-                  .map((level) => DropdownMenuItem(
-                value: level,
-                child: Text(level),
-              ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  educationLevel = value;
-                });
-              },
-            ),
-            TextFormField(
-              controller: _graduationYearController,
-              decoration: const InputDecoration(labelText: 'Graduation Year'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                _saveDataToFirestore();
-              },
-              child: const Text('Save'),
-            ),
+            Text(
+              "Progress: $progressPecentage",
+              style: const TextStyle(
+                  color: Colors.white, backgroundColor: Colors.black),
+            )
           ],
         ),
-      ),
+      ],
     );
   }
 }

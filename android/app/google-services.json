@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:79663037799:android:731f8ef840f846dd35c3c2",
+        "android_client_info": {
+          "package_name": "com.example.rightway_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "79663037799-03j52g5fksu65uc30a9824ag4t7nd1hh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIBmz8bRTSw8_zMv5Gd4ZF8NuiNF9w_9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "79663037799-03j52g5fksu65uc30a9824ag4t7nd1hh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "79663037799-3icft0h4n6a965g7mg4srpchb1bf19l6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.roadwise.roadwiseApplication"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:79663037799:android:f2d9cd42275695d435c3c2",
         "android_client_info": {
           "package_name": "com.roadwise.roadwise_application"

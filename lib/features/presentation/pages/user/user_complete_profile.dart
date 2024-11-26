@@ -183,7 +183,7 @@ class _UserCompleteProfileState extends State<UserCompleteProfile> {
       body: isLoading
           ? Center(
               child:
-                  LoadingAnimationWidget.inkDrop(color: Colors.blue, size: 25))
+                  LoadingAnimationWidget.discreteCircle(color: Colors.blue, size: 25))
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),

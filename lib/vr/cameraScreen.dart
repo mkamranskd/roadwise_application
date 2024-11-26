@@ -109,7 +109,7 @@ class _CameraScreenState extends State<CameraScreen> {
                   ),
                 );
               } else {
-                return  Center(child: LoadingAnimationWidget.inkDrop(
+                return  Center(child: LoadingAnimationWidget.discreteCircle(
                                 color: Colors.blue,
                                 size: 25,
                               ));
@@ -205,7 +205,7 @@ class ConfirmPictureScreen extends StatelessWidget {
             );
           } else {
             return  Center(
-              child: LoadingAnimationWidget.inkDrop(
+              child: LoadingAnimationWidget.discreteCircle(
                                 color: Colors.blue,
                                 size: 25,
                               ),
@@ -296,7 +296,7 @@ class _UploadPictureScreenState extends State<UploadPictureScreen> {
             ?  Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LoadingAnimationWidget.inkDrop(
+            LoadingAnimationWidget.discreteCircle(
                                 color: Colors.blue,
                                 size: 25,
                               ),

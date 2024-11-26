@@ -625,7 +625,7 @@ class _CustomComboBoxState extends State<CustomComboBox> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Center(
-          child: LoadingAnimationWidget.inkDrop(
+          child: LoadingAnimationWidget.discreteCircle(
         color: Colors.blue,
         size: 25,
       )); // Show loader while loading cities
@@ -1057,16 +1057,15 @@ class CommonHeader extends StatelessWidget {
     );
   }
 }
-
 class FillOutlineButton extends StatefulWidget {
-  FillOutlineButton({
+  const FillOutlineButton({
     super.key,
-    this.isFilled = true,
     required this.press,
     required this.text,
+    this.isFilled = true,
   });
 
-  bool isFilled;
+  final bool isFilled;
   final VoidCallback press;
   final String text;
 
@@ -1075,6 +1074,14 @@ class FillOutlineButton extends StatefulWidget {
 }
 
 class _FillOutlineButtonState extends State<FillOutlineButton> {
+  late bool isFilled;
+
+  @override
+  void initState() {
+    super.initState();
+    isFilled = widget.isFilled; // Initialize with the passed-in value
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -1086,18 +1093,17 @@ class _FillOutlineButtonState extends State<FillOutlineButton> {
             borderRadius: BorderRadius.circular(30),
             side: const BorderSide(color: Colors.blue),
           ),
-          elevation: widget.isFilled ? 2 : 0,
-          color: widget.isFilled ? Colors.blue : Colors.transparent,
+          elevation: isFilled ? 2 : 0,
+          color: isFilled ? Colors.blue : Colors.transparent,
           onPressed: () {
             setState(() {
-              widget.isFilled = !widget.isFilled;
+              isFilled = !isFilled;
             });
           },
-          // onPressed: widget.press,
           child: Text(
             widget.text,
             style: TextStyle(
-              color: widget.isFilled ? Colors.white : Colors.white,
+              color: isFilled ? Colors.white : Colors.white,
               fontSize: 10,
             ),
           ),
@@ -1212,7 +1218,7 @@ class ErrorInfo extends StatelessWidget {
 //RightWay(height:110)
 Widget RightWay({double height = 110.0}) {
   return Image.asset(
-    'assets/roadwiselogo.png',
+    'assets/roadwiselogo.PNG',
     height: height,
   );
 }

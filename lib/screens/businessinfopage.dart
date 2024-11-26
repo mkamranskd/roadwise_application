@@ -56,7 +56,7 @@ class BusinessPageScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-              child: LoadingAnimationWidget.inkDrop(
+              child: LoadingAnimationWidget.discreteCircle(
             color: primaryBlueColor,
             size: 25,
           ));
@@ -117,7 +117,7 @@ class BusinessPageScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-              child: LoadingAnimationWidget.inkDrop(
+              child: LoadingAnimationWidget.discreteCircle(
             color: primaryBlueColor,
             size: 25,
           ));
@@ -179,7 +179,7 @@ class BusinessPageScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-              child: LoadingAnimationWidget.inkDrop(
+              child: LoadingAnimationWidget.discreteCircle(
             color: primaryBlueColor,
             size: 25,
           ));
@@ -244,7 +244,7 @@ class BusinessPageScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-              child: LoadingAnimationWidget.inkDrop(
+              child: LoadingAnimationWidget.discreteCircle(
             color: primaryBlueColor,
             size: 25,
           ));

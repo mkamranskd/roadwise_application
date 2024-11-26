@@ -279,7 +279,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
       ),
       body: isLoading
           ? Center(
-              child: LoadingAnimationWidget.inkDrop(
+              child: LoadingAnimationWidget.discreteCircle(
               color: Colors.blue,
               size: 25,
             ))

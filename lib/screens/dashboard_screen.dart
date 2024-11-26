@@ -108,14 +108,15 @@ class _FirstPageState extends State<FirstPage> {
           const MyHomePage(
             title: '',
           ),
-          const ChatsScreen(),
+          //const ChatsScreen(),
           const NotificationScreen(),
-          BookMarks_Page(),
+          //BookMarks_Page(),
           AccountSettingsScreen(),
         ],
       ),
       bottomNavigationBar: SalomonBottomBar(
-        //backgroundColor: Colors.white,
+        //backgroundColor: Colors.white
+
         selectedItemColor: primaryBlueColor,
         unselectedItemColor: const Color(0xffADD8E6),
         currentIndex: _selectedIndex,
@@ -137,8 +138,9 @@ class _FirstPageState extends State<FirstPage> {
             ),
             selectedColor: primaryBlueColor,
             activeIcon: const Icon(Clarity.home_solid),
+
           ),
-          SalomonBottomBarItem(
+          /*SalomonBottomBarItem(
             icon: const Icon(Clarity.email_line),
             title: const Text(
               "Chats",
@@ -149,7 +151,7 @@ class _FirstPageState extends State<FirstPage> {
             ),
             selectedColor: Colors.pink,
             activeIcon: const Icon(Clarity.email_solid),
-          ),
+          ),*/
           SalomonBottomBarItem(
             icon: const Icon(Clarity.search_line),
             title: const Text(
@@ -161,7 +163,7 @@ class _FirstPageState extends State<FirstPage> {
             ),
             selectedColor: Colors.orange,
           ),
-          SalomonBottomBarItem(
+          /*SalomonBottomBarItem(
             icon: const Icon(Clarity.bookmark_line),
             title: const Text(
               "Bookmarks",
@@ -172,7 +174,7 @@ class _FirstPageState extends State<FirstPage> {
             ),
             selectedColor: primaryBlueColor,
             activeIcon: const Icon(Clarity.bookmark_solid),
-          ),
+          ),*/
           SalomonBottomBarItem(
             icon: const Icon(Clarity.user_line),
             title: const Text(
@@ -238,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(8),
           ),
           icon: Image.asset(
-            'assets/roadwiselogo.png',
+            'assets/roadwiselogo.PNG',
             height: 100,
           ),
           content: Text(
@@ -466,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         const SizedBox(height: 20),
                         Image.asset(
-                          'assets/roadwiselogo.png',
+                          'assets/roadwiselogo.PNG',
                           height: 110,
                         ),
                         const SizedBox(height: 20),
@@ -1525,7 +1527,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: LoadingAnimationWidget.inkDrop(
+                child: LoadingAnimationWidget.discreteCircle(
                   color: Colors.blue,
                   size: 25,
                 ),

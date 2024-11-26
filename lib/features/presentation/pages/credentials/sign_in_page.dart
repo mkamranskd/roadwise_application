@@ -154,7 +154,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       child: Center(
                         child: loading
-                            ? LoadingAnimationWidget.inkDrop(
+                            ? LoadingAnimationWidget.discreteCircle(
                                 color: Colors.white,
                                 size: 25,
                               )
@@ -192,6 +192,87 @@ class _SignInScreenState extends State<SignInScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Expanded(
+                        child: ZoomTapAnimation(
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              setState(() {
+                                loading = true;
+                              });
+                              final userCredential = await _signInWithGoogle();
+
+                              if (userCredential != null) {
+                                final user = userCredential.user;
+                                if (user != null) {
+                                  final userDoc = await FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .doc(user.uid)
+                                      .get();
+
+                                  if (userDoc.exists) {
+                                    final userData = userDoc.data();
+                                    final fullName = userData?['fullName'];
+
+                                    if (fullName != null && fullName.isNotEmpty) {
+                                      // Navigate to main app
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const MyApp()),
+                                      );
+                                    } else {
+                                      FirebaseFirestore.instance
+                                          .collection('Users')
+                                          .doc(_auth.currentUser!.uid)
+                                          .set({
+                                        "isThemeMode": false,
+                                      });
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserCompleteProfile()),
+                                      );
+                                    }
+                                  } else {
+                                    // Navigate to complete profile screen
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              UserCompleteProfile()),
+                                    );
+                                  }
+                                }
+                              }
+
+                              setState(() {
+                                loading = false;
+                              });
+                            },
+                            icon: SvgPicture.string(googleIcon),
+                            label: const Text('Sign in with Google',style: TextStyle(
+                              fontFamily: 'Dubai',
+                                fontWeight: FontWeight.normal,
+                            ),),
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.blue,
+                              minimumSize: const Size(double.infinity, 48),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(16)
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  /*Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       SocialCard(
                         icon: SvgPicture.string(googleIcon),
                         press: () async {
@@ -220,7 +301,12 @@ class _SignInScreenState extends State<SignInScreen> {
                                         builder: (context) => const MyApp()),
                                   );
                                 } else {
-                                  // Navigate to complete profile screen
+                                  FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .doc(_auth.currentUser!.uid)
+                                      .set({
+                                    "isThemeMode": false,
+                                  });
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
@@ -245,19 +331,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           });
                         },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: SocialCard(
-                          icon: SvgPicture.string(facebookIcon),
-                          press: () {},
-                        ),
-                      ),
-                      SocialCard(
-                        icon: SvgPicture.string(twitterIcon),
-                        press: () {},
-                      ),
                     ],
-                  ),
+                  ),*/
                   const SizedBox(height: 10),
                   const Text(
                     "By continuing your confirm that you agree \nwith our Term and Condition",
@@ -445,6 +520,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       return userCredential;
     } catch (error) {
+
       Utils.toastMessage(context, "Google Sign-In failed: $error", Icons.error);
       print("Google Sign-In failed: $error");
       return null;
